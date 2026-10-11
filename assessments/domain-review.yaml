@@ -1,0 +1,303 @@
+schema_version: 1
+kind: question_bank
+id: ats036-domain-review
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official examination questions.
+scope:
+  type: domain
+  id: domain-review
+  title: Monitoring, Logging and Runtime Security
+placement:
+  position: after
+  reading: sections/section-050/module-01/course-02-summary.md
+questions:
+- id: ats036-domain-review-q01
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Build an expected behavior model for a workload.
+  source_readings:
+  - sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
+  prompt: Why might a shell in a container be suspicious but not definitive proof of compromise?
+  options:
+  - id: a
+    text: Shell processes are impossible in containers.
+    explanation: They can exist if the image and runtime allow them.
+  - id: b
+    text: Every shell is always an authorized Kubernetes health check.
+    explanation: Health checks do not universally explain shell execution.
+  - id: c
+    text: Its meaning depends on expected workload behavior and authorized maintenance.
+    explanation: Context distinguishes unusual malicious execution from justified activity.
+  correct_option: c
+  explanation: Context distinguishes unusual malicious execution from justified activity.
+- id: ats036-domain-review-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain runtime rule scope and detection limitations.
+  source_readings:
+  - sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
+  prompt: What is a runtime rule match?
+  options:
+  - id: a
+    text: A guarantee that all related attack steps were collected.
+    explanation: Coverage and retention can leave other steps unobserved.
+  - id: b
+    text: An observation requiring contextual investigation.
+    explanation: Detection rules identify suspicious patterns rather than universal proof.
+  - id: c
+    text: Proof that the attempted operation was prevented automatically.
+    explanation: A detection system may report an operation without blocking it.
+  correct_option: b
+  explanation: Detection rules identify suspicious patterns rather than universal proof.
+- id: ats036-domain-review-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Choose proportionate investigation and containment evidence.
+  source_readings:
+  - sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
+  prompt: What should an investigator preserve before disruptive changes when feasible?
+  options:
+  - id: a
+    text: Relevant process, network and identity evidence with timestamps.
+    explanation: Replacement can destroy volatile context needed to understand the activity.
+  - id: b
+    text: Only a screenshot of the Pod's display name.
+    explanation: A name alone omits identity, lifecycle and observed operations.
+  - id: c
+    text: No evidence because deleting the Pod explains the cause.
+    explanation: Deletion may contain one process but does not establish cause or scope.
+  correct_option: a
+  explanation: Replacement can destroy volatile context needed to understand the activity.
+- id: ats036-domain-review-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Identify sensitive fields and evidence gaps.
+  source_readings:
+  - sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
+  prompt: An investigation has no record because collection failed. What is the correct interpretation?
+  options:
+  - id: a
+    text: The event definitely never occurred.
+    explanation: Missing data cannot support that certainty.
+  - id: b
+    text: The user identity in any unrelated log proves the action.
+    explanation: Attribution needs relevant correlated evidence.
+  - id: c
+    text: Evidence coverage is incomplete; absence is not proof of no event.
+    explanation: Observation-path failure limits conclusions.
+  correct_option: c
+  explanation: Observation-path failure limits conclusions.
+- id: ats036-domain-review-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish API audit, runtime and application security observations.
+  source_readings:
+  - sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
+  prompt: API audit records show resource creation, but the question concerns later file access in a container.
+    What additional evidence is relevant?
+  options:
+  - id: a
+    text: Assume every accepted Pod performed every possible file action.
+    explanation: Acceptance does not establish later behavior.
+  - id: b
+    text: Appropriate runtime or application observations.
+    explanation: The API source does not record every execution action.
+  - id: c
+    text: Only rereading the resource creation response.
+    explanation: That remains evidence for the earlier API boundary.
+  correct_option: b
+  explanation: The API source does not record every execution action.
+- id: ats036-domain-review-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Relate alert quality to relevant behaviors and response ownership.
+  source_readings:
+  - sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
+  prompt: A runtime detector reports a suspicious action. Does that prove the action was prevented?
+  options:
+  - id: a
+    text: No; detection and enforcement have different effects.
+    explanation: Actual operating mode determines whether any blocking occurred.
+  - id: b
+    text: No security evidence can ever be useful.
+    explanation: Detection can still support scope and response.
+  - id: c
+    text: Yes; every alert is a rejection.
+    explanation: An observation can occur after execution.
+  correct_option: a
+  explanation: Actual operating mode determines whether any blocking occurred.
+- id: ats036-domain-review-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Build a timeline from API, application, host and network evidence.
+  source_readings:
+  - sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
+  prompt: Why correlate audit and runtime evidence?
+  options:
+  - id: a
+    text: Audit events contain every syscall automatically.
+    explanation: Kubernetes audit covers API activity rather than all host operations.
+  - id: b
+    text: Runtime events identify every earlier API caller automatically.
+    explanation: Local execution observations may lack the initiating API context.
+  - id: c
+    text: API actions and local execution cover different portions of an attack.
+    explanation: Together they can link resource creation to later process behavior.
+  correct_option: c
+  explanation: Together they can link resource creation to later process behavior.
+- id: ats036-domain-review-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish observed actor identity from the human behind a credential.
+  source_readings:
+  - sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
+  prompt: What does an audit username establish most directly?
+  options:
+  - id: a
+    text: That the named person intentionally performed the action.
+    explanation: Credentials can be stolen or used by automated processes.
+  - id: b
+    text: The credential identity presented for the recorded API request.
+    explanation: It does not independently establish which human controlled that credential.
+  - id: c
+    text: The physical location of the attacker with certainty.
+    explanation: Identity data alone does not establish physical attribution.
+  correct_option: b
+  explanation: It does not independently establish which human controlled that credential.
+- id: ats036-domain-review-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Contain compromised authority and preserve useful evidence.
+  source_readings:
+  - sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
+  prompt: Why can deleting a compromised Pod be incomplete containment?
+  options:
+  - id: a
+    text: Its controller, credentials or persistence mechanism may recreate the harm.
+    explanation: Containment must address the authority and resource relationships behind execution.
+  - id: b
+    text: Deleting any Pod rotates every cloud credential automatically.
+    explanation: Credential revocation is a separate operation.
+  - id: c
+    text: Pod deletion guarantees all leaked data becomes confidential again.
+    explanation: Previously disclosed data cannot be made undisclosed by deletion.
+  correct_option: a
+  explanation: Containment must address the authority and resource relationships behind execution.
+- id: ats036-domain-review-q10
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain read-only root filesystems and their limits.
+  source_readings:
+  - sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
+  prompt: What does readOnlyRootFilesystem principally constrain?
+  options:
+  - id: a
+    text: Every network request made by the process.
+    explanation: Filesystem policy does not define network authorization.
+  - id: b
+    text: All writes to every mounted volume automatically.
+    explanation: Separate volumes can remain writable under their own configuration.
+  - id: c
+    text: Writes to the container's root filesystem.
+    explanation: Writable mounts can still provide separate write surfaces.
+  correct_option: c
+  explanation: Writable mounts can still provide separate write surfaces.
+- id: ats036-domain-review-q11
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Separate required temporary data from executable image content.
+  source_readings:
+  - sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
+  prompt: An application needs temporary files. Which design fits a read-only root?
+  options:
+  - id: a
+    text: Mount the entire host filesystem writable.
+    explanation: That exposes unnecessary host data and mutation authority.
+  - id: b
+    text: Provide a narrowly placed writable temporary volume.
+    explanation: The required data path can be separated from image content.
+  - id: c
+    text: Make the whole container privileged.
+    explanation: Privilege broadly expands authority beyond temporary file creation.
+  correct_option: b
+  explanation: The required data path can be separated from image content.
+- id: ats036-domain-review-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Evaluate replacement-based updates and residual compromise paths.
+  source_readings:
+  - sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
+  prompt: Which attack can remain possible with a read-only root?
+  options:
+  - id: a
+    text: Misuse of a supplied credential to access an external service.
+    explanation: The process can use legitimate network and credential authority without altering root
+      files.
+  - id: b
+    text: Replacing any root filesystem file through ordinary writes.
+    explanation: The read-only boundary is intended to reject that operation.
+  - id: c
+    text: Installing arbitrary files into the protected root through a normal file write.
+    explanation: That is the surface the read-only root restricts.
+  correct_option: a
+  explanation: The process can use legitimate network and credential authority without altering root files.
+- id: ats036-domain-review-q13
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain what Kubernetes audit events record.
+  source_readings:
+  - sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
+  prompt: An API audit event records successful resource creation. What further evidence is needed for
+    runtime impact?
+  options:
+  - id: a
+    text: No evidence because accepted intent proves all behavior.
+    explanation: Later stages remain separate.
+  - id: b
+    text: Only changing the audit filename.
+    explanation: Naming does not extend observation coverage.
+  - id: c
+    text: Relevant workload, runtime and application observations.
+    explanation: API acceptance does not record every later execution effect.
+  correct_option: c
+  explanation: API acceptance does not record every later execution effect.
+- id: ats036-domain-review-q14
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Compare Metadata, Request and RequestResponse audit detail.
+  source_readings:
+  - sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
+  prompt: An audit policy records full bodies for sensitive Secret requests. What risk arises?
+  options:
+  - id: a
+    text: All API authorization is disabled by the detail level.
+    explanation: Recording detail does not itself replace permission checks.
+  - id: b
+    text: Credentials can be copied into the audit store.
+    explanation: Additional detail can create a disclosure path.
+  - id: c
+    text: Audit records automatically encrypt every value for every reader.
+    explanation: Access and encryption depend on the actual design.
+  correct_option: b
+  explanation: Additional detail can create a disclosure path.
+- id: ats036-domain-review-q15
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Relate audit retention and protection to investigation.
+  source_readings:
+  - sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
+  prompt: No record remains for an old action after retention expired. What conclusion is supported?
+  options:
+  - id: a
+    text: The evidence is unavailable; absence does not prove the action never happened.
+    explanation: Retention bounds later investigation.
+  - id: b
+    text: The caller definitely performed no action.
+    explanation: Expired data cannot support that certainty.
+  - id: c
+    text: Restarting a collector recreates every past event.
+    explanation: A collector cannot reconstruct unretained historical observations.
+  correct_option: a
+  explanation: Retention bounds later investigation.
