@@ -5,7 +5,9 @@ exam_objectives:
 ---
 # Use Kubernetes audit logs to monitor access
 
-This section covers use Kubernetes audit logs to monitor access. It develops audit Policy And Security Evidence through mechanisms, examples, prerequisites and failure reasoning.
+An audit response shows that a Pod creation was accepted, but no record proves the container ever started. API auditing and runtime observation describe different events.
+
+The explanations identify the responsible components, compare intended and observed state, and work through the decisions needed to preserve the requirement. Read the worked examples as reasoning about a proposed system; no environment is started by this section.
 
 Read the module goals, teaching and closing summary in order. YAML checks are indexed separately and appear after designated summaries. Larger domains include an intermediate checkpoint before the final review.
 
