@@ -5,6 +5,20 @@ exam_objectives:
 ---
 # Behavioral Detection With Runtime Context
 
+A web process launches an unexpected shell after handling a request. Its approved image does not make that new execution legitimate. Runtime evidence describes behavior after startup.
+
+## Learning objectives
+
+- Build an expected behavior model for a workload.
+- Relate syscall and process observations to security hypotheses.
+- Explain runtime rule scope and detection limitations.
+
+## Before you start
+
+This chapter is standalone reading material; no running cluster or installed tools are required. A Pod is the Kubernetes unit for running one or more containers, and a namespace groups namespaced objects. Treat the worked configurations as teaching examples rather than recorded observations from a provisioned environment.
+
+## Responsible components and behavior
+
 Behavioral detection asks whether a running workload is doing something unexpected or dangerous. It complements static image and configuration assessment because a legitimate image can be exploited after startup. Useful detection combines an expected behavior model with observations of process execution, file access, network activity and identity use.
 
 ## Define A Meaningful Baseline
@@ -34,6 +48,29 @@ Collection itself has costs and limits. Event loss, sampling, disabled sources a
 ## Choose A Proportionate Response
 
 A response can isolate a workload, restrict a credential or preserve evidence for analysis. Replacing a Pod may stop one process but also erase volatile evidence, and a compromised controller template may recreate the same behavior. Evaluate the owner, credentials and related workloads before claiming containment. Document the observed facts separately from hypotheses, and confirm whether the suspicious activity and its authority have actually been removed.
+
+## Work through the decision
+
+A runtime sensor observes supported process, filesystem or network events and connects them to workload context. Falco can evaluate relevant events against configured rules. A rule match signals a condition worth investigation, not proof of every inferred attack step.
+
+Define expected behavior from the application's responsibility, including authorized maintenance. Then identify the process, container instance, node and observation time. Reused names and missing enrichment can misattribute an event to a later Pod. Check sensor coverage and correlate the alert with independent request or audit evidence before selecting proportionate containment. A quiet dashboard cannot establish that unsupported behavior never occurred.
+
+```mermaid
+flowchart TB
+    N0["Observed runtime event"]
+    N1["Workload identity and timing"]
+    N2["Behavior rule evaluation"]
+    N3["Independent corroboration"]
+    N4["Proportionate response"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
+
+Runtime detection becomes useful evidence through accurate context, known coverage and verified interpretation.
+
+Runtime detection becomes useful evidence through accurate context, known coverage and verified interpretation.
 
 ## Common pitfalls
 

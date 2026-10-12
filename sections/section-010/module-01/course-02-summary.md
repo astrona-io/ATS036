@@ -8,3 +8,5 @@ exam_objectives:
 Behavioral detection compares observed operations with a justified workload expectation. Process, file, network and API evidence become useful when they identify the workload, identity and timing of the activity.
 
 A rule match is a hypothesis requiring investigation, while missing alerts can reflect collection or coverage gaps. Preserve evidence and choose proportionate containment without assuming that a detector automatically prevents every prohibited action.
+
+Runtime detection becomes useful evidence through accurate context, known coverage and verified interpretation.
