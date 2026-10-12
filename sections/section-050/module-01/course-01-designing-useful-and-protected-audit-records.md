@@ -5,6 +5,20 @@ exam_objectives:
 ---
 # Designing Useful And Protected Audit Records
 
+An audit response shows that a Pod creation was accepted, but no record proves the container ever started. API auditing and runtime observation describe different events.
+
+## Learning objectives
+
+- Explain what Kubernetes audit events record.
+- Compare Metadata, Request and RequestResponse audit detail.
+- Relate audit retention and protection to investigation.
+
+## Before you start
+
+This chapter is standalone reading material; no running cluster or installed tools are required. A Pod is the Kubernetes unit for running one or more containers, and a namespace groups namespaced objects. Treat the worked configurations as teaching examples rather than recorded observations from a provisioned environment.
+
+## Responsible components and behavior
+
 A deployment identity creates an unexpected workload. Kubernetes audit records can help establish who requested the change, which resource it targeted and what response the application programming interface (API) produced. Auditing is evidence about API activity; it does not automatically observe every command or file access inside a running container.
 
 ## Recorded Context And Stages
@@ -38,6 +52,29 @@ Find the request that created the object, its authenticated identity and respons
 If the credential was exposed, revoke or rotate it and examine other permitted actions during its validity. Restore reviewed state and consider persistent data or external systems the workload could access. Audit evidence supports scope; it is not a corrective control that automatically reverses misuse.
 
 A sound audit design balances relevant detail, sensitive-data protection and durable availability. Explain exactly which question the records can answer and which needs another observation source.
+
+## Work through the decision
+
+An audit policy selects request coverage and detail. Metadata preserves request context; Request and RequestResponse can include bodies under their supported semantics. Those bodies can contain sensitive configuration or credentials, so more detail is not automatically the safer choice.
+
+Several lifecycle-stage events can refer to one request. Correlate them before counting actions or attributing completion. Protect the log backend and record collection gaps, retention and reader authority. A username identifies the credential presented to the API, not necessarily the human controlling it. Compare runtime and application sources when the investigated behavior extends beyond resource requests.
+
+```mermaid
+flowchart TB
+    N0["API request and identity"]
+    N1["Matched audit policy"]
+    N2["Selected stage and detail"]
+    N3["Protected retained record"]
+    N4["Correlated investigation evidence"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
+
+Useful audit evidence balances coverage, attribution and sensitive-data protection within the API request boundary.
+
+Useful audit evidence balances coverage, attribution and sensitive-data protection within the API request boundary.
 
 ## Common pitfalls
 
