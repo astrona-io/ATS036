@@ -5,6 +5,20 @@ exam_objectives:
 ---
 # Constraining Runtime Mutation And Writable Paths
 
+An application needs temporary files but does not need to rewrite its executable directory. A narrow writable volume can preserve its function while the image filesystem remains read-only.
+
+## Learning objectives
+
+- Explain read-only root filesystems and their limits.
+- Separate required temporary data from executable image content.
+- Relate capabilities, identity and host mounts to immutability.
+
+## Before you start
+
+This chapter is standalone reading material; no running cluster or installed tools are required. A Pod is the Kubernetes unit for running one or more containers, and a namespace groups namespaced objects. Treat the worked configurations as teaching examples rather than recorded observations from a provisioned environment.
+
+## Responsible components and behavior
+
 An immutable deployment model updates software by replacing a reviewed artifact rather than modifying a running container. This makes the relationship between deployed image, configuration and observed behavior easier to understand. Runtime immutability adds restrictions on unnecessary changes, but the application still needs carefully defined writable data and authority.
 
 ## Separate Image Content From State
@@ -34,6 +48,29 @@ Replacement is not a complete recovery procedure if credentials were stolen or e
 ## Interpret Runtime Changes
 
 Unexpected writes to executable paths or changes inconsistent with the deployment model can support detection. Record the expected writable surfaces so a legitimate cache update is not confused with code mutation. A denied write may reveal either an application compatibility issue or malicious activity; correlate the process and intended operation before changing policy. Keep the correction as narrow as the demonstrated requirement.
+
+## Work through the decision
+
+An immutable delivery model changes software through reviewed replacement rather than ad hoc edits to running image content. A read-only root filesystem constrains image writes, but separately mounted volumes can remain writable. Inspect each container and mount rather than assuming one setting protects every path.
+
+Writable paths can still hold scripts or plugins that an application executes. Minimal capabilities, suitable identity, system-call restrictions and controlled loading behavior therefore remain relevant. A host runtime socket or broad API credential can also enable changes outside the container's filesystem. Explain the constrained behavior and remaining authority instead of treating filesystem immutability as a complete compromise boundary.
+
+```mermaid
+flowchart TB
+    N0["Reviewed executable image"]
+    N1["Read-only image filesystem"]
+    N2["Narrow writable state mounts"]
+    N3["Restricted process authority"]
+    N4["Controlled replacement"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
+
+Runtime immutability separates necessary state writes from software mutation while preserving other required controls.
+
+Runtime immutability separates necessary state writes from software mutation while preserving other required controls.
 
 ## Common pitfalls
 
