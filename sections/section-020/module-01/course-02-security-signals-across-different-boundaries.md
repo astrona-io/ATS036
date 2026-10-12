@@ -5,6 +5,20 @@ exam_objectives:
 ---
 # Security Signals Across Different Boundaries
 
+Audit records show a workload creation, runtime records show a shell, and application logs show a report read. Each observation establishes a different boundary of a possible incident.
+
+## Learning objectives
+
+- Distinguish API audit, runtime and application security observations.
+- Explain telemetry collection and retention trust boundaries.
+- Relate alert quality to relevant behaviors and response ownership.
+
+## Before you start
+
+This chapter is standalone reading material; no running cluster or installed tools are required. A Pod is the Kubernetes unit for running one or more containers, and a namespace groups namespaced objects. Treat the worked configurations as teaching examples rather than recorded observations from a provisioned environment.
+
+## Responsible components and behavior
+
 An unexpected workload appears, and a confidential report is accessed. application programming interface (API) audit records can explain resource requests, while runtime observations can describe selected process or filesystem activity. Application logs can describe report access. A security investigation needs the sources relevant to the actual boundary rather than assuming one monitoring product records everything.
 
 ## What Each Observation Can Establish
@@ -34,6 +48,29 @@ Detection is not prevention. A scanner or alert can report risk while the worklo
 Suppose audit records show an exposed deployment identity created a workload, and runtime evidence shows it accessed a mounted volume. The identity's grants explain resource authority; the mount and backend rules explain data access. Restore trusted state, revoke exposure and assess the affected data. A deletion event alone does not prove confidentiality was preserved.
 
 The security observation design should state its coverage, retention and sensitivity. Its value is a supported account of behavior and a useful response, not the number of installed dashboards or rules.
+
+## Work through the decision
+
+API audit describes supported requests and responses. Runtime sensing describes supported execution activity. Application records describe their own operations and identities. No single source automatically captures every action or proves that all three belong to one actor.
+
+Correlate object identifiers, lifecycle intervals, request context and timing. A ServiceAccount username identifies a presented credential, which may have been stolen; it does not prove the human behind it. Protect collection and retention against deletion or tampering, and avoid copying sensitive bodies into broad diagnostic stores. State missing observation coverage and alternative explanations alongside any reconstructed timeline.
+
+```mermaid
+flowchart TB
+    N0["API and runtime observations"]
+    N1["Stable identity and timing correlation"]
+    N2["Application operation evidence"]
+    N3["Coverage and integrity review"]
+    N4["Bounded incident explanation"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
+
+Independent signals strengthen attribution only when their scope, identity and timing actually support the connection.
+
+Independent signals strengthen attribution only when their scope, identity and timing actually support the connection.
 
 ## Common pitfalls
 

@@ -5,6 +5,20 @@ exam_objectives:
 ---
 # Collection, Storage And Observation Limits
 
+The application emits records, but the collector cannot export them. A blank dashboard can describe a telemetry failure while requests continue succeeding.
+
+## Learning objectives
+
+- Distinguish API audit, runtime and application security observations.
+- Explain telemetry collection and retention trust boundaries.
+- Relate alert quality to relevant behaviors and response ownership.
+
+## Before you start
+
+This chapter is standalone reading material; no running cluster or installed tools are required. A Pod is the Kubernetes unit for running one or more containers, and a namespace groups namespaced objects. Treat the worked configurations as teaching examples rather than recorded observations from a provisioned environment.
+
+## Responsible components and behavior
+
 The `scout` application must emit enough information to diagnose its database calls. Instrumentation adds measurements and context to application code or supporting components. Automatic instrumentation can cover supported libraries; explicit instrumentation can describe application-specific operations that generic tools cannot infer.
 
 Collection moves telemetry from producers to processing and storage systems. A collector may receive, transform, filter and export signals. A backend stores and queries them, while a dashboard visualizes selected results. These are distinct responsibilities even when one product bundles several of them.
@@ -40,6 +54,29 @@ Suppose a request metric uses five route categories and four response classes. T
 Detailed request identifiers can belong in logs or trace context where the system is designed to store event-level detail. Metrics should usually use dimensions with controlled value sets that support useful aggregation. The tradeoff is between query detail, operating cost and privacy, not maximum label count.
 
 Standardized attribute names and units make signals easier to compare between services. Retention, sampling and access controls should follow the intended diagnostic use. A useful telemetry design states what is emitted, where it goes, which detail is retained and how operators detect a failure of the collection path itself.
+
+## Work through the decision
+
+Producing, collecting, storing and querying telemetry are distinct responsibilities. Instrumentation emits supported observations; a collector processes and exports them; a backend retains them; and a query selects what the reader sees. Failure at any stage can remove visibility without changing the application outcome.
+
+Sampling and retention limit what remains available. Unbounded metric labels can also create excessive cardinality, meaning too many distinct series. Use dimensions that answer a meaningful question without turning each request identity into a series. Compare timestamps, source identity and pipeline health before treating absent data as evidence that an event did not happen.
+
+```mermaid
+flowchart TB
+    N0["Instrumented producer"]
+    N1["Collector and export"]
+    N2["Retained backend data"]
+    N3["Correct scoped query"]
+    N4["Interpreted observation"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
+
+Missing telemetry needs pipeline and coverage checks before it supports a claim about missing application activity.
+
+Missing telemetry needs pipeline and coverage checks before it supports a claim about missing application activity.
 
 ## Common pitfalls
 
