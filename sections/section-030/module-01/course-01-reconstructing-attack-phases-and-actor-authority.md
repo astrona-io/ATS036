@@ -5,6 +5,20 @@ exam_objectives:
 ---
 # Reconstructing Attack Phases And Actor Authority
 
+Deleting the suspicious Pod stops one process, but its controller template still creates replacements with the same compromised behavior. Containment must identify persistence and authority, not only the visible instance.
+
+## Learning objectives
+
+- Build a timeline from API, application, host and network evidence.
+- Distinguish observed actor identity from the human behind a credential.
+- Relate initial access, escalation, persistence and impact hypotheses.
+
+## Before you start
+
+This chapter is standalone reading material; no running cluster or installed tools are required. A Pod is the Kubernetes unit for running one or more containers, and a namespace groups namespaced objects. Treat the worked configurations as teaching examples rather than recorded observations from a provisioned environment.
+
+## Responsible components and behavior
+
 Incident investigation reconstructs what happened, which authority enabled it and what remains affected. Kubernetes environments produce evidence at several boundaries: application requests, API decisions, host processes, network flows and external identity systems. Attack phases provide a useful organizing framework, but the timeline must distinguish actual observations from inferred explanations.
 
 ## Start With A Time And Identity Model
@@ -34,6 +48,29 @@ Preserve volatile evidence when feasible before disruptive changes, following th
 ## Define Recovery Evidence
 
 Recovery includes removing the exploited path, revoking affected credentials, restoring trustworthy definitions and assessing data impact. A clean replacement image does not repair leaked credentials or corrupted external state. Confirm the intended workload behavior and monitoring coverage after restoration. Document what is known, what remains uncertain and which residual risks require follow-up rather than equate a quiet dashboard with complete recovery.
+
+## Work through the decision
+
+Reconstruct observed actions using object unique identifiers, lifecycle intervals and credential ownership. Kubernetes usernames describe presented identities; a stolen token can act under a legitimate name. Attack phases organize hypotheses, but actual events need not follow one fixed order.
+
+Review workload templates, scheduled work, bindings and external credentials for persistence or continued authority. Preserve enough protected evidence before cleanup, then choose actions proportional to the verified scope. A replacement from the same untrusted input can repeat the incident. Recovery checks need trusted artifacts, corrected grants and meaningful operations, rather than only an absence of the original Pod.
+
+```mermaid
+flowchart TB
+    N0["Correlated incident evidence"]
+    N1["Actor authority and persistence scope"]
+    N2["Preserved protected record"]
+    N3["Targeted containment and revocation"]
+    N4["Trusted recovery verification"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+```
+
+Recovery addresses the authority and durable inputs that can reproduce behavior, not just the first observed process.
+
+Recovery addresses the authority and durable inputs that can reproduce behavior, not just the first observed process.
 
 ## Common pitfalls
 
