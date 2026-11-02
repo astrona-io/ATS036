@@ -1,9 +1,9 @@
-# Reading-only content; YAML knowledge checks have a separate index.
 training:
   id: ATS036
   title: 'CKS: Monitoring, Logging and Runtime Security'
-  description: 'Detailed reading material and reusable YAML knowledge checks for CKS: Monitoring, Logging
-    and Runtime Security. Technical content remains draft. No labs or playgrounds.'
+  description: 'Detailed reading material and reusable YAML knowledge checks for CKS:
+    Monitoring, Logging and Runtime Security. Technical content remains draft. No
+    labs or playgrounds.'
   certification:
     name: Certified Kubernetes Security Specialist
     code: CKS
@@ -12,7 +12,8 @@ training:
     weight: 20
     competencies:
     - Perform behavioral analytics to detect malicious activities
-    - Detect threats within physical infrastructure, apps, networks, data, users and workloads
+    - Detect threats within physical infrastructure, apps, networks, data, users and
+      workloads
     - Investigate and identify phases of attack and bad actors within the environment
     - Ensure immutability of containers at runtime
     - Use Kubernetes audit logs to monitor access
@@ -35,8 +36,9 @@ modules:
     path: sections/intro/course-03-how-this-course-is-made.md
 - id: module-010
   title: Perform behavioral analytics to detect malicious activities
-  description: Developed reading and reasoning for Perform behavioral analytics to detect malicious activities.
-  draft: true
+  description: Developed reading and reasoning for Perform behavioral analytics to
+    detect malicious activities.
+  status: alpha
   content:
   - type: reading
     title: Perform behavioral analytics to detect malicious activities
@@ -48,16 +50,40 @@ modules:
     title: Behavioral Detection With Runtime Context
     path: sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
   - type: reading
+    title: Detect A Denied API Access Attempt — Task
+    path: sections/section-010/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Detect A Denied API Access Attempt
+    path: sections/section-010/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: audit-detection
+    task_kind: build
+    learning_goals:
+    - Classify a real denied Secret request and bind the finding to its actor and
+      audit identifier.
+    tags:
+    - cks
+    - audit-detection
+  - type: reading
+    title: Detect A Denied API Access Attempt — Solution
+    path: sections/section-010/module-01/labs/lab-01/solution.md
+  - type: reading
+    title: 'Guided Practice: Detect A Denied API Access Attempt'
+    path: sections/section-010/module-01/course-02-guided-practice.md
+  - type: reading
     title: Summary
-    path: sections/section-010/module-01/course-02-summary.md
+    path: sections/section-010/module-01/course-03-summary.md
 - id: module-020
-  title: Detect threats within physical infrastructure, apps, networks, data, users and workloads
-  description: Developed reading and reasoning for Detect threats within physical infrastructure, apps,
-    networks, data, users and workloads.
-  draft: true
+  title: Detect threats within physical infrastructure, apps, networks, data, users
+    and workloads
+  description: Developed reading and reasoning for Detect threats within physical
+    infrastructure, apps, networks, data, users and workloads.
+  status: alpha
   content:
   - type: reading
-    title: Detect threats within physical infrastructure, apps, networks, data, users and workloads
+    title: Detect threats within physical infrastructure, apps, networks, data, users
+      and workloads
     path: sections/section-020/README.md
   - type: reading
     title: Security Observability And Evidence Quality
@@ -69,13 +95,34 @@ modules:
     title: Security Signals Across Different Boundaries
     path: sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
   - type: reading
+    title: Diagnose A Previous Container Exit — Task
+    path: sections/section-020/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Diagnose A Previous Container Exit
+    path: sections/section-020/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: previous-logs
+    task_kind: build
+    learning_goals:
+    - Select the previous container log and record the corresponding exit evidence.
+    tags:
+    - cks
+    - previous-logs
+  - type: reading
+    title: Diagnose A Previous Container Exit — Solution
+    path: sections/section-020/module-01/labs/lab-01/solution.md
+  - type: reading
+    title: 'Guided Practice: Diagnose A Previous Container Exit'
+    path: sections/section-020/module-01/course-03-guided-practice.md
+  - type: reading
     title: Summary
-    path: sections/section-020/module-01/course-03-summary.md
+    path: sections/section-020/module-01/course-04-summary.md
 - id: module-030
   title: Investigate and identify phases of attack and bad actors within the environment
-  description: Developed reading and reasoning for Investigate and identify phases of attack and bad actors
-    within the environment.
-  draft: true
+  description: Developed reading and reasoning for Investigate and identify phases
+    of attack and bad actors within the environment.
+  status: alpha
   content:
   - type: reading
     title: Investigate and identify phases of attack and bad actors within the environment
@@ -87,12 +134,35 @@ modules:
     title: Reconstructing Attack Phases And Actor Authority
     path: sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
   - type: reading
+    title: Attribute An API Attempt To A Workload Identity — Task
+    path: sections/section-030/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Attribute An API Attempt To A Workload Identity
+    path: sections/section-030/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: audit-attribution
+    task_kind: build
+    learning_goals:
+    - Classify a real denied Secret request and bind the finding to its actor and
+      audit identifier.
+    tags:
+    - cks
+    - audit-attribution
+  - type: reading
+    title: Attribute An API Attempt To A Workload Identity — Solution
+    path: sections/section-030/module-01/labs/lab-01/solution.md
+  - type: reading
+    title: 'Guided Practice: Attribute An API Attempt To A Workload Identity'
+    path: sections/section-030/module-01/course-02-guided-practice.md
+  - type: reading
     title: Summary
-    path: sections/section-030/module-01/course-02-summary.md
+    path: sections/section-030/module-01/course-03-summary.md
 - id: module-040
   title: Ensure immutability of containers at runtime
-  description: Developed reading and reasoning for Ensure immutability of containers at runtime.
-  draft: true
+  description: Developed reading and reasoning for Ensure immutability of containers
+    at runtime.
+  status: alpha
   content:
   - type: reading
     title: Ensure immutability of containers at runtime
@@ -104,12 +174,35 @@ modules:
     title: Constraining Runtime Mutation And Writable Paths
     path: sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
   - type: reading
+    title: Run With A Restricted Security Context — Task
+    path: sections/section-040/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Run With A Restricted Security Context
+    path: sections/section-040/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: security-context
+    task_kind: build
+    learning_goals:
+    - Keep a non-root workload functional with a read-only root filesystem and a writable
+      scratch volume.
+    tags:
+    - cks
+    - security-context
+  - type: reading
+    title: Run With A Restricted Security Context — Solution
+    path: sections/section-040/module-01/labs/lab-01/solution.md
+  - type: reading
+    title: 'Guided Practice: Run With A Restricted Security Context'
+    path: sections/section-040/module-01/course-02-guided-practice.md
+  - type: reading
     title: Summary
-    path: sections/section-040/module-01/course-02-summary.md
+    path: sections/section-040/module-01/course-03-summary.md
 - id: module-050
   title: Use Kubernetes audit logs to monitor access
-  description: Developed reading and reasoning for Use Kubernetes audit logs to monitor access.
-  draft: true
+  description: Developed reading and reasoning for Use Kubernetes audit logs to monitor
+    access.
+  status: alpha
   content:
   - type: reading
     title: Use Kubernetes audit logs to monitor access
@@ -121,5 +214,27 @@ modules:
     title: Designing Useful And Protected Audit Records
     path: sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
   - type: reading
+    title: Verify Metadata Audit Records Exclude Secret Payloads — Task
+    path: sections/section-050/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Verify Metadata Audit Records Exclude Secret Payloads
+    path: sections/section-050/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: audit-redaction
+    task_kind: build
+    learning_goals:
+    - Generate a real Secret read record and verify useful metadata without credential
+      bodies.
+    tags:
+    - cks
+    - audit-redaction
+  - type: reading
+    title: Verify Metadata Audit Records Exclude Secret Payloads — Solution
+    path: sections/section-050/module-01/labs/lab-01/solution.md
+  - type: reading
+    title: 'Guided Practice: Verify Metadata Audit Records Exclude Secret Payloads'
+    path: sections/section-050/module-01/course-02-guided-practice.md
+  - type: reading
     title: Summary
-    path: sections/section-050/module-01/course-02-summary.md
+    path: sections/section-050/module-01/course-03-summary.md
