@@ -1,0 +1,216 @@
+# Knowledge check for section 040, module 01. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-040-01
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-040/module-01
+  title: "Constraining Runtime Mutation And Writable Paths"
+placement:
+  position: after
+  reading: sections/section-040/module-01/course-05-summary.md
+questions:
+  - id: ats036-040-01-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe the writable container layer."
+    source_readings:
+      - sections/section-040/module-01/course-01-the-writable-container-layer.md
+    prompt: "A process writes a file to the root filesystem of a container with default settings. Where does the file go?"
+    options:
+      - id: a
+        text: "Into the image layers, for all future containers"
+        explanation: "Image layers are read-only. The runtime does not change them."
+      - id: b
+        text: "Into the writable layer of this container instance"
+        explanation: "Correct. The layer is created when the container starts and discarded when it is replaced."
+      - id: c
+        text: "Into the node filesystem outside the container"
+        explanation: "Only a volume such as `hostPath` reaches the node."
+    correct_option: b
+    explanation: "Writes go to the container writable layer."
+
+  - id: ats036-040-01-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Choose the fix after a manual change."
+    source_readings:
+      - sections/section-040/module-01/course-01-the-writable-container-layer.md
+    prompt: "An operator patched a file inside a running container to fix a bug. What is the correct long-term action?"
+    options:
+      - id: a
+        text: "Keep the container running because the fix works"
+        explanation: "The change is unreviewed and lost on restart."
+      - id: b
+        text: "Change the image or Pod template and replace the container"
+        explanation: "Correct. A replacement from a reviewed image restores a known state."
+      - id: c
+        text: "Restart the container and expect the file to persist"
+        explanation: "The writable layer is discarded on restart."
+    correct_option: b
+    explanation: "Replace containers; do not patch them."
+
+  - id: ats036-040-01-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Identify the field for a read-only root."
+    source_readings:
+      - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
+    prompt: "Which field makes the root filesystem of a container read-only?"
+    options:
+      - id: a
+        text: "`securityContext.readOnlyRootFilesystem: true` on the container"
+        explanation: "Correct. This field mounts the root filesystem read-only."
+      - id: b
+        text: "`spec.readOnly: true` on the Pod"
+        explanation: "This field does not exist on the Pod."
+      - id: c
+        text: "`runAsNonRoot: true`"
+        explanation: "This stops root users. It does not change the mount."
+    correct_option: a
+    explanation: "The field is set in the container securityContext."
+
+  - id: ats036-040-01-q04
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Choose a writable path for a read-only Pod."
+    source_readings:
+      - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
+    prompt: "An application with a read-only root filesystem needs to write temporary files. What is the recommended approach?"
+    options:
+      - id: a
+        text: "Turn off `readOnlyRootFilesystem`"
+        explanation: "This removes the protection."
+      - id: b
+        text: "Mount an `emptyDir` volume at the path that needs writes"
+        explanation: "Correct. The volume is writable and the rest of the root stays read-only."
+      - id: c
+        text: "Run the container as root"
+        explanation: "Root does not make a read-only mount writable."
+    correct_option: b
+    explanation: "Mount an emptyDir only where writes are needed."
+
+  - id: ats036-040-01-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain allowPrivilegeEscalation."
+    source_readings:
+      - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
+    prompt: "What does `allowPrivilegeEscalation: false` do?"
+    options:
+      - id: a
+        text: "Sets the `no_new_privs` flag so a process cannot gain more privileges than its parent"
+        explanation: "Correct. For example, a set-user-ID binary cannot raise privileges."
+      - id: b
+        text: "Blocks all network access"
+        explanation: "It does not affect networking."
+      - id: c
+        text: "Removes all capabilities"
+        explanation: "`capabilities.drop` does that."
+    correct_option: a
+    explanation: "It sets no_new_privs."
+
+  - id: ats036-040-01-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read the result of a write test."
+    source_readings:
+      - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
+    prompt: "In a Pod with a read-only root and an `emptyDir` at `/scratch`, a user runs `echo test > /root-file` and `echo test > /scratch/file`. What happens?"
+    options:
+      - id: a
+        text: "Both writes succeed"
+        explanation: "The root mount is read-only."
+      - id: b
+        text: "Both writes fail"
+        explanation: "The volume accepts writes."
+      - id: c
+        text: "The first fails with Read-only file system and the second succeeds"
+        explanation: "Correct. Only the volume path is writable."
+    correct_option: c
+    explanation: "Root is read-only; the volume is writable."
+
+  - id: ats036-040-01-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Know the restricted standard."
+    source_readings:
+      - sections/section-040/module-01/course-03-limits-of-a-read-only-filesystem-and-pod-security-admission.md
+    prompt: "A Pod passes the `restricted` Pod Security Standard. What can you say about its root filesystem?"
+    options:
+      - id: a
+        text: "It is read-only"
+        explanation: "The standard does not require this field."
+      - id: b
+        text: "It may still be writable"
+        explanation: "Correct. `restricted` does not require `readOnlyRootFilesystem`."
+      - id: c
+        text: "It is hidden from the process"
+        explanation: "Nothing is hidden."
+    correct_option: b
+    explanation: "Restricted does not require a read-only root."
+
+  - id: ats036-040-01-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose a safe rollout for Pod Security Admission."
+    source_readings:
+      - sections/section-040/module-01/course-03-limits-of-a-read-only-filesystem-and-pod-security-admission.md
+    prompt: "A namespace has many running Deployments. How do you introduce `restricted` with the least risk?"
+    options:
+      - id: a
+        text: "Set `enforce` at once"
+        explanation: "Controllers may fail to create replacement Pods."
+      - id: b
+        text: "Start with `warn` and `audit`, fix the specifications, then use `enforce`"
+        explanation: "Correct. Messages show what would fail before anything is rejected."
+      - id: c
+        text: "Label only the system namespaces"
+        explanation: "These components need privileges."
+    correct_option: b
+    explanation: "Warn and audit first, then enforce."
+
+  - id: ats036-040-01-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Pick the object that enforces a field."
+    source_readings:
+      - sections/section-040/module-01/course-04-verifying-and-enforcing-immutability.md
+    prompt: "You must reject every new Pod in one namespace that does not set `readOnlyRootFilesystem: true`. Which combination does it?"
+    options:
+      - id: a
+        text: "A ValidatingAdmissionPolicy with a CEL expression and a binding with `Deny` for the namespace"
+        explanation: "Correct. The policy holds the rule and the binding sets the scope and the action."
+      - id: b
+        text: "A NetworkPolicy in the namespace"
+        explanation: "NetworkPolicy controls traffic, not Pod fields."
+      - id: c
+        text: "A Role that denies `create` on pods"
+        explanation: "RBAC has no deny rules and does not inspect fields."
+    correct_option: a
+    explanation: "Use a policy plus a binding."
+
+  - id: ats036-040-01-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Control exec access."
+    source_readings:
+      - sections/section-040/module-01/course-04-verifying-and-enforcing-immutability.md
+    prompt: "Which RBAC rule gives a user the right to run `kubectl exec` in Pods?"
+    options:
+      - id: a
+        text: "Verb `get` on resource `pods`"
+        explanation: "This reads the Pod object only."
+      - id: b
+        text: "Verb `create` on resource `pods/exec`"
+        explanation: "Correct. Exec is a subresource and uses the verb `create`."
+      - id: c
+        text: "Verb `update` on resource `pods/status`"
+        explanation: "This changes status, not commands."
+    correct_option: b
+    explanation: "Exec needs create on pods/exec."

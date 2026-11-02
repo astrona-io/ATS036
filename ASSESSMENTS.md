@@ -29,3 +29,15 @@ ID, not display position, so a later renderer can shuffle choices safely.
 
 The banks contain answer keys and are public learning material, so this is not
 a secure examination bank. Do not treat scores as an official CKS result.
+
+## Hands-On Coverage
+
+This course has 5 ungraded module playgrounds and 5 draft independent labs. Tasks and solutions are registered around each lab immediately after its teaching reading. Static configuration, shell/Python/YAML, parser, lifecycle and offline grader checks pass. Live execution remains pending because the session cannot access Podman; installed CLI configuration validation is separately blocked by its maintenance lock.
+
+| Module | Labs in teaching order |
+| --- | --- |
+| 010/01 | Detect A Denied API Access Attempt |
+| 020/01 | Diagnose A Previous Container Exit |
+| 030/01 | Attribute An API Attempt To A Workload Identity |
+| 040/01 | Run With A Restricted Security Context |
+| 050/01 | Verify Metadata Audit Records Exclude Secret Payloads |

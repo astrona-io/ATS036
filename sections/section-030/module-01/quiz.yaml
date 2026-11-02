@@ -1,0 +1,216 @@
+# Knowledge check for section 030, module 01. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-030-01
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-030/module-01
+  title: "Reconstructing Attack Phases And Actor Authority"
+placement:
+  position: after
+  reading: sections/section-030/module-01/course-05-summary.md
+questions:
+  - id: ats036-030-01-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Classify an action by attack phase."
+    source_readings:
+      - sections/section-030/module-01/course-01-attack-phases-in-kubernetes.md
+    prompt: "A process in a Pod uses its ServiceAccount token to ask the API server which actions the ServiceAccount may perform. Which phase is this?"
+    options:
+      - id: a
+        text: "Discovery"
+        explanation: "Correct. The attacker learns what the identity can do in the environment."
+      - id: b
+        text: "Persistence"
+        explanation: "Persistence means staying in the environment after a restart, for example with a new binding or CronJob."
+      - id: c
+        text: "Impact"
+        explanation: "Impact is the final goal, such as data destruction. A permission query changes nothing."
+    correct_option: a
+    explanation: "Listing the permissions of an identity is discovery."
+
+  - id: ats036-030-01-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Classify a Secret read attempt."
+    source_readings:
+      - sections/section-030/module-01/course-01-attack-phases-in-kubernetes.md
+    prompt: "A Pod's identity sends `get` for a Secret and the API server answers `403`. Which statement is correct?"
+    options:
+      - id: a
+        text: "No phase applies, because the request failed"
+        explanation: "A failed attempt still shows an action and intent."
+      - id: b
+        text: "It is a credential access attempt that did not succeed"
+        explanation: "Correct. The goal was to get a secret, and authorization denied it."
+      - id: c
+        text: "It is privilege escalation that succeeded"
+        explanation: "Nothing was escalated, and the request was denied."
+    correct_option: b
+    explanation: "A denied request is still an attempt in the credential access phase."
+
+  - id: ats036-030-01-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the identity format of a ServiceAccount."
+    source_readings:
+      - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
+    prompt: "In an audit event, what is the `user.username` of the ServiceAccount `threat-reader` in the namespace `starfleet`?"
+    options:
+      - id: a
+        text: "`system:serviceaccount:starfleet:threat-reader`"
+        explanation: "Correct. The format is `system:serviceaccount:<namespace>:<name>`."
+      - id: b
+        text: "`starfleet/threat-reader`"
+        explanation: "This is not the authenticated user name format."
+      - id: c
+        text: "`system:node:threat-reader`"
+        explanation: "The `system:node:` prefix is for kubelets."
+    correct_option: a
+    explanation: "ServiceAccounts authenticate as `system:serviceaccount:<namespace>:<name>`."
+
+  - id: ats036-030-01-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read impersonation in an audit event."
+    source_readings:
+      - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
+    prompt: "An audit event has `user.username: admin` and `impersonatedUser.username: system:serviceaccount:starfleet:threat-reader`. Who made the request?"
+    options:
+      - id: a
+        text: "The ServiceAccount `threat-reader`"
+        explanation: "This identity was used for authorization, but it did not send the request."
+      - id: b
+        text: "The caller `admin`, who asked the API server to act as `threat-reader`"
+        explanation: "Correct. `user` is the real caller. `impersonatedUser` is the identity used for authorization."
+      - id: c
+        text: "Nobody can say"
+        explanation: "The two fields together show both the caller and the identity they used."
+    correct_option: b
+    explanation: "Read both fields. The real caller is in `user`."
+
+  - id: ats036-030-01-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Tie an audit event to a Pod."
+    source_readings:
+      - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
+    prompt: "An audit event has the `user.extra` key `authentication.kubernetes.io/pod-uid`. Why is this value better than the Pod name for attribution?"
+    options:
+      - id: a
+        text: "Pod UIDs are secret and cannot be read by others"
+        explanation: "UIDs are visible in the Pod object. That is not the reason."
+      - id: b
+        text: "The UID is unique for the life of one Pod, while a name can be reused by a replacement"
+        explanation: "Correct. A replacement Pod with the same name has a different UID."
+      - id: c
+        text: "The UID is the same for all Pods of a Deployment"
+        explanation: "Each Pod has its own UID."
+    correct_option: b
+    explanation: "UIDs identify one object instance. Names can be reused."
+
+  - id: ats036-030-01-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Judge the reliability of `userAgent`."
+    source_readings:
+      - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
+    prompt: "An audit event has `userAgent: kubectl/v1.35.0`. What does this prove?"
+    options:
+      - id: a
+        text: "The request came from a person on a workstation"
+        explanation: "A program can send any user agent, and `kubectl` can run in a Pod."
+      - id: b
+        text: "The client reported the name `kubectl`, which an attacker can also set"
+        explanation: "Correct. The user agent is chosen by the client, so it is a hint and not proof."
+      - id: c
+        text: "The request was authorized"
+        explanation: "The user agent says nothing about authorization."
+    correct_option: b
+    explanation: "The client sets the user agent. Treat it as a hint."
+
+  - id: ats036-030-01-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Interpret a gap in a timeline."
+    source_readings:
+      - sections/section-030/module-01/course-03-building-a-timeline-from-several-sources.md
+    prompt: "An audit timeline has no events for `pods/exec` in the incident hour. The policy uses the level `None` for everything except `secrets`, `configmaps` and `pods`. What is the correct reading?"
+    options:
+      - id: a
+        text: "Nobody used `exec` in that hour"
+        explanation: "The policy would not have recorded it, so the gap proves nothing."
+      - id: b
+        text: "The API server was down"
+        explanation: "A policy gap does not need an outage."
+      - id: c
+        text: "The policy did not record that request, so the gap is not evidence of no activity"
+        explanation: "Correct. `pods` does not match the `pods/exec` subresource, and the last rule is `None`."
+    correct_option: c
+    explanation: "Read the policy before you read the gaps."
+
+  - id: ats036-030-01-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Find what recreates a Pod."
+    source_readings:
+      - sections/section-030/module-01/course-03-building-a-timeline-from-several-sources.md
+    prompt: "A Pod has `ownerReferences` with `ReplicaSet/probe-7d9c`. That ReplicaSet has the owner `Deployment/probe`. You delete the Pod. What happens?"
+    options:
+      - id: a
+        text: "The ReplicaSet creates a new Pod from the same Deployment template"
+        explanation: "Correct. The template is the source, so the same behavior returns if the template is compromised."
+      - id: b
+        text: "The Pod is gone for good"
+        explanation: "This is true only for a Pod without an owner."
+      - id: c
+        text: "The Deployment is deleted"
+        explanation: "Deleting a Pod does not delete its owners."
+    correct_option: a
+    explanation: "Deleting a controlled Pod creates a replacement. Fix the template."
+
+  - id: ats036-030-01-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Order the containment steps."
+    source_readings:
+      - sections/section-030/module-01/course-04-containment-and-evidence-preservation.md
+    prompt: "A Pod of a Deployment is confirmed compromised. Which order keeps the evidence and removes the attacker's authority?"
+    options:
+      - id: a
+        text: "Delete the Pod, revoke permissions, then save the logs"
+        explanation: "The logs are gone with the Pod."
+      - id: b
+        text: "Preserve evidence, isolate the Pod, revoke the identity's authority, then remove and recover"
+        explanation: "Correct. Each step needs information that removal would destroy."
+      - id: c
+        text: "Scale the Deployment to zero, then check the logs"
+        explanation: "Scaling to zero deletes the Pods, and with them their logs."
+    correct_option: b
+    explanation: "Preserve, isolate, revoke, remove. Deletion is last."
+
+  - id: ats036-030-01-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Decide which tokens survive Pod deletion."
+    source_readings:
+      - sections/section-030/module-01/course-04-containment-and-evidence-preservation.md
+    prompt: "A ServiceAccount token was created with `kubectl create token` and stolen. You delete the Pod that used the ServiceAccount. Is the token still valid?"
+    options:
+      - id: a
+        text: "No, all tokens end with the Pod"
+        explanation: "Only tokens bound to the Pod end with it."
+      - id: b
+        text: "Yes, until it expires or the ServiceAccount is deleted, because it is bound to the ServiceAccount"
+        explanation: "Correct. Revoke it by deleting the ServiceAccount or by waiting for expiry, and limit what it can do."
+      - id: c
+        text: "Yes, but only for read requests"
+        explanation: "Validity does not depend on the verb."
+    correct_option: b
+    explanation: "Tokens created with `kubectl create token` are bound to the ServiceAccount, not to a Pod."

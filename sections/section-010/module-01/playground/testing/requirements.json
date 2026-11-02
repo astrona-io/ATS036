@@ -1,0 +1,26 @@
+{
+  "context": "kind-astro-ats-036-playground-010-01",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "audit-finding",
+      "namespace": "starfleet",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "audit-finding",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "actor": "system:serviceaccount:starfleet:threat-reader",
+          "resource": "secrets",
+          "namespace": "starfleet",
+          "code": "403",
+          "finding": "unauthorized-secret-read"
+        }
+      }
+    }
+  ],
+  "behavior": []
+}

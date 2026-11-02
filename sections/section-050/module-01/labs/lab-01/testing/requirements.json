@@ -1,0 +1,24 @@
+{
+  "context": "kind-astro-ats-036-lab-050-01-01",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "audit-review",
+      "namespace": "starfleet",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "audit-review",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "level": "Metadata",
+          "resource": "secrets",
+          "result": "payload-excluded"
+        }
+      }
+    }
+  ],
+  "behavior": []
+}

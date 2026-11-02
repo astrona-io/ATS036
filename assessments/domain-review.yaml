@@ -11,14 +11,14 @@ scope:
   title: Monitoring, Logging and Runtime Security
 placement:
   position: after
-  reading: sections/section-050/module-01/course-02-summary.md
+  reading: sections/section-050/module-01/course-05-summary.md
 questions:
 - id: ats036-domain-review-q01
   type: single_choice
   difficulty: intermediate
   learning_objective: Build an expected behavior model for a workload.
   source_readings:
-  - sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
+  - sections/section-010/module-01/course-01-expected-behavior-of-a-workload.md
   prompt: Why might a shell in a container be suspicious but not definitive proof of compromise?
   options:
   - id: a
@@ -37,7 +37,7 @@ questions:
   difficulty: intermediate
   learning_objective: Explain runtime rule scope and detection limitations.
   source_readings:
-  - sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
+  - sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
   prompt: What is a runtime rule match?
   options:
   - id: a
@@ -56,7 +56,7 @@ questions:
   difficulty: intermediate
   learning_objective: Choose proportionate investigation and containment evidence.
   source_readings:
-  - sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
+  - sections/section-010/module-01/course-04-triage-tuning-and-response.md
   prompt: What should an investigator preserve before disruptive changes when feasible?
   options:
   - id: a
@@ -75,7 +75,7 @@ questions:
   difficulty: intermediate
   learning_objective: Identify sensitive fields and evidence gaps.
   source_readings:
-  - sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
+  - sections/section-020/module-01/course-03-network-traffic-application-logs-and-evidence-gaps.md
   prompt: An investigation has no record because collection failed. What is the correct interpretation?
   options:
   - id: a
@@ -94,7 +94,7 @@ questions:
   difficulty: intermediate
   learning_objective: Distinguish API audit, runtime and application security observations.
   source_readings:
-  - sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
+  - sections/section-020/module-01/course-01-security-signals-by-layer.md
   prompt: API audit records show resource creation, but the question concerns later file access in a container.
     What additional evidence is relevant?
   options:
@@ -114,7 +114,7 @@ questions:
   difficulty: intermediate
   learning_objective: Relate alert quality to relevant behaviors and response ownership.
   source_readings:
-  - sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
+  - sections/section-020/module-01/course-01-security-signals-by-layer.md
   prompt: A runtime detector reports a suspicious action. Does that prove the action was prevented?
   options:
   - id: a
@@ -133,7 +133,7 @@ questions:
   difficulty: intermediate
   learning_objective: Build a timeline from API, application, host and network evidence.
   source_readings:
-  - sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
+  - sections/section-030/module-01/course-03-building-a-timeline-from-several-sources.md
   prompt: Why correlate audit and runtime evidence?
   options:
   - id: a
@@ -152,7 +152,7 @@ questions:
   difficulty: intermediate
   learning_objective: Distinguish observed actor identity from the human behind a credential.
   source_readings:
-  - sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
+  - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
   prompt: What does an audit username establish most directly?
   options:
   - id: a
@@ -171,7 +171,7 @@ questions:
   difficulty: intermediate
   learning_objective: Contain compromised authority and preserve useful evidence.
   source_readings:
-  - sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
+  - sections/section-030/module-01/course-04-containment-and-evidence-preservation.md
   prompt: Why can deleting a compromised Pod be incomplete containment?
   options:
   - id: a
@@ -190,7 +190,7 @@ questions:
   difficulty: intermediate
   learning_objective: Explain read-only root filesystems and their limits.
   source_readings:
-  - sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
+  - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
   prompt: What does readOnlyRootFilesystem principally constrain?
   options:
   - id: a
@@ -209,7 +209,7 @@ questions:
   difficulty: intermediate
   learning_objective: Separate required temporary data from executable image content.
   source_readings:
-  - sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
+  - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
   prompt: An application needs temporary files. Which design fits a read-only root?
   options:
   - id: a
@@ -228,7 +228,7 @@ questions:
   difficulty: intermediate
   learning_objective: Evaluate replacement-based updates and residual compromise paths.
   source_readings:
-  - sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
+  - sections/section-040/module-01/course-03-limits-of-a-read-only-filesystem-and-pod-security-admission.md
   prompt: Which attack can remain possible with a read-only root?
   options:
   - id: a
@@ -248,7 +248,7 @@ questions:
   difficulty: intermediate
   learning_objective: Explain what Kubernetes audit events record.
   source_readings:
-  - sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
+  - sections/section-050/module-01/course-01-the-audit-event-model.md
   prompt: An API audit event records successful resource creation. What further evidence is needed for
     runtime impact?
   options:
@@ -268,7 +268,7 @@ questions:
   difficulty: intermediate
   learning_objective: Compare Metadata, Request and RequestResponse audit detail.
   source_readings:
-  - sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
+  - sections/section-050/module-01/course-01-the-audit-event-model.md
   prompt: An audit policy records full bodies for sensitive Secret requests. What risk arises?
   options:
   - id: a
@@ -287,7 +287,7 @@ questions:
   difficulty: intermediate
   learning_objective: Relate audit retention and protection to investigation.
   source_readings:
-  - sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
+  - sections/section-050/module-01/course-03-api-server-flags-backends-and-troubleshooting.md
   prompt: No record remains for an old action after retention expired. What conclusion is supported?
   options:
   - id: a

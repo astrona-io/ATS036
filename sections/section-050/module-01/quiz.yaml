@@ -1,0 +1,216 @@
+# Knowledge check for section 050, module 01. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-050-01
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-050/module-01
+  title: "Designing Useful And Protected Audit Records"
+placement:
+  position: after
+  reading: sections/section-050/module-01/course-05-summary.md
+questions:
+  - id: ats036-050-01-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the audit levels."
+    source_readings:
+      - sections/section-050/module-01/course-01-the-audit-event-model.md
+    prompt: "Which audit level records the request body but not the response body?"
+    options:
+      - id: a
+        text: "`Metadata`"
+        explanation: "Metadata has neither body."
+      - id: b
+        text: "`Request`"
+        explanation: "Correct. The event holds the metadata and the request body."
+      - id: c
+        text: "`RequestResponse`"
+        explanation: "This level also holds the response body."
+    correct_option: b
+    explanation: "Request records the request body only."
+
+  - id: ats036-050-01-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Pick the stage with the outcome."
+    source_readings:
+      - sections/section-050/module-01/course-01-the-audit-event-model.md
+    prompt: "Which stage holds the final HTTP status code of a normal request?"
+    options:
+      - id: a
+        text: "`RequestReceived`"
+        explanation: "This stage is written before any handler runs, so no status exists."
+      - id: b
+        text: "`ResponseComplete`"
+        explanation: "Correct. It is written after the response body is sent."
+      - id: c
+        text: "`Panic`"
+        explanation: "This stage is only for internal handler failures."
+    correct_option: b
+    explanation: "ResponseComplete carries the final status."
+
+  - id: ats036-050-01-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Choose the safe level for Secrets."
+    source_readings:
+      - sections/section-050/module-01/course-01-the-audit-event-model.md
+    prompt: "Which level is the safe choice for Secrets?"
+    options:
+      - id: a
+        text: "`RequestResponse`"
+        explanation: "The response body contains the Secret data."
+      - id: b
+        text: "`Request`"
+        explanation: "A create or update request body contains the Secret data."
+      - id: c
+        text: "`Metadata`"
+        explanation: "Correct. It records the access without the data."
+    correct_option: c
+    explanation: "Metadata keeps credentials out of the log."
+
+  - id: ats036-050-01-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Understand rule order."
+    source_readings:
+      - sections/section-050/module-01/course-02-writing-an-audit-policy.md
+    prompt: "A policy has a rule with no filters and level `Metadata` first, and a rule for Secrets at level `RequestResponse` after it. What happens to a Secret read?"
+    options:
+      - id: a
+        text: "It is logged at `RequestResponse`"
+        explanation: "The first rule already matched."
+      - id: b
+        text: "It is logged at `Metadata`"
+        explanation: "Correct. The first matching rule wins and later rules are ignored."
+      - id: c
+        text: "It is not logged"
+        explanation: "The first rule matches every request."
+    correct_option: b
+    explanation: "First match wins."
+
+  - id: ats036-050-01-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Find the exec gap."
+    source_readings:
+      - sections/section-050/module-01/course-02-writing-an-audit-policy.md
+    prompt: "A rule records `resources: [\"pods\"]` at `Metadata`. A user runs `kubectl exec`. Is the exec request recorded by this rule?"
+    options:
+      - id: a
+        text: "Yes, because exec is an action on a Pod"
+        explanation: "The rule matches the resource name, not the action."
+      - id: b
+        text: "No, because `pods/exec` is a subresource that the name `pods` does not match"
+        explanation: "Correct. Add `pods/exec` to the rule."
+      - id: c
+        text: "Only when the command succeeds"
+        explanation: "The outcome does not change matching."
+    correct_option: b
+    explanation: "Subresources need their own entries."
+
+  - id: ats036-050-01-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Know the effect of no match."
+    source_readings:
+      - sections/section-050/module-01/course-02-writing-an-audit-policy.md
+    prompt: "What happens to a request that matches no rule in the policy?"
+    options:
+      - id: a
+        text: "It is logged at `Metadata`"
+        explanation: "There is no default level."
+      - id: b
+        text: "It is not logged"
+        explanation: "Correct. Requests without a matching rule are not recorded."
+      - id: c
+        text: "The API server rejects it"
+        explanation: "Auditing never rejects requests, except in blocking-strict mode when writing fails."
+    correct_option: b
+    explanation: "No rule, no record."
+
+  - id: ats036-050-01-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read the flags."
+    source_readings:
+      - sections/section-050/module-01/course-03-api-server-flags-backends-and-troubleshooting.md
+    prompt: "Which flag sets the path of the audit log file?"
+    options:
+      - id: a
+        text: "`--audit-policy-file`"
+        explanation: "This flag loads the policy."
+      - id: b
+        text: "`--audit-log-path`"
+        explanation: "Correct. This flag sets the log file."
+      - id: c
+        text: "`--audit-log-maxsize`"
+        explanation: "This flag sets the size at which the file rotates."
+    correct_option: b
+    explanation: "audit-log-path sets the file."
+
+  - id: ats036-050-01-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Troubleshoot an API server that does not start."
+    source_readings:
+      - sections/section-050/module-01/course-03-api-server-flags-backends-and-troubleshooting.md
+    prompt: "After adding `--audit-policy-file` to the API server static Pod, the API server does not start. Which cause is most likely?"
+    options:
+      - id: a
+        text: "The policy file is not mounted into the container"
+        explanation: "Correct. The path does not exist inside the container without a volume and a mount."
+      - id: b
+        text: "The kubelet disabled auditing"
+        explanation: "The kubelet does not control audit."
+      - id: c
+        text: "The etcd database is full"
+        explanation: "This does not depend on the audit flag."
+    correct_option: a
+    explanation: "Mount the policy file."
+
+  - id: ats036-050-01-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Pick the webhook mode."
+    source_readings:
+      - sections/section-050/module-01/course-03-api-server-flags-backends-and-troubleshooting.md
+    prompt: "You must not lose events even when the collector is slow, and you accept slower API requests. Which mode fits?"
+    options:
+      - id: a
+        text: "`batch`"
+        explanation: "Events can be dropped when the buffer is full."
+      - id: b
+        text: "`blocking`"
+        explanation: "Correct. Each request waits until its event is sent."
+      - id: c
+        text: "No mode; use the log backend only"
+        explanation: "The webhook has modes for this reason."
+    correct_option: b
+    explanation: "Blocking avoids drops at the cost of latency."
+
+  - id: ats036-050-01-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Interpret a denied request."
+    source_readings:
+      - sections/section-050/module-01/course-04-reading-audit-records-to-monitor-access.md
+    prompt: "An event shows `user.username: kubernetes-admin`, `impersonatedUser.username: system:serviceaccount:outpost:default`, `verb: get`, resource `secrets` and code `403`. What does it mean?"
+    options:
+      - id: a
+        text: "The administrator read the Secret"
+        explanation: "The status code is 403, so the request was denied."
+      - id: b
+        text: "The ServiceAccount sent the request itself"
+        explanation: "The `user` field shows the caller, who used impersonation."
+      - id: c
+        text: "The administrator asked to act as the ServiceAccount, and authorization denied the read"
+        explanation: "Correct. `user` is the caller and `impersonatedUser` is the identity checked by authorization."
+    correct_option: c
+    explanation: "403 with an impersonated user shows a denied attempt by the caller."

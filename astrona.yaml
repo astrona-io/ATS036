@@ -2,8 +2,8 @@ training:
   id: ATS036
   title: 'CKS: Monitoring, Logging and Runtime Security'
   description: 'Detailed reading material and reusable YAML knowledge checks for CKS:
-    Monitoring, Logging and Runtime Security. Technical content remains draft. No
-    labs or playgrounds.'
+    Monitoring, Logging and Runtime Security. Technical content remains draft. Each
+    module has a playground, a graded lab and a knowledge check.'
   certification:
     name: Certified Kubernetes Security Specialist
     code: CKS
@@ -44,11 +44,17 @@ modules:
     title: Perform behavioral analytics to detect malicious activities
     path: sections/section-010/README.md
   - type: reading
-    title: Behavioral Detection With Runtime Context
+    title: "Behavioral Detection With Runtime Context"
     path: sections/section-010/module-01/course.md
   - type: reading
-    title: Behavioral Detection With Runtime Context
-    path: sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
+    title: "Expected Behavior Of A Workload"
+    path: sections/section-010/module-01/course-01-expected-behavior-of-a-workload.md
+  - type: reading
+    title: "Syscalls, eBPF And Falco Rules"
+    path: sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
+  - type: reading
+    title: "Audit Records As Behavioral Evidence"
+    path: sections/section-010/module-01/course-03-audit-records-as-behavioral-evidence.md
   - type: reading
     title: Detect A Denied API Access Attempt — Task
     path: sections/section-010/module-01/labs/lab-01/question.md
@@ -69,11 +75,15 @@ modules:
     title: Detect A Denied API Access Attempt — Solution
     path: sections/section-010/module-01/labs/lab-01/solution.md
   - type: reading
-    title: 'Guided Practice: Detect A Denied API Access Attempt'
-    path: sections/section-010/module-01/course-02-guided-practice.md
+    title: "Triage, Tuning And Response To An Alert"
+    path: sections/section-010/module-01/course-04-triage-tuning-and-response.md
   - type: reading
-    title: Summary
-    path: sections/section-010/module-01/course-03-summary.md
+    title: "Summary"
+    path: sections/section-010/module-01/course-05-summary.md
+  - type: quiz
+    title: "Knowledge Check: Behavioral Detection With Runtime Context"
+    path: sections/section-010/module-01/quiz.yaml
+    question_count: 10
 - id: module-020
   title: Detect threats within physical infrastructure, apps, networks, data, users
     and workloads
@@ -86,14 +96,14 @@ modules:
       and workloads
     path: sections/section-020/README.md
   - type: reading
-    title: Security Observability And Evidence Quality
+    title: "Security Observability And Evidence Quality"
     path: sections/section-020/module-01/course.md
   - type: reading
-    title: Collection, Storage And Observation Limits
-    path: sections/section-020/module-01/course-01-collection-storage-and-observation-limits.md
+    title: "Security Signals By Layer"
+    path: sections/section-020/module-01/course-01-security-signals-by-layer.md
   - type: reading
-    title: Security Signals Across Different Boundaries
-    path: sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
+    title: "Workload Logs, Restarts And Exit Evidence"
+    path: sections/section-020/module-01/course-02-workload-logs-restarts-and-exit-evidence.md
   - type: reading
     title: Diagnose A Previous Container Exit — Task
     path: sections/section-020/module-01/labs/lab-01/question.md
@@ -113,11 +123,15 @@ modules:
     title: Diagnose A Previous Container Exit — Solution
     path: sections/section-020/module-01/labs/lab-01/solution.md
   - type: reading
-    title: 'Guided Practice: Diagnose A Previous Container Exit'
-    path: sections/section-020/module-01/course-03-guided-practice.md
+    title: "Network Traffic, Application Logs And Evidence Gaps"
+    path: sections/section-020/module-01/course-03-network-traffic-application-logs-and-evidence-gaps.md
   - type: reading
-    title: Summary
+    title: "Summary"
     path: sections/section-020/module-01/course-04-summary.md
+  - type: quiz
+    title: "Knowledge Check: Security Observability And Evidence Quality"
+    path: sections/section-020/module-01/quiz.yaml
+    question_count: 10
 - id: module-030
   title: Investigate and identify phases of attack and bad actors within the environment
   description: Developed reading and reasoning for Investigate and identify phases
@@ -128,11 +142,14 @@ modules:
     title: Investigate and identify phases of attack and bad actors within the environment
     path: sections/section-030/README.md
   - type: reading
-    title: Reconstructing Attack Phases And Actor Authority
+    title: "Reconstructing Attack Phases And Actor Authority"
     path: sections/section-030/module-01/course.md
   - type: reading
-    title: Reconstructing Attack Phases And Actor Authority
-    path: sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
+    title: "Attack Phases In Kubernetes"
+    path: sections/section-030/module-01/course-01-attack-phases-in-kubernetes.md
+  - type: reading
+    title: "Actor Identity In Audit Records"
+    path: sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
   - type: reading
     title: Attribute An API Attempt To A Workload Identity — Task
     path: sections/section-030/module-01/labs/lab-01/question.md
@@ -153,11 +170,18 @@ modules:
     title: Attribute An API Attempt To A Workload Identity — Solution
     path: sections/section-030/module-01/labs/lab-01/solution.md
   - type: reading
-    title: 'Guided Practice: Attribute An API Attempt To A Workload Identity'
-    path: sections/section-030/module-01/course-02-guided-practice.md
+    title: "Building A Timeline From Several Sources"
+    path: sections/section-030/module-01/course-03-building-a-timeline-from-several-sources.md
   - type: reading
-    title: Summary
-    path: sections/section-030/module-01/course-03-summary.md
+    title: "Containment And Evidence Preservation"
+    path: sections/section-030/module-01/course-04-containment-and-evidence-preservation.md
+  - type: reading
+    title: "Summary"
+    path: sections/section-030/module-01/course-05-summary.md
+  - type: quiz
+    title: "Knowledge Check: Reconstructing Attack Phases And Actor Authority"
+    path: sections/section-030/module-01/quiz.yaml
+    question_count: 10
 - id: module-040
   title: Ensure immutability of containers at runtime
   description: Developed reading and reasoning for Ensure immutability of containers
@@ -168,11 +192,14 @@ modules:
     title: Ensure immutability of containers at runtime
     path: sections/section-040/README.md
   - type: reading
-    title: Constraining Runtime Mutation And Writable Paths
+    title: "Constraining Runtime Mutation And Writable Paths"
     path: sections/section-040/module-01/course.md
   - type: reading
-    title: Constraining Runtime Mutation And Writable Paths
-    path: sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
+    title: "The Writable Container Layer"
+    path: sections/section-040/module-01/course-01-the-writable-container-layer.md
+  - type: reading
+    title: "Read-Only Root Filesystem And Security Context"
+    path: sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
   - type: reading
     title: Run With A Restricted Security Context — Task
     path: sections/section-040/module-01/labs/lab-01/question.md
@@ -193,11 +220,18 @@ modules:
     title: Run With A Restricted Security Context — Solution
     path: sections/section-040/module-01/labs/lab-01/solution.md
   - type: reading
-    title: 'Guided Practice: Run With A Restricted Security Context'
-    path: sections/section-040/module-01/course-02-guided-practice.md
+    title: "Limits Of A Read-Only Filesystem And Pod Security Admission"
+    path: sections/section-040/module-01/course-03-limits-of-a-read-only-filesystem-and-pod-security-admission.md
   - type: reading
-    title: Summary
-    path: sections/section-040/module-01/course-03-summary.md
+    title: "Verifying And Enforcing Immutability"
+    path: sections/section-040/module-01/course-04-verifying-and-enforcing-immutability.md
+  - type: reading
+    title: "Summary"
+    path: sections/section-040/module-01/course-05-summary.md
+  - type: quiz
+    title: "Knowledge Check: Constraining Runtime Mutation And Writable Paths"
+    path: sections/section-040/module-01/quiz.yaml
+    question_count: 10
 - id: module-050
   title: Use Kubernetes audit logs to monitor access
   description: Developed reading and reasoning for Use Kubernetes audit logs to monitor
@@ -208,11 +242,20 @@ modules:
     title: Use Kubernetes audit logs to monitor access
     path: sections/section-050/README.md
   - type: reading
-    title: Audit Policy And Security Evidence
+    title: "Using Kubernetes Audit Logs To Monitor Access"
     path: sections/section-050/module-01/course.md
   - type: reading
-    title: Designing Useful And Protected Audit Records
-    path: sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
+    title: "The Audit Event Model"
+    path: sections/section-050/module-01/course-01-the-audit-event-model.md
+  - type: reading
+    title: "Writing An Audit Policy"
+    path: sections/section-050/module-01/course-02-writing-an-audit-policy.md
+  - type: reading
+    title: "API Server Flags, Backends And Troubleshooting"
+    path: sections/section-050/module-01/course-03-api-server-flags-backends-and-troubleshooting.md
+  - type: reading
+    title: "Reading Audit Records To Monitor Access"
+    path: sections/section-050/module-01/course-04-reading-audit-records-to-monitor-access.md
   - type: reading
     title: Verify Metadata Audit Records Exclude Secret Payloads — Task
     path: sections/section-050/module-01/labs/lab-01/question.md
@@ -233,8 +276,9 @@ modules:
     title: Verify Metadata Audit Records Exclude Secret Payloads — Solution
     path: sections/section-050/module-01/labs/lab-01/solution.md
   - type: reading
-    title: 'Guided Practice: Verify Metadata Audit Records Exclude Secret Payloads'
-    path: sections/section-050/module-01/course-02-guided-practice.md
-  - type: reading
-    title: Summary
-    path: sections/section-050/module-01/course-03-summary.md
+    title: "Summary"
+    path: sections/section-050/module-01/course-05-summary.md
+  - type: quiz
+    title: "Knowledge Check: Using Kubernetes Audit Logs To Monitor Access"
+    path: sections/section-050/module-01/quiz.yaml
+    question_count: 10

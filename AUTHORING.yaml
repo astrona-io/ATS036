@@ -1,5 +1,6 @@
 version: 1
-approval: CKS requested 2026-10-11; established reading-only scope
+approval: Maintainer requested CKA and CKS playgrounds and graded labs on 2026-10-13,
+  superseding the earlier reading-only scope.
 course:
   id: ATS036
   certification:
@@ -10,12 +11,13 @@ course:
     weight: 20
     competencies:
     - Perform behavioral analytics to detect malicious activities
-    - Detect threats within physical infrastructure, apps, networks, data, users and workloads
+    - Detect threats within physical infrastructure, apps, networks, data, users and
+      workloads
     - Investigate and identify phases of attack and bad actors within the environment
     - Ensure immutability of containers at runtime
     - Use Kubernetes audit logs to monitor access
 defaults:
-  playground: false
+  playground: true
   module_lab: false
   capstone: false
   section_quiz: false
@@ -37,14 +39,28 @@ sections:
     - Choose proportionate investigation and containment evidence.
     outline:
     - Behavioral Detection With Runtime Context
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
       adapted_from: null
+    - reading: sections/section-010/module-01/course-02-guided-practice.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-010/module-01/labs/lab-01
+      after_reading: sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
+      objective: Classify a real denied Secret request and bind the finding to its
+        actor and audit identifier.
+      status: draft
+      runtime_verification: pending
+    practice_readings:
+    - sections/section-010/module-01/course-02-guided-practice.md
 - id: section-020
-  title: Detect threats within physical infrastructure, apps, networks, data, users and workloads
-  curriculum_item: Detect threats within physical infrastructure, apps, networks, data, users and workloads
+  title: Detect threats within physical infrastructure, apps, networks, data, users
+    and workloads
+  curriculum_item: Detect threats within physical infrastructure, apps, networks,
+    data, users and workloads
   capstone: false
   section_quiz: false
   modules:
@@ -58,16 +74,29 @@ sections:
     outline:
     - Collection, Storage And Observation Limits
     - Security Signals Across Different Boundaries
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-020/module-01/course-01-collection-storage-and-observation-limits.md
       adapted_from: ATS045/sections/section-030/module-01/course-01-collection-storage-and-observation-limits.md
     - reading: sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
       adapted_from: ATS045/sections/section-030/module-01/course-02-security-signals-across-different-boundaries.md
+    - reading: sections/section-020/module-01/course-03-guided-practice.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-020/module-01/labs/lab-01
+      after_reading: sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
+      objective: Select the previous container log and record the corresponding exit
+        evidence.
+      status: draft
+      runtime_verification: pending
+    practice_readings:
+    - sections/section-020/module-01/course-03-guided-practice.md
 - id: section-030
   title: Investigate and identify phases of attack and bad actors within the environment
-  curriculum_item: Investigate and identify phases of attack and bad actors within the environment
+  curriculum_item: Investigate and identify phases of attack and bad actors within
+    the environment
   capstone: false
   section_quiz: false
   modules:
@@ -80,11 +109,23 @@ sections:
     - Contain compromised authority and preserve useful evidence.
     outline:
     - Reconstructing Attack Phases And Actor Authority
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
       adapted_from: null
+    - reading: sections/section-030/module-01/course-02-guided-practice.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-030/module-01/labs/lab-01
+      after_reading: sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
+      objective: Classify a real denied Secret request and bind the finding to its
+        actor and audit identifier.
+      status: draft
+      runtime_verification: pending
+    practice_readings:
+    - sections/section-030/module-01/course-02-guided-practice.md
 - id: section-040
   title: Ensure immutability of containers at runtime
   curriculum_item: Ensure immutability of containers at runtime
@@ -100,11 +141,23 @@ sections:
     - Evaluate replacement-based updates and residual compromise paths.
     outline:
     - Constraining Runtime Mutation And Writable Paths
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
       adapted_from: null
+    - reading: sections/section-040/module-01/course-02-guided-practice.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-040/module-01/labs/lab-01
+      after_reading: sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
+      objective: Keep a non-root workload functional with a read-only root filesystem
+        and a writable scratch volume.
+      status: draft
+      runtime_verification: pending
+    practice_readings:
+    - sections/section-040/module-01/course-02-guided-practice.md
 - id: section-050
   title: Use Kubernetes audit logs to monitor access
   curriculum_item: Use Kubernetes audit logs to monitor access
@@ -120,8 +173,20 @@ sections:
     - Distinguish API evidence from runtime and application evidence.
     outline:
     - Designing Useful And Protected Audit Records
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
       adapted_from: ATS043/sections/section-070/module-01/course-01-designing-useful-and-protected-audit-records.md
+    - reading: sections/section-050/module-01/course-02-guided-practice.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-050/module-01/labs/lab-01
+      after_reading: sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
+      objective: Generate a real Secret read record and verify useful metadata without
+        credential bodies.
+      status: draft
+      runtime_verification: pending
+    practice_readings:
+    - sections/section-050/module-01/course-02-guided-practice.md
