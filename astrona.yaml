@@ -38,7 +38,7 @@ modules:
   title: Perform behavioral analytics to detect malicious activities
   description: Developed reading and reasoning for Perform behavioral analytics to
     detect malicious activities.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Perform behavioral analytics to detect malicious activities
@@ -79,7 +79,7 @@ modules:
     and workloads
   description: Developed reading and reasoning for Detect threats within physical
     infrastructure, apps, networks, data, users and workloads.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Detect threats within physical infrastructure, apps, networks, data, users
@@ -122,7 +122,7 @@ modules:
   title: Investigate and identify phases of attack and bad actors within the environment
   description: Developed reading and reasoning for Investigate and identify phases
     of attack and bad actors within the environment.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Investigate and identify phases of attack and bad actors within the environment
@@ -162,7 +162,7 @@ modules:
   title: Ensure immutability of containers at runtime
   description: Developed reading and reasoning for Ensure immutability of containers
     at runtime.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Ensure immutability of containers at runtime
@@ -202,7 +202,7 @@ modules:
   title: Use Kubernetes audit logs to monitor access
   description: Developed reading and reasoning for Use Kubernetes audit logs to monitor
     access.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Use Kubernetes audit logs to monitor access
