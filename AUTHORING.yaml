@@ -1,0 +1,127 @@
+version: 1
+approval: CKS requested 2026-10-11; established reading-only scope
+course:
+  id: ATS036
+  certification:
+    name: Certified Kubernetes Security Specialist
+    code: CKS
+    provider: CNCF / Linux Foundation
+    domain: Monitoring, Logging and Runtime Security
+    weight: 20
+    competencies:
+    - Perform behavioral analytics to detect malicious activities
+    - Detect threats within physical infrastructure, apps, networks, data, users and workloads
+    - Investigate and identify phases of attack and bad actors within the environment
+    - Ensure immutability of containers at runtime
+    - Use Kubernetes audit logs to monitor access
+defaults:
+  playground: false
+  module_lab: false
+  capstone: false
+  section_quiz: false
+  final_quiz: true
+assessment_format: YAML question banks v1, registered in assessments/index.yaml
+sections:
+- id: section-010
+  title: Perform behavioral analytics to detect malicious activities
+  curriculum_item: Perform behavioral analytics to detect malicious activities
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Behavioral Detection With Runtime Context
+    objectives:
+    - Build an expected behavior model for a workload.
+    - Relate syscall and process observations to security hypotheses.
+    - Explain runtime rule scope and detection limitations.
+    - Choose proportionate investigation and containment evidence.
+    outline:
+    - Behavioral Detection With Runtime Context
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
+      adapted_from: null
+- id: section-020
+  title: Detect threats within physical infrastructure, apps, networks, data, users and workloads
+  curriculum_item: Detect threats within physical infrastructure, apps, networks, data, users and workloads
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Security Observability And Evidence Quality
+    objectives:
+    - Distinguish API audit, runtime and application security observations.
+    - Explain telemetry collection and retention trust boundaries.
+    - Relate alert quality to relevant behaviors and response ownership.
+    - Identify sensitive fields and evidence gaps.
+    outline:
+    - Collection, Storage And Observation Limits
+    - Security Signals Across Different Boundaries
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-020/module-01/course-01-collection-storage-and-observation-limits.md
+      adapted_from: ATS045/sections/section-030/module-01/course-01-collection-storage-and-observation-limits.md
+    - reading: sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
+      adapted_from: ATS045/sections/section-030/module-01/course-02-security-signals-across-different-boundaries.md
+- id: section-030
+  title: Investigate and identify phases of attack and bad actors within the environment
+  curriculum_item: Investigate and identify phases of attack and bad actors within the environment
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Reconstructing Attack Phases And Actor Authority
+    objectives:
+    - Build a timeline from API, application, host and network evidence.
+    - Distinguish observed actor identity from the human behind a credential.
+    - Relate initial access, escalation, persistence and impact hypotheses.
+    - Contain compromised authority and preserve useful evidence.
+    outline:
+    - Reconstructing Attack Phases And Actor Authority
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
+      adapted_from: null
+- id: section-040
+  title: Ensure immutability of containers at runtime
+  curriculum_item: Ensure immutability of containers at runtime
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Constraining Runtime Mutation And Writable Paths
+    objectives:
+    - Explain read-only root filesystems and their limits.
+    - Separate required temporary data from executable image content.
+    - Relate capabilities, identity and host mounts to immutability.
+    - Evaluate replacement-based updates and residual compromise paths.
+    outline:
+    - Constraining Runtime Mutation And Writable Paths
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
+      adapted_from: null
+- id: section-050
+  title: Use Kubernetes audit logs to monitor access
+  curriculum_item: Use Kubernetes audit logs to monitor access
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Audit Policy And Security Evidence
+    objectives:
+    - Explain what Kubernetes audit events record.
+    - Compare Metadata, Request and RequestResponse audit detail.
+    - Relate audit retention and protection to investigation.
+    - Distinguish API evidence from runtime and application evidence.
+    outline:
+    - Designing Useful And Protected Audit Records
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
+      adapted_from: ATS043/sections/section-070/module-01/course-01-designing-useful-and-protected-audit-records.md
