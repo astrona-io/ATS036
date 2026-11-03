@@ -27,7 +27,7 @@ sections:
 - id: section-010
   title: Perform behavioral analytics to detect malicious activities
   curriculum_item: Perform behavioral analytics to detect malicious activities
-  capstone: false
+  capstone: true
   section_quiz: false
   modules:
   - id: module-01
@@ -56,12 +56,52 @@ sections:
       runtime_verification: pending
     practice_readings:
     - sections/section-010/module-01/course-02-guided-practice.md
+  - id: module-02
+    title: Writing Runtime Detection Rules
+    objectives:
+    - Name the parts of a Falco rule file and say what each part does.
+    - Write a rule condition limited to containers, a namespace and a set of process names.
+    - Add an exception for approved behavior without disabling the rule.
+    - Explain what a process rule cannot see.
+    outline:
+    - Anatomy Of A Falco Rule File
+    - Scope A Shell Rule To A Namespace
+    - Exceptions, Testing And Limits Of A Rule
+    playground: true
+    module_lab: true
+    labs:
+    - id: lab-01
+      path: sections/section-010/module-02/labs/lab-01
+      after_reading: sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
+      objective: Store a runtime rule scoped to containers, one namespace and shell names, with a useful output.
+      status: draft
+      runtime_verification: pending
+  - id: module-03
+    title: Detecting Command Execution Through API Audit Records
+    objectives:
+    - Say which audit policy rule records exec and portforward requests.
+    - Find the audit record of a kubectl exec request and name its Pod.
+    - Name the authenticated user, groups, source address and client of a request.
+    - Explain what an exec audit record proves and what it does not prove.
+    outline:
+    - Exec And Port-Forward In The Audit Log
+    - Who Sent The Request: Identity And Origin
+    - Correlating Audit Records With Other Evidence
+    playground: true
+    module_lab: true
+    labs:
+    - id: lab-01
+      path: sections/section-010/module-03/labs/lab-01
+      after_reading: sections/section-010/module-03/course-02-who-sent-the-request-identity-and-origin.md
+      objective: Bind an exec finding to its actor, Pod, stage and audit identifier.
+      status: draft
+      runtime_verification: pending
 - id: section-020
   title: Detect threats within physical infrastructure, apps, networks, data, users
     and workloads
   curriculum_item: Detect threats within physical infrastructure, apps, networks,
     data, users and workloads
-  capstone: false
+  capstone: true
   section_quiz: false
   modules:
   - id: module-01
@@ -93,11 +133,31 @@ sections:
       runtime_verification: pending
     practice_readings:
     - sections/section-020/module-01/course-03-guided-practice.md
+  - id: module-02
+    title: Detecting Risky Workloads From Events, Specifications And Logs
+    objectives:
+    - Read the events of a Pod and explain why events are short-lived.
+    - Find privileged containers and host directory mounts in Pod specifications.
+    - Count security-relevant application log lines and judge them by rate and source.
+    outline:
+    - Kubernetes Events As A Short-Lived Signal
+    - Reading A Pod Specification For Risky Settings
+    - Application Log Signals Of Abuse
+  - id: module-03
+    title: Detecting Threats To Data And User Accounts
+    objectives:
+    - Name ServiceAccount identities and find the account a Pod uses.
+    - Test which accounts can read Secrets and find the granting binding.
+    - List the paths along which a Secret value can be read.
+    outline:
+    - ServiceAccounts And User Identity
+    - Who Can Read Secrets
+    - Secret Exposure Paths
 - id: section-030
   title: Investigate and identify phases of attack and bad actors within the environment
   curriculum_item: Investigate and identify phases of attack and bad actors within
     the environment
-  capstone: false
+  capstone: true
   section_quiz: false
   modules:
   - id: module-01
@@ -126,10 +186,60 @@ sections:
       runtime_verification: pending
     practice_readings:
     - sections/section-030/module-01/course-02-guided-practice.md
+  - id: module-02
+    title: Finding Persistence And Escalated Authority
+    objectives:
+    - List the objects an attacker can use to persist.
+    - Follow ownerReferences from a Pod to the controller that recreates it.
+    - Test what a ServiceAccount can do and find the binding behind it.
+    - Contain a persistent workload by preserving it, scaling it to zero and removing the binding.
+    outline:
+    - Persistence In Workload Templates And Schedules
+    - Privilege Escalation Through Bindings And Pod Settings
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
+      adapted_from: null
+    - reading: sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-030/module-02/labs/lab-01
+      after_reading: sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+      objective: Find the controller and binding behind an unexpected Pod, record them and contain both.
+      status: draft
+      runtime_verification: pending
+    practice_readings: []
+  - id: module-03
+    title: Tracing Lateral Movement And Impact
+    objectives:
+    - Map a client address in an application log to a Pod.
+    - Separate kubelet and component requests from an intruder.
+    - State what a missing log line does and does not prove.
+    - Find signs of impact in limits, restarts and events.
+    outline:
+    - Lateral Movement And Network Evidence
+    - Impact And Resource Abuse
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+      adapted_from: null
+    - reading: sections/section-030/module-03/course-02-impact-and-resource-abuse.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-030/module-03/labs/lab-01
+      after_reading: sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+      objective: Identify the Pod that sends unexpected requests to the probe Service and record its address.
+      status: draft
+      runtime_verification: pending
+    practice_readings: []
 - id: section-040
   title: Ensure immutability of containers at runtime
   curriculum_item: Ensure immutability of containers at runtime
-  capstone: false
+  capstone: true
   section_quiz: false
   modules:
   - id: module-01
@@ -158,6 +268,67 @@ sections:
       runtime_verification: pending
     practice_readings:
     - sections/section-040/module-01/course-02-guided-practice.md
+  - id: module-02
+    title: "Dropping Privileges: Identity, Capabilities And Privilege Escalation"
+    objectives:
+    - Name the default capabilities of a container and the risk of each.
+    - Drop all capabilities and read the result from /proc/1/status.
+    - Run as a non-root user and set no_new_privs.
+    - Find and block privileged containers.
+    outline:
+    - Linux Capabilities And What A Container Starts With
+    - Non-Root Identity And Privilege Escalation
+    - Privileged Containers And Verifying Process Privileges
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
+      adapted_from: null
+    - reading: sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
+      adapted_from: null
+    - reading: sections/section-040/module-02/course-03-privileged-containers-and-verifying-process-privileges.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-040/module-02/labs/lab-01
+      after_reading: sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
+      objective: Run a workload as a non-root user with no Linux capabilities and no way to gain privileges.
+      status: draft
+      runtime_verification: pending
+    quiz: sections/section-040/module-02/quiz.yaml
+  - id: module-03
+    title: Host Mounts And Replacement-Based Updates
+    objectives:
+    - Explain the risk of hostPath volumes and mount a volume read-only.
+    - Change a workload by replacement through its Deployment template.
+    - Compare the running image digest with the approved image.
+    outline:
+    - Volumes That Reach The Host
+    - Updating By Replacement
+    - Pinning Images And Detecting Drift
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
+      adapted_from: null
+    - reading: sections/section-040/module-03/course-02-updating-by-replacement.md
+      adapted_from: null
+    - reading: sections/section-040/module-03/course-03-pinning-images-and-detecting-drift.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-040/module-03/labs/lab-01
+      after_reading: sections/section-040/module-03/course-02-updating-by-replacement.md
+      objective: Replace the Pods of a Deployment through its template so that they run version v2 with a read-only root filesystem and a writable temporary path.
+      status: draft
+      runtime_verification: pending
+    quiz: sections/section-040/module-03/quiz.yaml
+  capstone_lab:
+    path: sections/section-040/capstone/labs/lab-01
+    objective: Harden a Deployment and add an admission rule that rejects new Pods with a writable root filesystem in one namespace.
+    difficulty: advanced
+    status: draft
+    runtime_verification: pending
 - id: section-050
   title: Use Kubernetes audit logs to monitor access
   curriculum_item: Use Kubernetes audit logs to monitor access
@@ -190,3 +361,51 @@ sections:
       runtime_verification: pending
     practice_readings:
     - sections/section-050/module-01/course-02-guided-practice.md
+  - id: module-02
+    title: Auditing Interactive Access To Pods
+    objectives:
+    - Name the Pod subresources that carry interactive access.
+    - Find an exec request in the audit log and read the command from it.
+    - State what an exec record proves and what it does not.
+    outline:
+    - Auditing Interactive Access To Pods
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-050/module-02/course-01-subresources-in-audit-policy-rules.md
+      adapted_from: null
+    - reading: sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
+      adapted_from: null
+    - reading: sections/section-050/module-02/course-03-choosing-rules-and-levels-for-interactive-access.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-050/module-02/labs/lab-01
+      after_reading: sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
+      objective: Run a command in a Pod and bind its exec audit record to a report.
+      status: draft
+      runtime_verification: pending
+  - id: module-03
+    title: Retaining And Protecting Audit Logs
+    objectives:
+    - Read the audit rotation flags from the API server manifest.
+    - Compute the disk use and the evidence period of the log.
+    - Check the protection of the log file and explain the webhook modes.
+    outline:
+    - Retaining And Protecting Audit Logs
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
+      adapted_from: null
+    - reading: sections/section-050/module-03/course-02-protecting-the-log-file.md
+      adapted_from: null
+    - reading: sections/section-050/module-03/course-03-forwarding-and-retention-policy.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-050/module-03/labs/lab-01
+      after_reading: sections/section-050/module-03/course-02-protecting-the-log-file.md
+      objective: Read the live audit rotation flags and the log file mode and record them.
+      status: draft
+      runtime_verification: pending

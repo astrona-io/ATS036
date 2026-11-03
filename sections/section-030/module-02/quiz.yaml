@@ -1,0 +1,217 @@
+# Knowledge check for section 030, module 02. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-030-02
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-030/module-02
+  title: "Finding Persistence And Escalated Authority"
+placement:
+  position: after
+  reading: sections/section-030/module-02/course-03-summary.md
+questions:
+  - id: ats036-030-02-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain why deleting a Pod does not stop a controller workload."
+    source_readings:
+      - sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
+    prompt: "You delete the only Pod of a Deployment, and a Pod with a new name appears seconds later. Which component created it?"
+    options:
+      - id: a
+        text: "The ReplicaSet of the Deployment"
+        explanation: "Correct. The ReplicaSet keeps the number of Pods equal to the desired number and creates a new Pod from the template."
+      - id: b
+        text: "The kubelet of the node"
+        explanation: "The kubelet runs Pods that are assigned to it. It does not decide how many Pods exist."
+      - id: c
+        text: "The audit log"
+        explanation: "The audit log only records requests."
+    correct_option: a
+    explanation: "A controller recreates the Pod from its template, so stop the controller."
+
+  - id: ats036-030-02-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Follow an owner reference from a Pod."
+    source_readings:
+      - sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
+    prompt: "Which field of a Pod names the object that created it?"
+    options:
+      - id: a
+        text: "`spec.serviceAccountName`"
+        explanation: "This field names the identity of the Pod, not its owner."
+      - id: b
+        text: "`metadata.ownerReferences`"
+        explanation: "Correct. It holds the kind and name of the owner, for example a ReplicaSet."
+      - id: c
+        text: "`status.hostIP`"
+        explanation: "This is the address of the node."
+    correct_option: b
+    explanation: "Follow `ownerReferences` upward until an object has no owner."
+
+  - id: ats036-030-02-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "List persistence objects."
+    source_readings:
+      - sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
+    prompt: "Which object runs attacker code again on a schedule even after every Pod is deleted?"
+    options:
+      - id: a
+        text: "A ConfigMap"
+        explanation: "A ConfigMap only stores data."
+      - id: b
+        text: "A Namespace"
+        explanation: "A Namespace groups objects and does not start Pods."
+      - id: c
+        text: "A CronJob"
+        explanation: "Correct. The CronJob controller creates a new Job, and so a new Pod, at each scheduled time."
+    correct_option: c
+    explanation: "CronJobs, controllers and bindings are persistence objects."
+
+  - id: ats036-030-02-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read the scope of a RoleBinding that references a ClusterRole."
+    source_readings:
+      - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+    prompt: "A RoleBinding in the namespace `starfleet` references the ClusterRole `edit`. Where do the rules of `edit` apply for the subject?"
+    options:
+      - id: a
+        text: "Only inside the namespace `starfleet`"
+        explanation: "Correct. A RoleBinding limits the rules of a ClusterRole to its own namespace."
+      - id: b
+        text: "In every namespace of the cluster"
+        explanation: "That needs a ClusterRoleBinding."
+      - id: c
+        text: "Only to cluster-scoped objects such as nodes"
+        explanation: "A RoleBinding cannot grant access to cluster-scoped objects."
+    correct_option: a
+    explanation: "The namespace of the RoleBinding sets the scope."
+
+  - id: ats036-030-02-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Test the permissions of a ServiceAccount."
+    source_readings:
+      - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+    prompt: "Which command shows everything a ServiceAccount may do in a namespace?"
+    options:
+      - id: a
+        text: "`kubectl -n starfleet get serviceaccount build-helper`"
+        explanation: "This shows the ServiceAccount object, not its permissions."
+      - id: b
+        text: "`kubectl -n starfleet auth can-i --list --as=system:serviceaccount:starfleet:build-helper`"
+        explanation: "Correct. It asks the API server to evaluate the rules for that identity."
+      - id: c
+        text: "`kubectl -n starfleet logs build-helper`"
+        explanation: "A ServiceAccount has no logs."
+    correct_option: b
+    explanation: "Use `--as` to test the identity that the attacker holds."
+
+  - id: ats036-030-02-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name RBAC verbs that raise authority."
+    source_readings:
+      - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+    prompt: "Which verbs let an identity gain more authority than its roles give directly?"
+    options:
+      - id: a
+        text: "`get`, `list` and `watch`"
+        explanation: "These read objects and do not change authority."
+      - id: b
+        text: "`logs` and `exec`"
+        explanation: "These access containers and are risky, but they do not change RBAC."
+      - id: c
+        text: "`escalate`, `bind` and `impersonate`"
+        explanation: "Correct. They allow editing roles beyond your own, binding roles you do not hold, and acting as another identity."
+    correct_option: c
+    explanation: "Verbs that change or borrow identity are privilege escalation paths."
+
+  - id: ats036-030-02-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name Pod settings that give node access."
+    source_readings:
+      - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+    prompt: "Which Pod setting gives a container access to files of the node?"
+    options:
+      - id: a
+        text: "A `hostPath` volume"
+        explanation: "Correct. It mounts a path of the node into the container."
+      - id: b
+        text: "A `ConfigMap` volume"
+        explanation: "This mounts data from the API, not from the node."
+      - id: c
+        text: "A `readinessProbe`"
+        explanation: "A probe checks the health of the container."
+    correct_option: a
+    explanation: "`hostPath`, `hostPID`, `hostNetwork` and `privileged` reach the node."
+
+  - id: ats036-030-02-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Order the steps of containment."
+    source_readings:
+      - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+    prompt: "A Deployment and a RoleBinding belong to an incident. Which order is correct?"
+    options:
+      - id: a
+        text: "Delete the Deployment, then save its YAML from the API"
+        explanation: "The API no longer has it after deletion."
+      - id: b
+        text: "Save both objects and the logs, scale the Deployment to zero, then delete the RoleBinding"
+        explanation: "Correct. Evidence is preserved first, then the workload stops and the authority ends."
+      - id: c
+        text: "Delete the Pods and keep the Deployment and the RoleBinding"
+        explanation: "The controller recreates the Pods and the authority stays."
+    correct_option: b
+    explanation: "Preserve, stop the controller, revoke the authority."
+
+  - id: ats036-030-02-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "State what removing a binding changes for a copied token."
+    source_readings:
+      - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+    prompt: "An attacker copied a ServiceAccount token. You delete the RoleBinding that gave the ServiceAccount its permissions. What changes?"
+    options:
+      - id: a
+        text: "The token stops working at once for authentication and all other uses"
+        explanation: "Authentication of the token depends on the token, not on the binding."
+      - id: b
+        text: "Nothing changes until the token expires"
+        explanation: "Authorization uses the current bindings on each request."
+      - id: c
+        text: "The token still authenticates, but the API server no longer authorizes the actions the binding allowed"
+        explanation: "Correct. Authorization is checked on every request."
+    correct_option: c
+    explanation: "Removing the binding ends the authority. Secrets already read need rotation."
+
+  - id: ats036-030-02-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Choose scaling to zero over deleting the Deployment."
+    source_readings:
+      - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+    prompt: "Why scale the suspicious Deployment to zero instead of deleting it?"
+    options:
+      - id: a
+        text: "The object stays as evidence and can still be compared and saved"
+        explanation: "Correct. No new Pods start, and the template remains for the investigation."
+      - id: b
+        text: "A scaled Deployment cannot be changed again"
+        explanation: "It can be changed by anyone with the right permissions."
+      - id: c
+        text: "Deleting a Deployment leaves its Pods running forever"
+        explanation: "Deleting a Deployment normally removes its Pods too."
+    correct_option: a
+    explanation: "Scale to zero stops the workload and keeps the object."
+

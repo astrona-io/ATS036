@@ -1,0 +1,216 @@
+# Knowledge check for section 040, module 02. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-040-02
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-040/module-02
+  title: "Dropping Privileges: Identity, Capabilities And Privilege Escalation"
+placement:
+  position: after
+  reading: sections/section-040/module-02/course-04-summary.md
+questions:
+  - id: ats036-040-02-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe default container capabilities."
+    source_readings:
+      - sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
+    prompt: "A Pod has no `capabilities` field. What capabilities does its container process hold?"
+    options:
+      - id: a
+        text: "No capabilities, because none were requested"
+        explanation: "The runtime applies a default list when the Pod sets nothing."
+      - id: b
+        text: "The default list of the container runtime"
+        explanation: "Correct. The runtime adds a default list that includes `CHOWN`, `SETUID` and `NET_RAW`."
+      - id: c
+        text: "All Linux capabilities"
+        explanation: "All capabilities need `privileged: true`."
+    correct_option: b
+    explanation: "The runtime supplies a default list."
+
+  - id: ats036-040-02-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Remove all capabilities."
+    source_readings:
+      - sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
+    prompt: "Which setting removes every capability from a container?"
+    options:
+      - id: a
+        text: "`capabilities.drop: [\"ALL\"]` in the container `securityContext`"
+        explanation: "Correct. It empties the capability set."
+      - id: b
+        text: "`capabilities.drop: [\"ALL\"]` in the Pod `securityContext`"
+        explanation: "The field exists only at container level."
+      - id: c
+        text: "`allowPrivilegeEscalation: false`"
+        explanation: "This sets `no_new_privs` and does not remove capabilities."
+    correct_option: a
+    explanation: "Drop ALL at container level."
+
+  - id: ats036-040-02-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Read capability sets."
+    source_readings:
+      - sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
+    prompt: "Which file shows the capability sets of the main process of a container?"
+    options:
+      - id: a
+        text: "`/proc/1/status`"
+        explanation: "Correct. The lines `CapBnd` and `CapEff` hold the sets."
+      - id: b
+        text: "`/etc/passwd`"
+        explanation: "This file lists users."
+      - id: c
+        text: "`/sys/fs/cgroup`"
+        explanation: "This path shows resource limits."
+    correct_option: a
+    explanation: "Use /proc/1/status."
+
+  - id: ats036-040-02-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Judge a dangerous capability."
+    source_readings:
+      - sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
+    prompt: "A developer adds `SYS_ADMIN` to fix a permission error. What is the main concern?"
+    options:
+      - id: a
+        text: "It only changes log output"
+        explanation: "It allows mounts and many administrative actions."
+      - id: b
+        text: "It gives the container a large part of the power of the node"
+        explanation: "Correct. `SYS_ADMIN` is far broader than a single right."
+      - id: c
+        text: "It makes the root filesystem read-only"
+        explanation: "It has no effect on filesystem mode."
+    correct_option: b
+    explanation: "SYS_ADMIN is very broad."
+
+  - id: ats036-040-02-q05
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain runAsNonRoot."
+    source_readings:
+      - sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
+    prompt: "What does `runAsNonRoot: true` do?"
+    options:
+      - id: a
+        text: "It changes the container user to a random non-root user"
+        explanation: "It never chooses a user."
+      - id: b
+        text: "The kubelet refuses to start a container whose user is root"
+        explanation: "Correct. It is a check, and it needs a numeric user."
+      - id: c
+        text: "It removes all capabilities"
+        explanation: "Capabilities are set separately."
+    correct_option: b
+    explanation: "It is a kubelet check."
+
+  - id: ats036-040-02-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Diagnose a refused start."
+    source_readings:
+      - sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
+    prompt: "A Pod with `runAsNonRoot: true` and an image that runs as root shows `CreateContainerConfigError`. Which component produced the error?"
+    options:
+      - id: a
+        text: "The application"
+        explanation: "No process started."
+      - id: b
+        text: "The kubelet"
+        explanation: "Correct. It checks the user before it starts the container."
+      - id: c
+        text: "The scheduler"
+        explanation: "The Pod was scheduled; the node refused it."
+    correct_option: b
+    explanation: "The kubelet refuses."
+
+  - id: ats036-040-02-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain no_new_privs."
+    source_readings:
+      - sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
+    prompt: "What does `allowPrivilegeEscalation: false` set?"
+    options:
+      - id: a
+        text: "The `no_new_privs` flag on the process"
+        explanation: "Correct. A started program cannot gain more privileges than its parent."
+      - id: b
+        text: "An empty capability set"
+        explanation: "Capabilities are dropped separately."
+      - id: c
+        text: "A read-only root filesystem"
+        explanation: "That is `readOnlyRootFilesystem`."
+    correct_option: a
+    explanation: "It sets no_new_privs."
+
+  - id: ats036-040-02-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read seccomp evidence."
+    source_readings:
+      - sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
+    prompt: "The line `Seccomp` in `/proc/1/status` shows `2`. What does this mean?"
+    options:
+      - id: a
+        text: "The process has no filter"
+        explanation: "The value 0 means no filter."
+      - id: b
+        text: "The process runs with a seccomp filter"
+        explanation: "Correct. The value 2 means filter mode."
+      - id: c
+        text: "The process has two capabilities"
+        explanation: "Capabilities are in other lines."
+    correct_option: b
+    explanation: "2 means filter mode."
+
+  - id: ats036-040-02-q09
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe a privileged container."
+    source_readings:
+      - sections/section-040/module-02/course-03-privileged-containers-and-verifying-process-privileges.md
+    prompt: "What does `privileged: true` do to the other security settings?"
+    options:
+      - id: a
+        text: "It overrides them and gives all capabilities and node devices"
+        explanation: "Correct. Dropped capabilities and `no_new_privs` do not apply."
+      - id: b
+        text: "It is combined with them and they still apply"
+        explanation: "The privileged setting overrides them."
+      - id: c
+        text: "It only affects the network"
+        explanation: "It affects capabilities and devices."
+    correct_option: a
+    explanation: "Privileged overrides."
+
+  - id: ats036-040-02-q10
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose an admission mode."
+    source_readings:
+      - sections/section-040/module-02/course-03-privileged-containers-and-verifying-process-privileges.md
+    prompt: "Which Pod Security Admission mode rejects a new Pod that breaks the standard?"
+    options:
+      - id: a
+        text: "`audit`"
+        explanation: "It records a violation and creates the Pod."
+      - id: b
+        text: "`warn`"
+        explanation: "It shows a warning and creates the Pod."
+      - id: c
+        text: "`enforce`"
+        explanation: "Correct. Only this mode rejects the Pod."
+    correct_option: c
+    explanation: "Use enforce."

@@ -1,0 +1,217 @@
+# Knowledge check for section 050, module 02. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-050-02
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-050/module-02
+  title: "Auditing Interactive Access To Pods"
+placement:
+  position: after
+  reading: sections/section-050/module-02/course-04-summary.md
+questions:
+  - id: ats036-050-02-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain subresource matching."
+    source_readings:
+      - sections/section-050/module-02/course-01-subresources-in-audit-policy-rules.md
+    prompt: "A policy has a rule for the resource `pods` at level `Metadata`. Is a `kubectl exec` request into a Pod recorded by that rule?"
+    options:
+      - id: a
+        text: "Yes, exec is a request about a Pod"
+        explanation: "Exec is a request to a subresource, and names are compared in full."
+      - id: b
+        text: "No, the name `pods/exec` is not the name `pods`"
+        explanation: "Correct. The rule must list `pods/exec` or `pods/*`."
+      - id: c
+        text: "Yes, but only at the `None` level"
+        explanation: "`None` writes nothing."
+    correct_option: b
+    explanation: "Names are compared in full, so the subresource must be listed."
+
+  - id: ats036-050-02-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name interactive subresources."
+    source_readings:
+      - sections/section-050/module-02/course-01-subresources-in-audit-policy-rules.md
+    prompt: "Which subresource opens a tunnel from the client to a port of a Pod?"
+    options:
+      - id: a
+        text: "`pods/portforward`"
+        explanation: "Correct. It forwards a local port to a Pod port."
+      - id: b
+        text: "`pods/log`"
+        explanation: "This reads the container log."
+      - id: c
+        text: "`serviceaccounts/token`"
+        explanation: "This creates a ServiceAccount token."
+    correct_option: a
+    explanation: "`pods/portforward` carries the tunnel."
+
+  - id: ats036-050-02-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Find the subresource in an event."
+    source_readings:
+      - sections/section-050/module-02/course-01-subresources-in-audit-policy-rules.md
+    prompt: "Which event field holds the word `exec` for an exec request?"
+    options:
+      - id: a
+        text: "`objectRef.subresource`"
+        explanation: "Correct. The resource is `pods` and the subresource is `exec`."
+      - id: b
+        text: "`user.groups`"
+        explanation: "This lists groups of the caller."
+      - id: c
+        text: "`stage`"
+        explanation: "This is one of four request stages."
+    correct_option: a
+    explanation: "The subresource is a field of `objectRef`."
+
+  - id: ats036-050-02-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use the right field to find the command."
+    source_readings:
+      - sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
+    prompt: "Where does an exec event show the command that was requested?"
+    options:
+      - id: a
+        text: "In `responseObject`"
+        explanation: "Metadata events hold no response body."
+      - id: b
+        text: "In the query string of `requestURI`"
+        explanation: "Correct. It contains `command=` with the value."
+      - id: c
+        text: "In `annotations.decision`"
+        explanation: "This holds the authorization decision."
+    correct_option: b
+    explanation: "The command is part of the request path and query."
+
+  - id: ats036-050-02-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose a reliable filter."
+    source_readings:
+      - sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
+    prompt: "Why should a search for exec records filter by `objectRef.subresource` and not by the verb?"
+    options:
+      - id: a
+        text: "The verb can be `create` or `get`, depending on the client"
+        explanation: "Correct. A `POST` request gives `create` and a WebSocket request starts with `get`."
+      - id: b
+        text: "The verb is never written for exec"
+        explanation: "The verb is always written."
+      - id: c
+        text: "Exec has no verb in Kubernetes"
+        explanation: "Every API request has a verb."
+    correct_option: a
+    explanation: "The verb depends on how the client connects."
+
+  - id: ats036-050-02-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Know the limits of exec evidence."
+    source_readings:
+      - sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
+    prompt: "A user runs `kubectl exec -it shuttle -- sh` and deletes files inside the shell. What does the API audit log hold?"
+    options:
+      - id: a
+        text: "Every command typed in the shell"
+        explanation: "The log does not capture the session."
+      - id: b
+        text: "One record with `command=sh` and no record of the commands typed"
+        explanation: "Correct. The session is outside the API server."
+      - id: c
+        text: "The output of each command"
+        explanation: "Output is not recorded."
+    correct_option: b
+    explanation: "Only the request is audited."
+
+  - id: ats036-050-02-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Pick the right tool for session activity."
+    source_readings:
+      - sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
+    prompt: "Which source can show the commands run inside an exec shell?"
+    options:
+      - id: a
+        text: "A runtime sensor on the node"
+        explanation: "Correct. It watches system calls of container processes."
+      - id: b
+        text: "The `ResponseStarted` event"
+        explanation: "This event is about the connection start."
+      - id: c
+        text: "The audit policy file"
+        explanation: "The policy only selects what is recorded."
+    correct_option: a
+    explanation: "Runtime sensors see processes, the audit log sees API requests."
+
+  - id: ats036-050-02-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Understand rule order."
+    source_readings:
+      - sections/section-050/module-02/course-03-choosing-rules-and-levels-for-interactive-access.md
+    prompt: "A rule with `level: None` for the group `system:nodes` is placed above the exec rule. What happens to an exec request made by a node identity?"
+    options:
+      - id: a
+        text: "It is recorded by the exec rule"
+        explanation: "The first matching rule wins."
+      - id: b
+        text: "It is dropped by the first rule"
+        explanation: "Correct. The request matches the first rule and the later rule is not read."
+      - id: c
+        text: "It is recorded at `RequestResponse`"
+        explanation: "No rule sets that level."
+    correct_option: b
+    explanation: "Order decides which rule matches."
+
+  - id: ats036-050-02-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Choose the level for tokens."
+    source_readings:
+      - sections/section-050/module-02/course-03-choosing-rules-and-levels-for-interactive-access.md
+    prompt: "A rule records `serviceaccounts/token` requests. Which level avoids writing a working credential into the log?"
+    options:
+      - id: a
+        text: "`Metadata`"
+        explanation: "Correct. The response body is not written."
+      - id: b
+        text: "`RequestResponse`"
+        explanation: "The response holds the new token."
+      - id: c
+        text: "`Request` and `RequestResponse` are equal here"
+        explanation: "The levels differ in what they write."
+    correct_option: a
+    explanation: "Use `Metadata` for token requests."
+
+  - id: ats036-050-02-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Weigh a narrow rule."
+    source_readings:
+      - sections/section-050/module-02/course-03-choosing-rules-and-levels-for-interactive-access.md
+    prompt: "A rule records `pods/exec` with `resourceNames: [\"shuttle\"]`. What is the risk?"
+    options:
+      - id: a
+        text: "Exec into other Pods leaves no record"
+        explanation: "Correct. Only the named Pod is selected."
+      - id: b
+        text: "Exec into `shuttle` is recorded twice"
+        explanation: "One rule gives one record per stage."
+      - id: c
+        text: "The rule records bodies"
+        explanation: "The level decides that, not `resourceNames`."
+    correct_option: a
+    explanation: "A name filter leaves other Pods unaudited."
+

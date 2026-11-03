@@ -1,0 +1,216 @@
+# Knowledge check for section 020, module 02. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-020-02
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-020/module-02
+  title: "Detecting Risky Workloads From Events, Specifications And Logs"
+placement:
+  position: after
+  reading: sections/section-020/module-02/course-04-summary.md
+questions:
+  - id: ats036-020-02-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name how long events are kept by default."
+    source_readings:
+      - sections/section-020/module-02/course-01-kubernetes-events-as-a-short-lived-signal.md
+    prompt: "How long does the API server keep Kubernetes events by default?"
+    options:
+      - id: a
+        text: "One hour"
+        explanation: "Correct. The `--event-ttl` flag of the API server sets this time."
+      - id: b
+        text: "Thirty days"
+        explanation: "Events are not a long-term store."
+      - id: c
+        text: "Until the Pod is deleted"
+        explanation: "Events expire on their own time, not with the Pod."
+    correct_option: a
+    explanation: "Events expire after one hour by default, so export them if you need them later."
+
+  - id: ats036-020-02-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the component that writes Pod start events."
+    source_readings:
+      - sections/section-020/module-02/course-01-kubernetes-events-as-a-short-lived-signal.md
+    prompt: "Which component writes the events `Pulled`, `Created` and `Started` for a Pod?"
+    options:
+      - id: a
+        text: "The kubelet on the node"
+        explanation: "Correct. The kubelet prepares and starts the containers and reports each step."
+      - id: b
+        text: "The scheduler"
+        explanation: "The scheduler writes `Scheduled` and `FailedScheduling`."
+      - id: c
+        text: "The Service controller"
+        explanation: "It does not manage containers."
+    correct_option: a
+    explanation: "The kubelet reports container start steps."
+
+  - id: ats036-020-02-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Interpret a Normal event for a risky Pod."
+    source_readings:
+      - sections/section-020/module-02/course-01-kubernetes-events-as-a-short-lived-signal.md
+    prompt: "A Pod with a privileged container shows only `Normal` events. What does this mean?"
+    options:
+      - id: a
+        text: "The specification is safe"
+        explanation: "Events do not judge the specification."
+      - id: b
+        text: "Kubernetes did what the specification asked, and the risk is in the specification"
+        explanation: "Correct. Read the Pod specification to judge the risk."
+      - id: c
+        text: "An alert was sent to the administrator"
+        explanation: "Events do not send alerts."
+    correct_option: b
+    explanation: "Normal events report work done, not safety."
+
+  - id: ats036-020-02-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Sort events by time."
+    source_readings:
+      - sections/section-020/module-02/course-01-kubernetes-events-as-a-short-lived-signal.md
+    prompt: "Which option puts the output of `kubectl get events` in time order?"
+    options:
+      - id: a
+        text: "`--sort-by=.lastTimestamp`"
+        explanation: "Correct. Without it the order is not by time."
+      - id: b
+        text: "`--watch-only`"
+        explanation: "This option follows new events only."
+      - id: c
+        text: "`--show-labels`"
+        explanation: "This option prints labels."
+    correct_option: a
+    explanation: "Use `--sort-by=.lastTimestamp`."
+
+  - id: ats036-020-02-q05
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the setting that makes a container privileged."
+    source_readings:
+      - sections/section-020/module-02/course-02-reading-a-pod-specification-for-risky-settings.md
+    prompt: "Which field of a container makes it privileged?"
+    options:
+      - id: a
+        text: "`securityContext.privileged: true`"
+        explanation: "Correct. It gives the container almost all capabilities of the node."
+      - id: b
+        text: "`restartPolicy: Always`"
+        explanation: "This field controls restarts."
+      - id: c
+        text: "`imagePullPolicy: Always`"
+        explanation: "This field controls image pulls."
+    correct_option: a
+    explanation: "Look at the container `securityContext`."
+
+  - id: ats036-020-02-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain the risk of a hostPath volume."
+    source_readings:
+      - sections/section-020/module-02/course-02-reading-a-pod-specification-for-risky-settings.md
+    prompt: "Why is a `hostPath` volume with path `/etc` a finding even when it is mounted read-only?"
+    options:
+      - id: a
+        text: "A read-only mount cannot be read"
+        explanation: "Read-only blocks writing, not reading."
+      - id: b
+        text: "A process in the container can read node files such as configuration and certificates"
+        explanation: "Correct. Reading node files can be enough for an attacker."
+      - id: c
+        text: "The Pod cannot start"
+        explanation: "The Pod starts normally."
+    correct_option: b
+    explanation: "Host paths expose node files to the container."
+
+  - id: ats036-020-02-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Find privileged containers in all namespaces."
+    source_readings:
+      - sections/section-020/module-02/course-02-reading-a-pod-specification-for-risky-settings.md
+    prompt: "Which command prints one row for every Pod in the cluster with its `privileged` setting?"
+    options:
+      - id: a
+        text: "`kubectl get pods -A -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,PRIVILEGED:.spec.containers[*].securityContext.privileged`"
+        explanation: "Correct. It lists all namespaces and prints the field for each Pod."
+      - id: b
+        text: "`kubectl get events -A`"
+        explanation: "Events do not show the specification."
+      - id: c
+        text: "`kubectl top pods`"
+        explanation: "This command shows resource use."
+    correct_option: a
+    explanation: "Use `custom-columns` with `-A`."
+
+  - id: ats036-020-02-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "State what Pod Security Admission does."
+    source_readings:
+      - sections/section-020/module-02/course-02-reading-a-pod-specification-for-risky-settings.md
+    prompt: "A namespace has the label `pod-security.kubernetes.io/enforce=baseline`. What happens to a new Pod with a privileged container?"
+    options:
+      - id: a
+        text: "The API server rejects it"
+        explanation: "Correct. The baseline level forbids privileged containers."
+      - id: b
+        text: "The kubelet starts it and writes a warning"
+        explanation: "The check happens at admission, before the kubelet."
+      - id: c
+        text: "It starts, but without privileges"
+        explanation: "Admission rejects the request; it does not change it."
+    correct_option: a
+    explanation: "Baseline forbids privileged containers and hostPath volumes."
+
+  - id: ats036-020-02-q09
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Count log lines with a pattern."
+    source_readings:
+      - sections/section-020/module-02/course-03-application-log-signals-of-abuse.md
+    prompt: "Which command counts the lines that contain `login failed` in the log of the Pod `login-service`?"
+    options:
+      - id: a
+        text: "`kubectl -n starfleet logs login-service | grep -c \"login failed\"`"
+        explanation: "Correct. The option `-c` prints the number of matching lines."
+      - id: b
+        text: "`kubectl -n starfleet get pod login-service`"
+        explanation: "This command does not read the log."
+      - id: c
+        text: "`kubectl -n starfleet describe pod login-service`"
+        explanation: "This command prints the Pod description, not the log."
+    correct_option: a
+    explanation: "Pipe the log to `grep -c`."
+
+  - id: ats036-020-02-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Judge a count of failed logins."
+    source_readings:
+      - sections/section-020/module-02/course-03-application-log-signals-of-abuse.md
+    prompt: "The log shows five failed logins for the user `admin`, but it has no time and no source address. Which statement is correct?"
+    options:
+      - id: a
+        text: "It proves an attack from one client"
+        explanation: "Without time and source it proves neither."
+      - id: b
+        text: "It is a possible signal, but the rate and the source cannot be judged without more data"
+        explanation: "Correct. Add `--timestamps` for the time and add the source address to the application log."
+      - id: c
+        text: "It proves normal behavior"
+        explanation: "Five failures for one account need a closer look."
+    correct_option: b
+    explanation: "A count needs a time window and a source to become a signal."

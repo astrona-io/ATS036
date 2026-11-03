@@ -1,0 +1,127 @@
+{
+  "context": "kind-astro-ats-036-lab-040-03-01",
+  "resources": [
+    {
+      "kind": "deployment",
+      "name": "probe",
+      "expected": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "probe",
+          "namespace": "starfleet"
+        },
+        "spec": {
+          "replicas": 2,
+          "template": {
+            "spec": {
+              "containers": [
+                {
+                  "name": "probe",
+                  "image": "docker.io/library/python:3.13-alpine",
+                  "env": [
+                    {
+                      "name": "VERSION",
+                      "value": "v2"
+                    }
+                  ],
+                  "securityContext": {
+                    "readOnlyRootFilesystem": true
+                  },
+                  "volumeMounts": [
+                    {
+                      "name": "app",
+                      "mountPath": "/app",
+                      "readOnly": true
+                    },
+                    {
+                      "name": "tmp",
+                      "mountPath": "/tmp"
+                    }
+                  ]
+                }
+              ],
+              "volumes": [
+                {
+                  "name": "app",
+                  "configMap": {
+                    "name": "probe-code"
+                  }
+                },
+                {
+                  "name": "tmp",
+                  "emptyDir": {}
+                }
+              ]
+            }
+          }
+        }
+      },
+      "state": "deployment"
+    }
+  ],
+  "behavior": [
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "exec",
+        "shuttle",
+        "--",
+        "wget",
+        "-qO-",
+        "-T",
+        "5",
+        "http://probe/ready"
+      ],
+      "contains": [
+        "version=v2"
+      ]
+    },
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "exec",
+        "deploy/probe",
+        "--",
+        "sh",
+        "-c",
+        "printf ok > /tmp/scratch-check; cat /tmp/scratch-check"
+      ],
+      "equals": "ok"
+    },
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "exec",
+        "deploy/probe",
+        "--",
+        "sh",
+        "-c",
+        "printf denied > /root-file"
+      ],
+      "denied": true,
+      "failure_markers": [
+        "read-only file system"
+      ]
+    },
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "get",
+        "deployment",
+        "probe",
+        "-o",
+        "jsonpath={.spec.template.spec.volumes[*].hostPath}"
+      ],
+      "equals": ""
+    }
+  ]
+}

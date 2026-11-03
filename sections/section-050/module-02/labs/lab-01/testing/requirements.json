@@ -1,0 +1,26 @@
+{
+  "context": "kind-astro-ats-036-lab-050-02-01",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "audit-exec",
+      "namespace": "starfleet",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "audit-exec",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "resource": "pods",
+          "subresource": "exec",
+          "podName": "shuttle",
+          "command": "id",
+          "level": "Metadata"
+        }
+      }
+    }
+  ],
+  "behavior": []
+}

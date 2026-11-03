@@ -17,3 +17,6 @@ Read the module landing page, the deep-dive parts and the closing summary in ord
 - Compare Metadata, Request and RequestResponse audit detail.
 - Relate audit retention and protection to investigation.
 - Distinguish API evidence from runtime and application evidence.
+- Record interactive Pod access, such as exec, by naming Pod subresources in an audit policy.
+- Read the rotation settings and file protection of the audit log, and explain webhook forwarding.
+- Combine a successful read, a denied read and an exec request into one investigation from the audit log.

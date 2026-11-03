@@ -1,0 +1,26 @@
+{
+  "context": "kind-astro-ats-036-lab-050-03-01",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "audit-retention",
+      "namespace": "starfleet",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "audit-retention",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "policyFile": "/etc/kubernetes/training-audit-policy.json",
+          "logPath": "/var/log/training-audit/audit.jsonl",
+          "maxAge": "1",
+          "maxBackup": "1",
+          "maxSize": "10"
+        }
+      }
+    }
+  ],
+  "behavior": []
+}

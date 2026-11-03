@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exec-finding
+  namespace: starfleet
+data:
+  verb: create
+  resource: pods
+  subresource: exec
+  namespace: starfleet
+  finding: unexpected-exec

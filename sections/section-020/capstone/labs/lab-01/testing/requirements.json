@@ -1,0 +1,63 @@
+{
+  "context": "kind-astro-ats-036-capstone-020",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "threat-register",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "threat-register",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "crashExitCode": "12",
+          "failedLogins": "5",
+          "privilegedPod": "suspect-pod",
+          "secretReader": "reporter"
+        }
+      }
+    },
+    {
+      "kind": "rolebinding",
+      "name": "auditor-pods",
+      "expected": {
+        "roleRef": {
+          "name": "pod-reader"
+        }
+      }
+    },
+    {
+      "kind": "pod",
+      "name": "suspect-pod",
+      "state": "pod",
+      "expected": {
+        "spec": {
+          "containers": [
+            {
+              "securityContext": {
+                "privileged": true
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "behavior": [
+    {
+      "args": [
+        "kubectl",
+        "auth",
+        "can-i",
+        "list",
+        "pods",
+        "-n",
+        "starfleet",
+        "--as=system:serviceaccount:starfleet:auditor"
+      ],
+      "equals": "yes"
+    }
+  ]
+}

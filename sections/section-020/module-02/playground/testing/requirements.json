@@ -1,0 +1,37 @@
+{
+  "context": "kind-astro-ats-036-playground-020-02",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "pod-risk-report",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "pod-risk-report",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "pod": "suspect-pod",
+          "privileged": "true",
+          "hostPath": "/etc"
+        }
+      }
+    }
+  ],
+  "behavior": [
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "get",
+        "pod",
+        "suspect-pod",
+        "-o",
+        "jsonpath={.spec.containers[0].securityContext.privileged}"
+      ],
+      "equals": "true"
+    }
+  ]
+}

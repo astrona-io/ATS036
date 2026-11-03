@@ -1,0 +1,69 @@
+{
+  "context": "kind-astro-ats-036-capstone-030",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "incident-report",
+      "namespace": "starfleet",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "incident-report",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "deployment": "cache-sync",
+          "binding": "build-helper-edit",
+          "sourcePod": "intruder",
+          "sourceNamespace": "outpost",
+          "phases": "credential-access,persistence,lateral-movement",
+          "finding": "multi-phase-incident"
+        }
+      }
+    },
+    {
+      "kind": "deployment",
+      "name": "cache-sync",
+      "namespace": "starfleet",
+      "expected": {
+        "spec": {
+          "replicas": 0
+        }
+      }
+    },
+    {
+      "kind": "rolebinding",
+      "name": "probe-reader-view",
+      "namespace": "starfleet",
+      "expected": {
+        "roleRef": {
+          "kind": "ClusterRole",
+          "name": "view"
+        }
+      }
+    },
+    {
+      "kind": "deployment",
+      "name": "probe",
+      "namespace": "starfleet",
+      "state": "deployment",
+      "expected": {
+        "spec": {
+          "replicas": 2
+        }
+      }
+    },
+    {
+      "kind": "secret",
+      "name": "audit-token",
+      "namespace": "starfleet",
+      "expected": {
+        "metadata": {
+          "name": "audit-token"
+        }
+      }
+    }
+  ],
+  "behavior": []
+}

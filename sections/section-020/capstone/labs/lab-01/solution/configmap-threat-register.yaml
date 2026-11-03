@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: threat-register
+  namespace: starfleet
+data:
+  crashExitCode: '12'
+  failedLogins: '5'
+  privilegedPod: suspect-pod
+  secretReader: reporter

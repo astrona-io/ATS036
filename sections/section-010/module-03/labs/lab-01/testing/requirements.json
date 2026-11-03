@@ -1,0 +1,26 @@
+{
+  "context": "kind-astro-ats-036-lab-010-03-01",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "exec-finding",
+      "namespace": "starfleet",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "exec-finding",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "verb": "create",
+          "resource": "pods",
+          "subresource": "exec",
+          "namespace": "starfleet",
+          "finding": "unexpected-exec"
+        }
+      }
+    }
+  ],
+  "behavior": []
+}

@@ -1,0 +1,47 @@
+{
+  "context": "kind-astro-ats-036-playground-030-02",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "persistence-finding",
+      "namespace": "starfleet",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "persistence-finding",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "deployment": "cache-sync",
+          "serviceAccount": "build-helper",
+          "binding": "build-helper-edit",
+          "clusterRole": "edit",
+          "finding": "persistence-and-escalated-authority"
+        }
+      }
+    },
+    {
+      "kind": "deployment",
+      "name": "cache-sync",
+      "namespace": "starfleet",
+      "expected": {
+        "spec": {
+          "replicas": 0
+        }
+      }
+    },
+    {
+      "kind": "rolebinding",
+      "name": "probe-reader-view",
+      "namespace": "starfleet",
+      "expected": {
+        "roleRef": {
+          "kind": "ClusterRole",
+          "name": "view"
+        }
+      }
+    }
+  ],
+  "behavior": []
+}

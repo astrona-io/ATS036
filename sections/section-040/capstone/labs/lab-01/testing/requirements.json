@@ -1,0 +1,221 @@
+{
+  "context": "kind-astro-ats-036-capstone-040",
+  "resources": [
+    {
+      "kind": "deployment",
+      "name": "probe",
+      "expected": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "probe",
+          "namespace": "starfleet"
+        },
+        "spec": {
+          "replicas": 2,
+          "template": {
+            "spec": {
+              "securityContext": {
+                "runAsNonRoot": true,
+                "runAsUser": 10001,
+                "runAsGroup": 10001,
+                "seccompProfile": {
+                  "type": "RuntimeDefault"
+                }
+              },
+              "containers": [
+                {
+                  "name": "probe",
+                  "image": "docker.io/library/python:3.13-alpine",
+                  "env": [
+                    {
+                      "name": "VERSION",
+                      "value": "v1"
+                    }
+                  ],
+                  "securityContext": {
+                    "allowPrivilegeEscalation": false,
+                    "capabilities": {
+                      "drop": [
+                        "ALL"
+                      ]
+                    },
+                    "readOnlyRootFilesystem": true
+                  },
+                  "volumeMounts": [
+                    {
+                      "name": "app",
+                      "mountPath": "/app",
+                      "readOnly": true
+                    },
+                    {
+                      "name": "tmp",
+                      "mountPath": "/tmp"
+                    }
+                  ]
+                }
+              ],
+              "volumes": [
+                {
+                  "name": "app",
+                  "configMap": {
+                    "name": "probe-code"
+                  }
+                },
+                {
+                  "name": "tmp",
+                  "emptyDir": {}
+                }
+              ]
+            }
+          }
+        }
+      },
+      "state": "deployment"
+    },
+    {
+      "kind": "validatingadmissionpolicy",
+      "name": "require-read-only-root",
+      "namespace": "",
+      "expected": {
+        "spec": {
+          "matchConstraints": {
+            "resourceRules": [
+              {
+                "resources": [
+                  "pods"
+                ],
+                "operations": [
+                  "CREATE"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "validatingadmissionpolicybinding",
+      "name": "require-read-only-root",
+      "namespace": "",
+      "expected": {
+        "spec": {
+          "policyName": "require-read-only-root",
+          "validationActions": [
+            "Deny"
+          ],
+          "matchResources": {
+            "namespaceSelector": {
+              "matchLabels": {
+                "kubernetes.io/metadata.name": "starfleet"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "behavior": [
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "exec",
+        "shuttle",
+        "--",
+        "wget",
+        "-qO-",
+        "-T",
+        "5",
+        "http://probe/ready"
+      ],
+      "contains": [
+        "version=v1"
+      ]
+    },
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "exec",
+        "deploy/probe",
+        "--",
+        "id",
+        "-u"
+      ],
+      "equals": "10001"
+    },
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "exec",
+        "deploy/probe",
+        "--",
+        "sh",
+        "-c",
+        "printf denied > /root-file"
+      ],
+      "denied": true,
+      "failure_markers": [
+        "read-only file system"
+      ]
+    },
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "run",
+        "mutable-check",
+        "--image=docker.io/library/busybox:1.37.0",
+        "--restart=Never",
+        "--dry-run=server",
+        "-o",
+        "name"
+      ],
+      "denied": true,
+      "failure_markers": [
+        "denied request"
+      ]
+    },
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "run",
+        "ok-check",
+        "--image=docker.io/library/busybox:1.37.0",
+        "--restart=Never",
+        "--dry-run=server",
+        "-o",
+        "name",
+        "--overrides={\"spec\": {\"containers\": [{\"name\": \"ok-check\", \"image\": \"docker.io/library/busybox:1.37.0\", \"securityContext\": {\"readOnlyRootFilesystem\": true}}]}}"
+      ],
+      "contains": [
+        "pod/ok-check"
+      ]
+    },
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "outpost",
+        "run",
+        "outside-check",
+        "--image=docker.io/library/busybox:1.37.0",
+        "--restart=Never",
+        "--dry-run=server",
+        "-o",
+        "name"
+      ],
+      "contains": [
+        "pod/outside-check"
+      ]
+    }
+  ]
+}

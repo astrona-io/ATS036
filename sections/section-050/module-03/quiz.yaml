@@ -1,0 +1,217 @@
+# Knowledge check for section 050, module 03. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-050-03
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-050/module-03
+  title: "Retaining And Protecting Audit Logs"
+placement:
+  position: after
+  reading: sections/section-050/module-03/course-04-summary.md
+questions:
+  - id: ats036-050-03-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the size flag."
+    source_readings:
+      - sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
+    prompt: "Which flag sets the size in megabytes at which the API server starts a new audit file?"
+    options:
+      - id: a
+        text: "`--audit-log-maxsize`"
+        explanation: "Correct. The value is in megabytes."
+      - id: b
+        text: "`--audit-log-maxage`"
+        explanation: "This sets the age in days."
+      - id: c
+        text: "`--audit-log-maxbackup`"
+        explanation: "This sets the number of rotated files."
+    correct_option: a
+    explanation: "`--audit-log-maxsize` triggers rotation."
+
+  - id: ats036-050-03-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Read a zero value."
+    source_readings:
+      - sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
+    prompt: "What does `--audit-log-maxbackup=0` mean?"
+    options:
+      - id: a
+        text: "No rotated file is kept"
+        explanation: "Zero does not mean none."
+      - id: b
+        text: "All rotated files are kept"
+        explanation: "Correct. Zero sets no limit on the count."
+      - id: c
+        text: "Rotation is switched off"
+        explanation: "Rotation still happens by size."
+    correct_option: b
+    explanation: "Zero means no limit for this flag."
+
+  - id: ats036-050-03-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Compute the disk use."
+    source_readings:
+      - sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
+    prompt: "The flags are `maxsize=10` and `maxbackup=2`, without compression. What is the largest disk use of the log?"
+    options:
+      - id: a
+        text: "About 20 megabytes"
+        explanation: "This counts only two files."
+      - id: b
+        text: "About 30 megabytes"
+        explanation: "Correct. Two rotated files plus the active file are three files of 10 megabytes."
+      - id: c
+        text: "About 10 megabytes"
+        explanation: "This counts only one file."
+    correct_option: b
+    explanation: "Size times backups plus the active file."
+
+  - id: ats036-050-03-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Find the live flags."
+    source_readings:
+      - sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
+    prompt: "Where do you read the audit flags of the API server in a `kind` cluster?"
+    options:
+      - id: a
+        text: "In the static Pod manifest `/etc/kubernetes/manifests/kube-apiserver.yaml` on the control plane node"
+        explanation: "Correct. The kubelet starts the API server from this file."
+      - id: b
+        text: "In the `audit-review` ConfigMap"
+        explanation: "A ConfigMap holds data, not API server flags."
+      - id: c
+        text: "In the output of `kubectl get nodes`"
+        explanation: "This does not list API server flags."
+    correct_option: a
+    explanation: "The manifest holds the real flags."
+
+  - id: ats036-050-03-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose which limit decides."
+    source_readings:
+      - sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
+    prompt: "A busy cluster writes 10 megabytes of events per hour. The limits are `maxsize=10`, `maxbackup=1` and `maxage=1`. Which limit removes old files first?"
+    options:
+      - id: a
+        text: "The age limit"
+        explanation: "One day is longer than the two hours the files cover."
+      - id: b
+        text: "The size and backup limits"
+        explanation: "Correct. Two files of 10 megabytes cover about two hours."
+      - id: c
+        text: "No limit applies"
+        explanation: "Rotation limits always apply."
+    correct_option: b
+    explanation: "The size and backup limits act before the age limit."
+
+  - id: ats036-050-03-q06
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Know why the file is sensitive."
+    source_readings:
+      - sections/section-050/module-03/course-02-protecting-the-log-file.md
+    prompt: "Why is a `Metadata` audit log still sensitive?"
+    options:
+      - id: a
+        text: "It holds Secret values"
+        explanation: "Metadata events hold no body."
+      - id: b
+        text: "It lists users, groups, addresses and object names"
+        explanation: "Correct. It maps the cluster and its activity."
+      - id: c
+        text: "It holds the private key of the API server"
+        explanation: "Keys are not part of events."
+    correct_option: b
+    explanation: "The metadata describes the cluster."
+
+  - id: ats036-050-03-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Check the file protection."
+    source_readings:
+      - sections/section-050/module-03/course-02-protecting-the-log-file.md
+    prompt: "Which command prints the mode, the owner and the name of the audit file?"
+    options:
+      - id: a
+        text: "`stat -c '%a %U %n' <file>`"
+        explanation: "Correct. It prints the octal mode, the owner and the name."
+      - id: b
+        text: "`kubectl get auditlog`"
+        explanation: "There is no such resource."
+      - id: c
+        text: "`kubectl auth can-i get audit`"
+        explanation: "This checks an API permission."
+    correct_option: a
+    explanation: "Use `stat` on the node."
+
+  - id: ats036-050-03-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain the directory mode."
+    source_readings:
+      - sections/section-050/module-03/course-02-protecting-the-log-file.md
+    prompt: "Why check the mode of the log directory as well as the file?"
+    options:
+      - id: a
+        text: "A user with write access to the directory can delete or replace the file"
+        explanation: "Correct. Directory write access controls file names."
+      - id: b
+        text: "The directory mode sets the rotation size"
+        explanation: "Rotation uses flags."
+      - id: c
+        text: "The directory mode changes the audit level"
+        explanation: "The policy sets the level."
+    correct_option: a
+    explanation: "Directory write access allows deletion."
+
+  - id: ats036-050-03-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Compare webhook modes."
+    source_readings:
+      - sections/section-050/module-03/course-03-forwarding-and-retention-policy.md
+    prompt: "Which webhook mode can make API requests fail when the collector is down?"
+    options:
+      - id: a
+        text: "`batch`"
+        explanation: "This buffers events and does not delay requests."
+      - id: b
+        text: "`blocking-strict`"
+        explanation: "Correct. A failed send at `RequestReceived` fails the request."
+      - id: c
+        text: "None of them"
+        explanation: "This mode can fail requests."
+    correct_option: b
+    explanation: "Strict blocking protects the log over availability."
+
+  - id: ats036-050-03-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Choose a stronger evidence copy."
+    source_readings:
+      - sections/section-050/module-03/course-03-forwarding-and-retention-policy.md
+    prompt: "Why send events to a remote collector in addition to the local file?"
+    options:
+      - id: a
+        text: "A user with `root` on the node can change the local file"
+        explanation: "Correct. A remote copy is outside that access."
+      - id: b
+        text: "The remote copy makes rotation unnecessary on the node"
+        explanation: "Local rotation is still needed."
+      - id: c
+        text: "The remote copy raises the audit level"
+        explanation: "Levels come from the policy."
+    correct_option: a
+    explanation: "A separate copy resists tampering on the node."
+

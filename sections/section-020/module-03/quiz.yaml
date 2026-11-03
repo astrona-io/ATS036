@@ -1,0 +1,216 @@
+# Knowledge check for section 020, module 03. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-020-03
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-020/module-03
+  title: "Detecting Threats To Data And User Accounts"
+placement:
+  position: after
+  reading: sections/section-020/module-03/course-04-summary.md
+questions:
+  - id: ats036-020-03-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Write a ServiceAccount user name."
+    source_readings:
+      - sections/section-020/module-03/course-01-serviceaccounts-and-user-identity.md
+    prompt: "What is the user name of the ServiceAccount `reporter` in the namespace `starfleet`?"
+    options:
+      - id: a
+        text: "`system:serviceaccount:starfleet:reporter`"
+        explanation: "Correct. The form is `system:serviceaccount:<namespace>:<name>`."
+      - id: b
+        text: "`reporter@starfleet`"
+        explanation: "Kubernetes does not use this form."
+      - id: c
+        text: "`starfleet/reporter`"
+        explanation: "This form appears in some `kubectl` output, but it is not the user name."
+    correct_option: a
+    explanation: "Use the full user name in RBAC checks."
+
+  - id: ats036-020-03-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the account of a Pod without a ServiceAccount."
+    source_readings:
+      - sections/section-020/module-03/course-01-serviceaccounts-and-user-identity.md
+    prompt: "A Pod does not set `serviceAccountName`. Which ServiceAccount does it use?"
+    options:
+      - id: a
+        text: "`default` of its namespace"
+        explanation: "Correct. Kubernetes creates it in every namespace."
+      - id: b
+        text: "None"
+        explanation: "The Pod always has an identity."
+      - id: c
+        text: "`kube-system:admin`"
+        explanation: "No such default exists."
+    correct_option: a
+    explanation: "The `default` ServiceAccount is used."
+
+  - id: ats036-020-03-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Locate the mounted token."
+    source_readings:
+      - sections/section-020/module-03/course-01-serviceaccounts-and-user-identity.md
+    prompt: "Where does the kubelet mount the ServiceAccount token in a container by default?"
+    options:
+      - id: a
+        text: "`/var/run/secrets/kubernetes.io/serviceaccount`"
+        explanation: "Correct. The directory holds `ca.crt`, `namespace` and `token`."
+      - id: b
+        text: "`/etc/kubernetes/pki`"
+        explanation: "This is a control plane node directory."
+      - id: c
+        text: "`/proc/self`"
+        explanation: "This is a process information directory."
+    correct_option: a
+    explanation: "A projected volume holds the token."
+
+  - id: ats036-020-03-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Stop the token from being mounted."
+    source_readings:
+      - sections/section-020/module-03/course-01-serviceaccounts-and-user-identity.md
+    prompt: "Which Pod field stops the kubelet from mounting the ServiceAccount token?"
+    options:
+      - id: a
+        text: "`automountServiceAccountToken: false`"
+        explanation: "Correct. A Pod without the token cannot call the API with it."
+      - id: b
+        text: "`hostNetwork: false`"
+        explanation: "This field controls the network namespace."
+      - id: c
+        text: "`readOnlyRootFilesystem: true`"
+        explanation: "This field controls the root file system."
+    correct_option: a
+    explanation: "Disable automount for Pods that do not call the API."
+
+  - id: ats036-020-03-q05
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Test access with the API server."
+    source_readings:
+      - sections/section-020/module-03/course-02-who-can-read-secrets.md
+    prompt: "Which command asks the API server whether `reporter` can read Secrets in `starfleet`?"
+    options:
+      - id: a
+        text: "`kubectl auth can-i get secrets -n starfleet --as=system:serviceaccount:starfleet:reporter`"
+        explanation: "Correct. The option `--as` impersonates the account."
+      - id: b
+        text: "`kubectl get role secret-reader`"
+        explanation: "This shows the Role, not what the server enforces."
+      - id: c
+        text: "`kubectl logs reporter`"
+        explanation: "This command reads a Pod log."
+    correct_option: a
+    explanation: "Use `kubectl auth can-i` with `--as`."
+
+  - id: ats036-020-03-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Find the binding behind an access."
+    source_readings:
+      - sections/section-020/module-03/course-02-who-can-read-secrets.md
+    prompt: "Which command lists RoleBindings with their Roles and subjects?"
+    options:
+      - id: a
+        text: "`kubectl -n starfleet get rolebindings -o wide`"
+        explanation: "Correct. The columns show the Role and the ServiceAccounts."
+      - id: b
+        text: "`kubectl -n starfleet get events`"
+        explanation: "Events do not list RBAC objects."
+      - id: c
+        text: "`kubectl -n starfleet top pods`"
+        explanation: "This command shows resource use."
+    correct_option: a
+    explanation: "Read the RoleBinding rows."
+
+  - id: ats036-020-03-q07
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Explain the risk of the list verb."
+    source_readings:
+      - sections/section-020/module-03/course-02-who-can-read-secrets.md
+    prompt: "An account can `list` Secrets but cannot `get` them. Can it read the values?"
+    options:
+      - id: a
+        text: "No, `list` returns only names"
+        explanation: "`list` returns the full objects."
+      - id: b
+        text: "Yes, the response of `list` contains the data of every Secret"
+        explanation: "Correct. `watch` also returns the data."
+      - id: c
+        text: "Only if it is a ClusterRole"
+        explanation: "The scope does not change what `list` returns."
+    correct_option: b
+    explanation: "Check `get`, `list` and `watch`."
+
+  - id: ats036-020-03-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Revoke an access safely."
+    source_readings:
+      - sections/section-020/module-03/course-02-who-can-read-secrets.md
+    prompt: "The RoleBinding `reporter-secrets` gives `reporter` an unneeded access. What is the smallest change that removes it?"
+    options:
+      - id: a
+        text: "Delete the RoleBinding `reporter-secrets`"
+        explanation: "Correct. The Role and other bindings stay unchanged."
+      - id: b
+        text: "Delete all Secrets in the namespace"
+        explanation: "This destroys data and does not fix the permission."
+      - id: c
+        text: "Delete the namespace"
+        explanation: "This removes everything."
+    correct_option: a
+    explanation: "Delete the binding that grants the access."
+
+  - id: ats036-020-03-q09
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Judge base64 protection."
+    source_readings:
+      - sections/section-020/module-03/course-03-secret-exposure-paths.md
+    prompt: "What protection does the base64 form of a Secret value give?"
+    options:
+      - id: a
+        text: "None, it is an encoding that anyone can reverse"
+        explanation: "Correct. `base64 -d` returns the original text."
+      - id: b
+        text: "It encrypts the value in etcd"
+        explanation: "Encryption at rest needs an `EncryptionConfiguration`."
+      - id: c
+        text: "It hides the value from `kubectl exec`"
+        explanation: "The container sees the decoded value."
+    correct_option: a
+    explanation: "Base64 is not encryption."
+
+  - id: ats036-020-03-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Name a path from a Pod to the Secret value."
+    source_readings:
+      - sections/section-020/module-03/course-03-secret-exposure-paths.md
+    prompt: "A Pod gets a Secret in an environment variable. Who can read the value without the Secret API?"
+    options:
+      - id: a
+        text: "Anyone who can run `kubectl exec` in the Pod"
+        explanation: "Correct. The environment of the container shows the value."
+      - id: b
+        text: "Nobody"
+        explanation: "The environment variable is readable inside the container."
+      - id: c
+        text: "Only the kubelet"
+        explanation: "Processes in the container read it too."
+    correct_option: a
+    explanation: "The `exec` right is a right to read the Pod environment."

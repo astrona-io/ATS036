@@ -1,0 +1,47 @@
+{
+  "context": "kind-astro-ats-036-lab-030-03-01",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "lateral-finding",
+      "namespace": "starfleet",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "lateral-finding",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "sourcePod": "intruder",
+          "sourceNamespace": "outpost",
+          "target": "probe",
+          "finding": "lateral-movement-to-probe"
+        }
+      }
+    },
+    {
+      "kind": "pod",
+      "name": "intruder",
+      "namespace": "outpost",
+      "state": "pod",
+      "expected": {
+        "metadata": {
+          "name": "intruder"
+        }
+      }
+    },
+    {
+      "kind": "deployment",
+      "name": "probe",
+      "namespace": "starfleet",
+      "state": "deployment",
+      "expected": {
+        "spec": {
+          "replicas": 2
+        }
+      }
+    }
+  ],
+  "behavior": []
+}

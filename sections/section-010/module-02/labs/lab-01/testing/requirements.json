@@ -1,0 +1,28 @@
+{
+  "context": "kind-astro-ats-036-lab-010-02-01",
+  "resources": [
+    {
+      "kind": "deployment",
+      "name": "probe",
+      "namespace": "starfleet",
+      "expected": {
+        "metadata": {
+          "name": "probe"
+        }
+      },
+      "state": "deployment"
+    },
+    {
+      "kind": "configmap",
+      "name": "shell-in-probe-rule",
+      "namespace": "starfleet",
+      "expected": {
+        "metadata": {
+          "name": "shell-in-probe-rule",
+          "namespace": "starfleet"
+        }
+      }
+    }
+  ],
+  "behavior": []
+}

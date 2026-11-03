@@ -1,0 +1,216 @@
+# Knowledge check for section 010, module 02. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-010-02
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-010/module-02
+  title: "Writing Runtime Detection Rules"
+placement:
+  position: after
+  reading: sections/section-010/module-02/course-04-summary.md
+questions:
+  - id: ats036-010-02-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the entries of a rule file."
+    source_readings:
+      - sections/section-010/module-02/course-01-anatomy-of-a-falco-rule-file.md
+    prompt: "Which entry in a Falco rule file is a named piece of a condition that several rules can reuse?"
+    options:
+      - id: a
+        text: "A list"
+        explanation: "A list holds values, not condition logic."
+      - id: b
+        text: "A macro"
+        explanation: "Correct. A macro such as spawned_process is a named piece of condition."
+      - id: c
+        text: "A tag"
+        explanation: "A tag only groups rules; it has no condition."
+    correct_option: b
+    explanation: "A macro names a piece of condition."
+
+  - id: ats036-010-02-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Identify the field that names the command line."
+    source_readings:
+      - sections/section-010/module-02/course-01-anatomy-of-a-falco-rule-file.md
+    prompt: "Which field gives the full command line of the process in a Falco output?"
+    options:
+      - id: a
+        text: "proc.name"
+        explanation: "proc.name is only the name of the executable."
+      - id: b
+        text: "proc.cmdline"
+        explanation: "Correct. proc.cmdline is the full command line."
+      - id: c
+        text: "k8s.ns.name"
+        explanation: "k8s.ns.name is the namespace of the Pod."
+    correct_option: b
+    explanation: "proc.cmdline holds the full command line."
+
+  - id: ats036-010-02-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Choose stable scope values."
+    source_readings:
+      - sections/section-010/module-02/course-01-anatomy-of-a-falco-rule-file.md
+    prompt: "Which value is the most stable way to scope a rule to a workload group?"
+    options:
+      - id: a
+        text: "A Pod name"
+        explanation: "Pod names change with every rollout."
+      - id: b
+        text: "The namespace name"
+        explanation: "Correct. The namespace name does not change when Pods are replaced."
+      - id: c
+        text: "A container ID"
+        explanation: "Container IDs change whenever a container restarts."
+    correct_option: b
+    explanation: "Use the namespace, a container name or a label."
+
+  - id: ats036-010-02-q04
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain the effect of the container macro."
+    source_readings:
+      - sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
+    prompt: "What does adding the container macro to a process-creation condition change?"
+    options:
+      - id: a
+        text: "The rule fires only for processes inside containers"
+        explanation: "Correct. The macro limits the rule to container events."
+      - id: b
+        text: "The rule fires only for the root user"
+        explanation: "The macro does not test the user."
+      - id: c
+        text: "The rule also fires for host processes"
+        explanation: "The opposite is true: host processes are excluded."
+    correct_option: a
+    explanation: "The container macro excludes host processes."
+
+  - id: ats036-010-02-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Scope a rule to a namespace."
+    source_readings:
+      - sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
+    prompt: "You want a shell rule to apply to the starfleet namespace only. Which test do you add?"
+    options:
+      - id: a
+        text: "k8s.pod.name = starfleet"
+        explanation: "That field is the Pod name, not the namespace."
+      - id: b
+        text: "k8s.ns.name = starfleet"
+        explanation: "Correct. k8s.ns.name is the namespace of the Pod."
+      - id: c
+        text: "container.name = starfleet"
+        explanation: "That field is the container name."
+    correct_option: b
+    explanation: "k8s.ns.name tests the namespace."
+
+  - id: ats036-010-02-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose the shell names for a minimal image."
+    source_readings:
+      - sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
+    prompt: "The probe image is Alpine based and has no bash. Which process names should the shell rule match?"
+    options:
+      - id: a
+        text: "Only bash"
+        explanation: "A rule that matches only bash misses shells that the image really contains."
+      - id: b
+        text: "sh and ash, and bash for other images"
+        explanation: "Correct. Match the shells that images in scope can contain."
+      - id: c
+        text: "Only python"
+        explanation: "python is the application, not a shell."
+    correct_option: b
+    explanation: "Match the shells the images can contain."
+
+  - id: ats036-010-02-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use the parent process in triage."
+    source_readings:
+      - sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
+    prompt: "A shell has the parent process python in the probe workload. What does that suggest?"
+    options:
+      - id: a
+        text: "The application started it, which is more suspicious than a kubectl exec session"
+        explanation: "Correct. The application does not normally start a shell, so this needs investigation."
+      - id: b
+        text: "It is always a health probe"
+        explanation: "A parent of python does not indicate a probe."
+      - id: c
+        text: "It proves the kernel is compromised"
+        explanation: "The parent process alone proves nothing about the kernel."
+    correct_option: a
+    explanation: "A shell started by the application is more suspicious."
+
+  - id: ats036-010-02-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Write a narrow exception."
+    source_readings:
+      - sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
+    prompt: "Which exception best allows one approved start-up script and keeps the rule useful?"
+    options:
+      - id: a
+        text: "Ignore every shell in the namespace"
+        explanation: "That turns the rule off for the whole namespace."
+      - id: b
+        text: "Compare namespace, container, parent process and command line"
+        explanation: "Correct. Several fields exclude only the approved case."
+      - id: c
+        text: "Disable the rule for one hour"
+        explanation: "A disabled rule detects nothing during that hour."
+    correct_option: b
+    explanation: "Combine several fields in one exception."
+
+  - id: ats036-010-02-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Know what loads a rule."
+    source_readings:
+      - sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
+    prompt: "You store a rule file in a ConfigMap. When does the sensor start using it?"
+    options:
+      - id: a
+        text: "Immediately, because Falco watches ConfigMaps"
+        explanation: "Falco reads rule files from disk; it does not read ConfigMaps by itself."
+      - id: b
+        text: "After the file is mounted in a Falco Pod and loaded when Falco starts"
+        explanation: "Correct. The file must be mounted and loaded by Falco."
+      - id: c
+        text: "After the next kubectl apply"
+        explanation: "Applying a ConfigMap again does not load it into the sensor."
+    correct_option: b
+    explanation: "A stored file is not an active rule."
+
+  - id: ats036-010-02-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Judge the coverage of a process rule."
+    source_readings:
+      - sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
+    prompt: "An attacker with code execution inside the Python process reads files and opens connections without starting a process. Does the shell rule fire?"
+    options:
+      - id: a
+        text: "Yes, any activity starts a shell"
+        explanation: "No shell was started, so the condition is false."
+      - id: b
+        text: "No, a separate detection for file reads or connections is needed"
+        explanation: "Correct. The shell rule sees only process creation."
+      - id: c
+        text: "Yes, but only at priority DEBUG"
+        explanation: "The priority does not change what the condition matches."
+    correct_option: b
+    explanation: "Different behaviors need different rules."

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: audit-exec
+  namespace: starfleet
+data:
+  resource: pods
+  subresource: exec
+  podName: shuttle
+  command: id
+  level: Metadata

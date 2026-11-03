@@ -1,0 +1,216 @@
+# Knowledge check for section 010, module 03. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-010-03
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-010/module-03
+  title: "Detecting Command Execution Through API Audit Records"
+placement:
+  position: after
+  reading: sections/section-010/module-03/course-04-summary.md
+questions:
+  - id: ats036-010-03-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the subresource of an exec request."
+    source_readings:
+      - sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
+    prompt: "In an audit event for kubectl exec, which value is in the subresource field?"
+    options:
+      - id: a
+        text: "exec"
+        explanation: "Correct. The resource is pods and the subresource is exec."
+      - id: b
+        text: "shell"
+        explanation: "There is no subresource named shell."
+      - id: c
+        text: "attach-pods"
+        explanation: "There is no such subresource."
+    correct_option: a
+    explanation: "The subresource is exec."
+
+  - id: ats036-010-03-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Know the verb of an exec request."
+    source_readings:
+      - sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
+    prompt: "Which API verb does an exec request use?"
+    options:
+      - id: a
+        text: "get"
+        explanation: "The request is not a read of an object."
+      - id: b
+        text: "create"
+        explanation: "Correct. An exec request is a create on pods/exec."
+      - id: c
+        text: "delete"
+        explanation: "Nothing is deleted by an exec request."
+    correct_option: b
+    explanation: "exec is a create on pods/exec."
+
+  - id: ats036-010-03-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Write an audit policy that records exec."
+    source_readings:
+      - sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
+    prompt: "An audit policy lists only the resource pods. Are exec requests recorded?"
+    options:
+      - id: a
+        text: "Yes, subresources are included"
+        explanation: "A rule for pods does not match its subresources."
+      - id: b
+        text: "No, pods/exec must be listed by name"
+        explanation: "Correct. List pods/exec explicitly."
+      - id: c
+        text: "Only if the level is RequestResponse"
+        explanation: "The level does not change which resources a rule matches."
+    correct_option: b
+    explanation: "Subresources need their own entry."
+
+  - id: ats036-010-03-q04
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Know what the Metadata level omits."
+    source_readings:
+      - sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
+    prompt: "What does the Metadata audit level leave out?"
+    options:
+      - id: a
+        text: "The user name"
+        explanation: "The user name is recorded."
+      - id: b
+        text: "The request and response bodies"
+        explanation: "Correct. Bodies are not recorded at the Metadata level."
+      - id: c
+        text: "The verb"
+        explanation: "The verb is recorded."
+    correct_option: b
+    explanation: "Bodies are not recorded."
+
+  - id: ats036-010-03-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Match events of one request."
+    source_readings:
+      - sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
+    prompt: "One exec request produced more than one event. Which field ties them together?"
+    options:
+      - id: a
+        text: "userAgent"
+        explanation: "Many requests share a user agent."
+      - id: b
+        text: "auditID"
+        explanation: "Correct. All events of one request carry the same auditID."
+      - id: c
+        text: "stageTimestamp"
+        explanation: "Each stage has a different timestamp."
+    correct_option: b
+    explanation: "Match by auditID."
+
+  - id: ats036-010-03-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read identity fields."
+    source_readings:
+      - sections/section-010/module-03/course-02-who-sent-the-request-identity-and-origin.md
+    prompt: "A ServiceAccount sends a request. How does its username appear?"
+    options:
+      - id: a
+        text: "system:serviceaccount:<namespace>:<name>"
+        explanation: "Correct. This is the form of a ServiceAccount username."
+      - id: b
+        text: "The Pod name"
+        explanation: "The Pod name is not the identity."
+      - id: c
+        text: "The node name"
+        explanation: "The node name is not the identity."
+    correct_option: a
+    explanation: "ServiceAccounts use the system:serviceaccount form."
+
+  - id: ats036-010-03-q07
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Understand impersonation."
+    source_readings:
+      - sections/section-010/module-03/course-02-who-sent-the-request-identity-and-origin.md
+    prompt: "An event has both user and impersonatedUser. Which statement is correct?"
+    options:
+      - id: a
+        text: "user is the real caller and impersonatedUser is the identity used for authorization"
+        explanation: "Correct. Look at both fields."
+      - id: b
+        text: "They are always the same account"
+        explanation: "They differ when a caller impersonates another identity."
+      - id: c
+        text: "impersonatedUser is the Pod that received the request"
+        explanation: "impersonatedUser is an identity, not a Pod."
+    correct_option: a
+    explanation: "Read both fields."
+
+  - id: ats036-010-03-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "State what the record proves."
+    source_readings:
+      - sections/section-010/module-03/course-03-correlating-audit-records-with-other-evidence.md
+    prompt: "What does an exec audit record prove?"
+    options:
+      - id: a
+        text: "An identity asked the API server to open a session in a Pod"
+        explanation: "Correct. It proves the request and the identity."
+      - id: b
+        text: "The command succeeded and printed its output"
+        explanation: "The record does not contain the output or the result."
+      - id: c
+        text: "The container was compromised"
+        explanation: "A request alone does not prove a compromise."
+    correct_option: a
+    explanation: "It proves the request and the identity."
+
+  - id: ats036-010-03-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Correlate by time."
+    source_readings:
+      - sections/section-010/module-03/course-03-correlating-audit-records-with-other-evidence.md
+    prompt: "You match an audit record with a runtime alert. How do you compare their times?"
+    options:
+      - id: a
+        text: "Require the same exact second"
+        explanation: "Clocks of different machines differ slightly."
+      - id: b
+        text: "Use a window of seconds, because clocks differ"
+        explanation: "Correct. A window allows for clock differences."
+      - id: c
+        text: "Ignore time and match the namespace"
+        explanation: "A namespace match is too broad without time."
+    correct_option: b
+    explanation: "Use a time window."
+
+  - id: ats036-010-03-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Judge a missing record."
+    source_readings:
+      - sections/section-010/module-03/course-03-correlating-audit-records-with-other-evidence.md
+    prompt: "There is no audit record of a suspicious session. What can you conclude?"
+    options:
+      - id: a
+        text: "Nothing happened"
+        explanation: "A missing record is not proof of absence."
+      - id: b
+        text: "The policy may not cover it, or the behavior did not use the API"
+        explanation: "Correct. Both reasons are possible."
+      - id: c
+        text: "The log is always complete"
+        explanation: "Logs can be incomplete or changed."
+    correct_option: b
+    explanation: "A missing record proves nothing."

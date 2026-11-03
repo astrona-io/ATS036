@@ -11,459 +11,306 @@ scope:
   id: final
   title: Final Domain Quiz
 questions:
-- id: ats036-final-q01
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Choose the source of a workload baseline.
-  source_readings:
-  - sections/section-010/module-01/course-01-expected-behavior-of-a-workload.md
-  prompt: You must write the expected behavior of a new web workload before you enable runtime rules. Which source do you start from?
-  options:
-  - id: a
-    text: A week of observed behavior of the running Pods
-    explanation: Observation can contain the actions of an attacker if the workload is already compromised. It corrects a baseline but should not define it.
-  - id: b
-    text: The Pod specification and the purpose of the application
-    explanation: Correct. The specification declares the command, port and ServiceAccount, and the purpose says what the application may do.
-  - id: c
-    text: The default rule set of the sensor
-    explanation: Default rules are generic. They do not know what this workload is supposed to do.
-  correct_option: b
-  explanation: Start from the specification and the application purpose, then use observation to refine the baseline.
-- id: ats036-final-q02
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Explain why a node sensor sees all containers.
-  source_readings:
-  - sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
-  prompt: A sensor runs on a node and watches system calls. Why can it see the system calls of every container on that node?
-  options:
-  - id: a
-    text: Every container runs its own kernel and reports to the sensor
-    explanation: Containers do not have their own kernel.
-  - id: b
-    text: Containers are Linux processes that make system calls to the kernel of the node
-    explanation: Correct. All containers on the node share one kernel, so one sensor sees them all.
-  - id: c
-    text: The kubelet copies every system call into the sensor
-    explanation: The kubelet does not copy system calls. The sensor reads them from a driver in the kernel.
-  correct_option: b
-  explanation: Containers share the kernel of the node. A kernel driver can therefore capture the system calls of all of them.
-- id: ats036-final-q03
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Name the Falco rule fields.
-  source_readings:
-  - sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
-  prompt: In a Falco rule, which field holds the filter over event fields such as `proc.name` and `k8s.ns.name`?
-  options:
-  - id: a
-    text: "`output`"
-    explanation: "`output` is the alert text with placeholders."
-  - id: b
-    text: "`condition`"
-    explanation: Correct. The condition is the filter that decides whether an event matches the rule.
-  - id: c
-    text: "`priority`"
-    explanation: "`priority` sets the severity of the alert, for example `WARNING`."
-  correct_option: b
-  explanation: The `condition` field is the filter. `output` is the message and `priority` is the severity.
-- id: ats036-final-q04
+- id: ats036-final-030-q01
   type: single_choice
   difficulty: intermediate
-  learning_objective: Interpret a Falco rule match.
+  learning_objective: Find the object behind a returning Pod.
   source_readings:
-  - sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
-  prompt: Falco writes a `WARNING` alert that a shell started in a `probe` container. What does the alert prove?
+  - sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
+  prompt: A suspicious Pod returns after you delete it. Which action stops it from
+    returning while keeping the evidence?
   options:
   - id: a
-    text: The event matched the rule, but it does not prove that anything was prevented or that it was an attack
-    explanation: Correct. A rule match is an alert about an event that already happened. Context decides if it is an attack.
+    text: Delete the Pod again and again
+    explanation: The ReplicaSet creates a new Pod each time.
   - id: b
-    text: The shell was blocked before it ran
-    explanation: Falco detects events. It does not prevent them unless a separate response is configured.
+    text: Save the Deployment and logs, then scale the Deployment to zero
+    explanation: Correct. The controller stops creating Pods and the object stays
+      for the record.
   - id: c
-    text: The container image is compromised
-    explanation: A shell can come from approved maintenance. The alert alone does not prove a compromised image.
-  correct_option: a
-  explanation: An alert is a hypothesis about an event. It is neither proof of compromise nor proof of prevention.
-- id: ats036-final-q05
+    text: Restart the kubelet
+    explanation: The kubelet does not own the template.
+  correct_option: b
+  explanation: Stop the controller after you preserve its template.
+- id: ats036-final-030-q02
   type: single_choice
   difficulty: intermediate
-  learning_objective: Read the level of an audit policy.
+  learning_objective: Map a client address in an access log to its Pod.
   source_readings:
-  - sections/section-010/module-01/course-03-audit-records-as-behavioral-evidence.md
-  prompt: An audit policy rule sets the level `Metadata` for `secrets` in the namespace `starfleet`. Which statement about a recorded Secret read is true?
+  - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+  prompt: An access log line starts with the address 10.244.1.9. How do you find the
+    Pod that sent the request?
   options:
   - id: a
-    text: The event holds the Secret data in `responseObject`
-    explanation: "`responseObject` is kept only at the level `RequestResponse`."
+    text: Read the Pod name from the first field of the log line
+    explanation: The first field is an address, not a name.
   - id: b
-    text: The event names the user, verb, object, stage and result, without request or response bodies
-    explanation: Correct. `Metadata` records who did what and the result, but not the bodies.
+    text: Ask the Service for its endpoints
+    explanation: Endpoints list the targets, not the clients.
   - id: c
-    text: No event is written, because Secrets are excluded at this level
-    explanation: "`Metadata` writes an event. The level `None` writes nothing."
-  correct_option: b
-  explanation: The level `Metadata` keeps the request metadata and leaves out request and response bodies.
-- id: ats036-final-q06
+    text: Search the `IP` column of `kubectl get pods -A -o wide` and check the Pod
+      age against the log time
+    explanation: Correct. The IP column maps the address, and the age check avoids
+      a reused address.
+  correct_option: c
+  explanation: Map the address and check the timing.
+- id: ats036-final-030-q03
   type: single_choice
-  difficulty: beginner
-  learning_objective: Choose the evidence source for the user layer.
+  difficulty: advanced
+  learning_objective: Combine the evidence of persistence and authority.
   source_readings:
-  - sections/section-020/module-01/course-01-security-signals-by-layer.md
-  prompt: You want to know which authenticated user called the Kubernetes API to read a Secret. Which source holds this?
+  - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+  prompt: A Deployment runs as a ServiceAccount that has the ClusterRole `edit` in
+    its namespace. Which statement is correct?
   options:
   - id: a
-    text: The kubelet log on the worker node
-    explanation: The kubelet log records container and volume activity on one node, not API requests.
+    text: Both the Deployment and the binding are part of the incident and need separate
+      containment
+    explanation: Correct. The Deployment keeps the code running and the binding gives
+      it authority.
   - id: b
-    text: The Kubernetes audit log
-    explanation: Correct. Audit events name the authenticated user, the verb and the object.
+    text: Removing the Deployment also removes the binding
+    explanation: A RoleBinding is a separate object.
   - id: c
-    text: The application log of the Pod
-    explanation: The application log shows what the application printed. It does not show other API calls.
-  correct_option: b
-  explanation: The audit log is the source for who called the API.
-- id: ats036-final-q07
-  type: single_choice
-  difficulty: beginner
-  learning_objective: State how long Kubernetes events are kept by default.
-  source_readings:
-  - sections/section-020/module-01/course-01-security-signals-by-layer.md
-  prompt: Which statement about Kubernetes events is correct?
-  options:
-  - id: a
-    text: They are kept in the cluster for one hour by default, set by `--event-ttl`
-    explanation: Correct. Events are short-lived, so they are not long-term evidence.
-  - id: b
-    text: They are kept forever in etcd
-    explanation: Events expire. The API server removes them after the event time to live.
-  - id: c
-    text: They are written to `/var/log/pods` on the node
-    explanation: Container logs are in `/var/log/pods`. Events are API objects.
+    text: The role applies in every namespace
+    explanation: A RoleBinding limits the role to its own namespace.
   correct_option: a
-  explanation: Events expire after one hour by default. Ship important evidence to a store outside the cluster.
-- id: ats036-final-q08
+  explanation: Contain the workload and the authority separately.
+- id: ats036-final-040-02-q02
   type: single_choice
   difficulty: beginner
-  learning_objective: Read the exit code of a finished container.
+  learning_objective: Remove all capabilities.
   source_readings:
-  - sections/section-020/module-01/course-02-workload-logs-restarts-and-exit-evidence.md
-  prompt: Which command prints the exit code of the last finished instance of the container in Pod `crash-report`?
+  - sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
+  prompt: Which setting removes every capability from a container?
   options:
   - id: a
-    text: "`kubectl -n starfleet get pod crash-report -o jsonpath='{.status.containerStatuses[0].lastState.terminated.exitCode}'`"
-    explanation: Correct. The last terminated state holds the exit code.
+    text: '`capabilities.drop: ["ALL"]` in the container `securityContext`'
+    explanation: Correct. It empties the capability set.
   - id: b
-    text: "`kubectl -n starfleet logs crash-report`"
-    explanation: This prints a log. The exit code is a field of the Pod status.
+    text: '`capabilities.drop: ["ALL"]` in the Pod `securityContext`'
+    explanation: The field exists only at container level.
   - id: c
-    text: "`kubectl -n starfleet get events`"
-    explanation: Events may mention a restart, but the exit code is in the Pod status.
+    text: "`allowPrivilegeEscalation: false`"
+    explanation: This sets `no_new_privs` and does not remove capabilities.
   correct_option: a
-  explanation: The exit code is in `status.containerStatuses[].lastState.terminated.exitCode`.
-- id: ats036-final-q09
+  explanation: Drop ALL at container level.
+- id: ats036-final-040-02-q07
   type: single_choice
   difficulty: intermediate
-  learning_objective: Explain the previous log.
+  learning_objective: Explain no_new_privs.
   source_readings:
-  - sections/section-020/module-01/course-02-workload-logs-restarts-and-exit-evidence.md
-  prompt: A container restarted twenty seconds ago. The current log is empty. Where is the log of the instance that crashed?
+  - sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
+  prompt: 'What does `allowPrivilegeEscalation: false` set?'
   options:
   - id: a
-    text: In `kubectl logs --previous` for the same container
-    explanation: Correct. The option reads the log of the last finished instance.
+    text: The `no_new_privs` flag on the process
+    explanation: Correct. A started program cannot gain more privileges than its parent.
   - id: b
-    text: It is lost, because a restart clears all logs
-    explanation: The kubelet keeps the last finished instance, so it can still be read.
+    text: An empty capability set
+    explanation: Capabilities are dropped separately.
   - id: c
-    text: In the events of the Pod
-    explanation: Events say that the container was killed or restarted. They do not hold its log lines.
-  correct_option: a
-  explanation: After a restart, the current log is a new instance. Use `--previous` for the one that ended.
-- id: ats036-final-q10
-  type: single_choice
-  difficulty: intermediate
-  learning_objective: Interpret an exit code above 128.
-  source_readings:
-  - sections/section-020/module-01/course-02-workload-logs-restarts-and-exit-evidence.md
-  prompt: A container exits with code 137 and the reason `OOMKilled`. What does this mean?
-  options:
-  - id: a
-    text: The application returned its own error code 137
-    explanation: Codes above 128 normally mean a signal, and the reason names the memory limit.
-  - id: b
-    text: The kernel ended the container with signal 9 because it used more memory than its limit
-    explanation: Correct. 137 is 128 plus signal 9, and `OOMKilled` is the memory limit reason.
-  - id: c
-    text: The image could not be pulled
-    explanation: An image pull problem prevents the container from starting. It gives no exit code.
-  correct_option: b
-  explanation: 137 is 128 plus 9 (`SIGKILL`). With `OOMKilled` it means the memory limit was exceeded.
-- id: ats036-final-q11
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Classify an action by attack phase.
-  source_readings:
-  - sections/section-030/module-01/course-01-attack-phases-in-kubernetes.md
-  prompt: A process in a Pod uses its ServiceAccount token to ask the API server which actions the ServiceAccount may perform. Which phase is this?
-  options:
-  - id: a
-    text: Discovery
-    explanation: Correct. The attacker learns what the identity can do in the environment.
-  - id: b
-    text: Persistence
-    explanation: Persistence means staying in the environment after a restart, for example with a new binding or CronJob.
-  - id: c
-    text: Impact
-    explanation: Impact is the final goal, such as data destruction. A permission query changes nothing.
-  correct_option: a
-  explanation: Listing the permissions of an identity is discovery.
-- id: ats036-final-q12
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Classify a Secret read attempt.
-  source_readings:
-  - sections/section-030/module-01/course-01-attack-phases-in-kubernetes.md
-  prompt: A Pod's identity sends `get` for a Secret and the API server answers `403`. Which statement is correct?
-  options:
-  - id: a
-    text: No phase applies, because the request failed
-    explanation: A failed attempt still shows an action and intent.
-  - id: b
-    text: It is a credential access attempt that did not succeed
-    explanation: Correct. The goal was to get a secret, and authorization denied it.
-  - id: c
-    text: It is privilege escalation that succeeded
-    explanation: Nothing was escalated, and the request was denied.
-  correct_option: b
-  explanation: A denied request is still an attempt in the credential access phase.
-- id: ats036-final-q13
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Name the identity format of a ServiceAccount.
-  source_readings:
-  - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
-  prompt: In an audit event, what is the `user.username` of the ServiceAccount `threat-reader` in the namespace `starfleet`?
-  options:
-  - id: a
-    text: "`system:serviceaccount:starfleet:threat-reader`"
-    explanation: Correct. The format is `system:serviceaccount:<namespace>:<name>`.
-  - id: b
-    text: "`starfleet/threat-reader`"
-    explanation: This is not the authenticated user name format.
-  - id: c
-    text: "`system:node:threat-reader`"
-    explanation: The `system:node:` prefix is for kubelets.
-  correct_option: a
-  explanation: ServiceAccounts authenticate as `system:serviceaccount:<namespace>:<name>`.
-- id: ats036-final-q14
-  type: single_choice
-  difficulty: intermediate
-  learning_objective: Read impersonation in an audit event.
-  source_readings:
-  - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
-  prompt: 'An audit event has `user.username: admin` and `impersonatedUser.username: system:serviceaccount:starfleet:threat-reader`. Who made the request?'
-  options:
-  - id: a
-    text: The ServiceAccount `threat-reader`
-    explanation: This identity was used for authorization, but it did not send the request.
-  - id: b
-    text: The caller `admin`, who asked the API server to act as `threat-reader`
-    explanation: Correct. `user` is the real caller. `impersonatedUser` is the identity used for authorization.
-  - id: c
-    text: Nobody can say
-    explanation: The two fields together show both the caller and the identity they used.
-  correct_option: b
-  explanation: Read both fields. The real caller is in `user`.
-- id: ats036-final-q15
-  type: single_choice
-  difficulty: intermediate
-  learning_objective: Tie an audit event to a Pod.
-  source_readings:
-  - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
-  prompt: An audit event has the `user.extra` key `authentication.kubernetes.io/pod-uid`. Why is this value better than the Pod name for attribution?
-  options:
-  - id: a
-    text: Pod UIDs are secret and cannot be read by others
-    explanation: UIDs are visible in the Pod object. That is not the reason.
-  - id: b
-    text: The UID is unique for the life of one Pod, while a name can be reused by a replacement
-    explanation: Correct. A replacement Pod with the same name has a different UID.
-  - id: c
-    text: The UID is the same for all Pods of a Deployment
-    explanation: Each Pod has its own UID.
-  correct_option: b
-  explanation: UIDs identify one object instance. Names can be reused.
-- id: ats036-final-q16
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Describe the writable container layer.
-  source_readings:
-  - sections/section-040/module-01/course-01-the-writable-container-layer.md
-  prompt: A process writes a file to the root filesystem of a container with default settings. Where does the file go?
-  options:
-  - id: a
-    text: Into the image layers, for all future containers
-    explanation: Image layers are read-only. The runtime does not change them.
-  - id: b
-    text: Into the writable layer of this container instance
-    explanation: Correct. The layer is created when the container starts and discarded when it is replaced.
-  - id: c
-    text: Into the node filesystem outside the container
-    explanation: Only a volume such as `hostPath` reaches the node.
-  correct_option: b
-  explanation: Writes go to the container writable layer.
-- id: ats036-final-q17
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Choose the fix after a manual change.
-  source_readings:
-  - sections/section-040/module-01/course-01-the-writable-container-layer.md
-  prompt: An operator patched a file inside a running container to fix a bug. What is the correct long-term action?
-  options:
-  - id: a
-    text: Keep the container running because the fix works
-    explanation: The change is unreviewed and lost on restart.
-  - id: b
-    text: Change the image or Pod template and replace the container
-    explanation: Correct. A replacement from a reviewed image restores a known state.
-  - id: c
-    text: Restart the container and expect the file to persist
-    explanation: The writable layer is discarded on restart.
-  correct_option: b
-  explanation: Replace containers; do not patch them.
-- id: ats036-final-q18
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Identify the field for a read-only root.
-  source_readings:
-  - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
-  prompt: Which field makes the root filesystem of a container read-only?
-  options:
-  - id: a
-    text: "`securityContext.readOnlyRootFilesystem: true` on the container"
-    explanation: Correct. This field mounts the root filesystem read-only.
-  - id: b
-    text: "`spec.readOnly: true` on the Pod"
-    explanation: This field does not exist on the Pod.
-  - id: c
-    text: "`runAsNonRoot: true`"
-    explanation: This stops root users. It does not change the mount.
-  correct_option: a
-  explanation: The field is set in the container securityContext.
-- id: ats036-final-q19
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Choose a writable path for a read-only Pod.
-  source_readings:
-  - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
-  prompt: An application with a read-only root filesystem needs to write temporary files. What is the recommended approach?
-  options:
-  - id: a
-    text: Turn off `readOnlyRootFilesystem`
-    explanation: This removes the protection.
-  - id: b
-    text: Mount an `emptyDir` volume at the path that needs writes
-    explanation: Correct. The volume is writable and the rest of the root stays read-only.
-  - id: c
-    text: Run the container as root
-    explanation: Root does not make a read-only mount writable.
-  correct_option: b
-  explanation: Mount an emptyDir only where writes are needed.
-- id: ats036-final-q20
-  type: single_choice
-  difficulty: intermediate
-  learning_objective: Explain allowPrivilegeEscalation.
-  source_readings:
-  - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
-  prompt: 'What does `allowPrivilegeEscalation: false` do?'
-  options:
-  - id: a
-    text: Sets the `no_new_privs` flag so a process cannot gain more privileges than its parent
-    explanation: Correct. For example, a set-user-ID binary cannot raise privileges.
-  - id: b
-    text: Blocks all network access
-    explanation: It does not affect networking.
-  - id: c
-    text: Removes all capabilities
-    explanation: "`capabilities.drop` does that."
+    text: A read-only root filesystem
+    explanation: That is `readOnlyRootFilesystem`.
   correct_option: a
   explanation: It sets no_new_privs.
-- id: ats036-final-q21
+- id: ats036-final-040-03-q08
   type: single_choice
   difficulty: beginner
-  learning_objective: Name the audit levels.
+  learning_objective: Define a digest.
   source_readings:
-  - sections/section-050/module-01/course-01-the-audit-event-model.md
-  prompt: Which audit level records the request body but not the response body?
+  - sections/section-040/module-03/course-03-pinning-images-and-detecting-drift.md
+  prompt: What is an image digest?
   options:
   - id: a
-    text: "`Metadata`"
-    explanation: Metadata has neither body.
+    text: A label that the registry owner can move
+    explanation: That describes a tag.
   - id: b
-    text: "`Request`"
-    explanation: Correct. The event holds the metadata and the request body.
+    text: The SHA-256 hash of the image manifest
+    explanation: Correct. The same digest always means the same content.
   - id: c
-    text: "`RequestResponse`"
-    explanation: This level also holds the response body.
+    text: The size of the image
+    explanation: Size is not the digest.
   correct_option: b
-  explanation: Request records the request body only.
-- id: ats036-final-q22
+  explanation: Digest is a content hash.
+- id: ats036-final-050-q01
   type: single_choice
   difficulty: beginner
-  learning_objective: Pick the stage with the outcome.
+  learning_objective: Name interactive subresources.
   source_readings:
-  - sections/section-050/module-01/course-01-the-audit-event-model.md
-  prompt: Which stage holds the final HTTP status code of a normal request?
+  - sections/section-050/module-02/course-01-subresources-in-audit-policy-rules.md
+  prompt: Which subresource opens a tunnel from the client to a port of a Pod?
   options:
   - id: a
-    text: "`RequestReceived`"
-    explanation: This stage is written before any handler runs, so no status exists.
+    text: "`pods/portforward`"
+    explanation: Correct. It forwards a local port to a Pod port.
   - id: b
-    text: "`ResponseComplete`"
-    explanation: Correct. It is written after the response body is sent.
+    text: "`pods/log`"
+    explanation: This reads the container log.
   - id: c
-    text: "`Panic`"
-    explanation: This stage is only for internal handler failures.
-  correct_option: b
-  explanation: ResponseComplete carries the final status.
-- id: ats036-final-q23
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Choose the safe level for Secrets.
-  source_readings:
-  - sections/section-050/module-01/course-01-the-audit-event-model.md
-  prompt: Which level is the safe choice for Secrets?
-  options:
-  - id: a
-    text: "`RequestResponse`"
-    explanation: The response body contains the Secret data.
-  - id: b
-    text: "`Request`"
-    explanation: A create or update request body contains the Secret data.
-  - id: c
-    text: "`Metadata`"
-    explanation: Correct. It records the access without the data.
-  correct_option: c
-  explanation: Metadata keeps credentials out of the log.
-- id: ats036-final-q24
+    text: "`serviceaccounts/token`"
+    explanation: This creates a ServiceAccount token.
+  correct_option: a
+  explanation: "`pods/portforward` carries the tunnel."
+- id: ats036-final-050-q02
   type: single_choice
   difficulty: intermediate
   learning_objective: Understand rule order.
   source_readings:
-  - sections/section-050/module-01/course-02-writing-an-audit-policy.md
-  prompt: A policy has a rule with no filters and level `Metadata` first, and a rule for Secrets at level `RequestResponse` after it. What happens to a Secret read?
+  - sections/section-050/module-02/course-03-choosing-rules-and-levels-for-interactive-access.md
+  prompt: 'A rule with `level: None` for the group `system:nodes` is placed above
+    the exec rule. What happens to an exec request made by a node identity?'
   options:
   - id: a
-    text: It is logged at `RequestResponse`
-    explanation: The first rule already matched.
+    text: It is recorded by the exec rule
+    explanation: The first matching rule wins.
   - id: b
-    text: It is logged at `Metadata`
-    explanation: Correct. The first matching rule wins and later rules are ignored.
+    text: It is dropped by the first rule
+    explanation: Correct. The request matches the first rule and the later rule is
+      not read.
   - id: c
-    text: It is not logged
-    explanation: The first rule matches every request.
+    text: It is recorded at `RequestResponse`
+    explanation: No rule sets that level.
   correct_option: b
-  explanation: First match wins.
+  explanation: Order decides which rule matches.
+- id: ats036-final-050-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Compute the disk use.
+  source_readings:
+  - sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
+  prompt: The flags are `maxsize=10` and `maxbackup=2`, without compression. What
+    is the largest disk use of the log?
+  options:
+  - id: a
+    text: About 20 megabytes
+    explanation: This counts only two files.
+  - id: b
+    text: About 30 megabytes
+    explanation: Correct. Two rotated files plus the active file are three files of
+      10 megabytes.
+  - id: c
+    text: About 10 megabytes
+    explanation: This counts only one file.
+  correct_option: b
+  explanation: Size times backups plus the active file.
+- id: ats036-final-020-02-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Name the component that writes Pod start events.
+  source_readings:
+  - sections/section-020/module-02/course-01-kubernetes-events-as-a-short-lived-signal.md
+  prompt: Which component writes the events `Pulled`, `Created` and `Started` for
+    a Pod?
+  options:
+  - id: a
+    text: The kubelet on the node
+    explanation: Correct. The kubelet prepares and starts the containers and reports
+      each step.
+  - id: b
+    text: The scheduler
+    explanation: The scheduler writes `Scheduled` and `FailedScheduling`.
+  - id: c
+    text: The Service controller
+    explanation: It does not manage containers.
+  correct_option: a
+  explanation: The kubelet reports container start steps.
+- id: ats036-final-020-03-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Name the account of a Pod without a ServiceAccount.
+  source_readings:
+  - sections/section-020/module-03/course-01-serviceaccounts-and-user-identity.md
+  prompt: A Pod does not set `serviceAccountName`. Which ServiceAccount does it use?
+  options:
+  - id: a
+    text: "`default` of its namespace"
+    explanation: Correct. Kubernetes creates it in every namespace.
+  - id: b
+    text: None
+    explanation: The Pod always has an identity.
+  - id: c
+    text: "`kube-system:admin`"
+    explanation: No such default exists.
+  correct_option: a
+  explanation: The `default` ServiceAccount is used.
+- id: ats036-final-020-03-q09
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Judge base64 protection.
+  source_readings:
+  - sections/section-020/module-03/course-03-secret-exposure-paths.md
+  prompt: What protection does the base64 form of a Secret value give?
+  options:
+  - id: a
+    text: None, it is an encoding that anyone can reverse
+    explanation: Correct. `base64 -d` returns the original text.
+  - id: b
+    text: It encrypts the value in etcd
+    explanation: Encryption at rest needs an `EncryptionConfiguration`.
+  - id: c
+    text: It hides the value from `kubectl exec`
+    explanation: The container sees the decoded value.
+  correct_option: a
+  explanation: Base64 is not encryption.
+- id: ats036-final-s010-q01
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Scope a runtime detection rule.
+  source_readings:
+  - sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
+  prompt: Which condition best limits a shell rule to containers of the starfleet
+    namespace?
+  options:
+  - id: a
+    text: spawned_process and k8s.ns.name = starfleet
+    explanation: Without the container macro the rule also matches shells on the node.
+  - id: b
+    text: spawned_process and container and k8s.ns.name = starfleet and proc.name
+      in (sh, bash, ash)
+    explanation: Correct. It combines process creation, container scope, the namespace
+      and shell names.
+  - id: c
+    text: proc.name = bash
+    explanation: This matches no scope and misses sh and ash.
+  correct_option: b
+  explanation: Combine process creation, the container macro, the namespace and the
+    shell names.
+- id: ats036-final-s010-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Tune a rule with an exception.
+  source_readings:
+  - sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
+  prompt: A shell rule fires for an approved start-up script. What is the best fix?
+  options:
+  - id: a
+    text: Disable the rule
+    explanation: A disabled rule detects nothing.
+  - id: b
+    text: Add an exception on namespace, container, parent process and command line
+    explanation: Correct. A narrow exception keeps the rule useful.
+  - id: c
+    text: Ignore every shell in the namespace
+    explanation: That is an exception that is too broad.
+  correct_option: b
+  explanation: Use a narrow exception with several fields.
+- id: ats036-final-s010-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Find exec requests in the audit log.
+  source_readings:
+  - sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
+  prompt: Which audit policy entry makes the API server record kubectl exec requests?
+  options:
+  - id: a
+    text: The resource pods only
+    explanation: A rule for pods does not match its subresources.
+  - id: b
+    text: The resource pods/exec
+    explanation: Correct. The subresource is listed by its own name.
+  - id: c
+    text: The resource events
+    explanation: Events do not describe exec requests.
+  correct_option: b
+  explanation: List pods/exec in the policy.

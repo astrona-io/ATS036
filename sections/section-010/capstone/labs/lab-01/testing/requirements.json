@@ -1,0 +1,34 @@
+{
+  "context": "kind-astro-ats-036-capstone-010",
+  "resources": [
+    {
+      "kind": "deployment",
+      "name": "probe",
+      "namespace": "starfleet",
+      "expected": {
+        "metadata": {
+          "name": "probe"
+        }
+      },
+      "state": "deployment"
+    },
+    {
+      "kind": "configmap",
+      "name": "incident-report",
+      "namespace": "starfleet",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "incident-report",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "deniedActor": "system:serviceaccount:starfleet:threat-reader",
+          "response": "quarantined"
+        }
+      }
+    }
+  ],
+  "behavior": []
+}

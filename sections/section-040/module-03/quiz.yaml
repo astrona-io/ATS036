@@ -1,0 +1,216 @@
+# Knowledge check for section 040, module 03. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-040-03
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-040/module-03
+  title: "Host Mounts And Replacement-Based Updates"
+placement:
+  position: after
+  reading: sections/section-040/module-03/course-04-summary.md
+questions:
+  - id: ats036-040-03-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe hostPath."
+    source_readings:
+      - sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
+    prompt: "What does a `hostPath` volume mount into the container?"
+    options:
+      - id: a
+        text: "A directory or file of the node"
+        explanation: "Correct. The container reads and writes real node files."
+      - id: b
+        text: "A temporary directory removed with the Pod"
+        explanation: "That is `emptyDir`."
+      - id: c
+        text: "A Secret as files"
+        explanation: "That is a Secret volume."
+    correct_option: a
+    explanation: "hostPath is node storage."
+
+  - id: ats036-040-03-q02
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Assess runtime socket risk."
+    source_readings:
+      - sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
+    prompt: "Why is mounting the container runtime socket dangerous?"
+    options:
+      - id: a
+        text: "It slows the node"
+        explanation: "Speed is not the concern."
+      - id: b
+        text: "It lets the container start new containers on the node"
+        explanation: "Correct. Access to the socket is access to every container."
+      - id: c
+        text: "It deletes the image"
+        explanation: "The socket does not delete images."
+    correct_option: b
+    explanation: "Socket access means node control."
+
+  - id: ats036-040-03-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Make a mount read-only."
+    source_readings:
+      - sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
+    prompt: "Where is `readOnly: true` set to stop a container from writing to a mounted volume?"
+    options:
+      - id: a
+        text: "In the `volumeMount` of the container"
+        explanation: "Correct. It applies to that mount."
+      - id: b
+        text: "In the Namespace"
+        explanation: "Namespaces have no such field."
+      - id: c
+        text: "In the image"
+        explanation: "The image does not control mounts."
+    correct_option: a
+    explanation: "Set it on the volumeMount."
+
+  - id: ats036-040-03-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Interpret a failed write."
+    source_readings:
+      - sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
+    prompt: "A container with a read-only `hostPath` mount writes a file there. What happens?"
+    options:
+      - id: a
+        text: "The write succeeds on the node"
+        explanation: "The mount is read-only."
+      - id: b
+        text: "The write fails with `Read-only file system`"
+        explanation: "Correct. Reads keep working."
+      - id: c
+        text: "The Pod is deleted"
+        explanation: "A failed write does not delete the Pod."
+    correct_option: b
+    explanation: "The write fails."
+
+  - id: ats036-040-03-q05
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain rollout triggers."
+    source_readings:
+      - sections/section-040/module-03/course-02-updating-by-replacement.md
+    prompt: "Which change starts a new ReplicaSet in a Deployment?"
+    options:
+      - id: a
+        text: "A change to the Pod template, such as an environment variable"
+        explanation: "Correct. The controller replaces the Pods."
+      - id: b
+        text: "A change to the replica count"
+        explanation: "It scales the existing ReplicaSet."
+      - id: c
+        text: "A manual file edit inside a Pod"
+        explanation: "The controller does not see it."
+    correct_option: a
+    explanation: "Template changes roll out."
+
+  - id: ats036-040-03-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict a manual change."
+    source_readings:
+      - sections/section-040/module-03/course-02-updating-by-replacement.md
+    prompt: "An operator creates a file in a running Pod. The Deployment template then changes. Is the file in the new Pods?"
+    options:
+      - id: a
+        text: "Yes, the controller copies it"
+        explanation: "The controller starts new Pods from the template."
+      - id: b
+        text: "No, the new Pods start from the image and the template"
+        explanation: "Correct. The old Pods are deleted."
+      - id: c
+        text: "Only if the volume is `emptyDir`"
+        explanation: "The new Pods have new volumes."
+    correct_option: b
+    explanation: "Replacement discards it."
+
+  - id: ats036-040-03-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Describe a rollback."
+    source_readings:
+      - sections/section-040/module-03/course-02-updating-by-replacement.md
+    prompt: "What does `kubectl rollout undo` do?"
+    options:
+      - id: a
+        text: "Repairs the old Pods in place"
+        explanation: "It does not repair Pods."
+      - id: b
+        text: "Starts a rollout back to an earlier template"
+        explanation: "Correct. It also creates new Pods."
+      - id: c
+        text: "Deletes the Deployment"
+        explanation: "It keeps the Deployment."
+    correct_option: b
+    explanation: "Rollback is a replacement."
+
+  - id: ats036-040-03-q08
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Define a digest."
+    source_readings:
+      - sections/section-040/module-03/course-03-pinning-images-and-detecting-drift.md
+    prompt: "What is an image digest?"
+    options:
+      - id: a
+        text: "A label that the registry owner can move"
+        explanation: "That describes a tag."
+      - id: b
+        text: "The SHA-256 hash of the image manifest"
+        explanation: "Correct. The same digest always means the same content."
+      - id: c
+        text: "The size of the image"
+        explanation: "Size is not the digest."
+    correct_option: b
+    explanation: "Digest is a content hash."
+
+  - id: ats036-040-03-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Find the running image."
+    source_readings:
+      - sections/section-040/module-03/course-03-pinning-images-and-detecting-drift.md
+    prompt: "Which field shows the image digest that a container actually runs?"
+    options:
+      - id: a
+        text: "`spec.containers[].image` in the template"
+        explanation: "It shows the request, not the result."
+      - id: b
+        text: "`status.containerStatuses[].imageID`"
+        explanation: "Correct. It is set by the runtime."
+      - id: c
+        text: "`metadata.name`"
+        explanation: "It is only a name."
+    correct_option: b
+    explanation: "Read imageID."
+
+  - id: ats036-040-03-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Choose an enforcement point."
+    source_readings:
+      - sections/section-040/module-03/course-03-pinning-images-and-detecting-drift.md
+    prompt: "How can a cluster reject Pods whose images have no digest?"
+    options:
+      - id: a
+        text: "A ValidatingAdmissionPolicy with a CEL expression on the image field"
+        explanation: "Correct. The API server evaluates it at admission."
+      - id: b
+        text: "A longer `imagePullPolicy`"
+        explanation: "It does not reject images."
+      - id: c
+        text: "A read-only root filesystem"
+        explanation: "It does not check images."
+    correct_option: a
+    explanation: "Use admission."

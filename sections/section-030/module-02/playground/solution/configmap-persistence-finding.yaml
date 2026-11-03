@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: persistence-finding
+  namespace: starfleet
+data:
+  deployment: cache-sync
+  serviceAccount: build-helper
+  binding: build-helper-edit
+  clusterRole: edit
+  finding: persistence-and-escalated-authority

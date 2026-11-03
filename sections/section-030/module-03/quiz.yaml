@@ -1,0 +1,217 @@
+# Knowledge check for section 030, module 03. Contract:
+# schemas/question-bank.schema.json. Keep question ids stable once published.
+schema_version: 1
+kind: question_bank
+id: ats036-030-03
+course_id: ATS036
+exam_code: CKS
+status: draft
+provenance: Original practice material; not official exam questions.
+scope:
+  type: section
+  id: section-030/module-03
+  title: "Tracing Lateral Movement And Impact"
+placement:
+  position: after
+  reading: sections/section-030/module-03/course-03-summary.md
+questions:
+  - id: ats036-030-03-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Define lateral movement."
+    source_readings:
+      - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+    prompt: "What is lateral movement?"
+    options:
+      - id: a
+        text: "Using one compromised workload to reach other workloads"
+        explanation: "Correct. The attacker moves from the first foothold to other systems."
+      - id: b
+        text: "Deleting logs to avoid detection"
+        explanation: "This is defense evasion."
+      - id: c
+        text: "Reading the permissions of an identity"
+        explanation: "This is discovery."
+    correct_option: a
+    explanation: "Lateral movement is a phase of reaching other systems."
+
+  - id: ats036-030-03-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Read an HTTP access log line."
+    source_readings:
+      - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+    prompt: "In the access log of the `probe` application, what is the first field of a line?"
+    options:
+      - id: a
+        text: "The name of the Pod that wrote the line"
+        explanation: "`kubectl logs --prefix` adds the Pod name, but the application does not write it."
+      - id: b
+        text: "The address of the client that sent the request"
+        explanation: "Correct. The log format starts with the client address."
+      - id: c
+        text: "The user name of the client"
+        explanation: "HTTP servers like this one do not know a user name."
+    correct_option: b
+    explanation: "The first field is the client address."
+
+  - id: ats036-030-03-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Map an address to a Pod."
+    source_readings:
+      - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+    prompt: "Which command lists Pods of all namespaces with their IP addresses?"
+    options:
+      - id: a
+        text: "`kubectl get services -A`"
+        explanation: "This shows Service addresses, not Pod addresses."
+      - id: b
+        text: "`kubectl get events -A`"
+        explanation: "Events do not list addresses of Pods."
+      - id: c
+        text: "`kubectl get pods -A -o wide`"
+        explanation: "Correct. The `IP` column shows the address and the `NODE` column the node."
+    correct_option: c
+    explanation: "Use `-o wide` to see Pod IPs."
+
+  - id: ats036-030-03-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Recognize kubelet probe requests."
+    source_readings:
+      - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+    prompt: "A request to `/ready` arrives every two seconds from an address that no Pod owns. What is it most likely?"
+    options:
+      - id: a
+        text: "The readiness probe of the kubelet from the node"
+        explanation: "Correct. The kubelet runs on the node network, so its address matches no Pod."
+      - id: b
+        text: "A second attacker Pod"
+        explanation: "An attacker Pod has a Pod address."
+      - id: c
+        text: "The Service of the application"
+        explanation: "A Service forwards requests and does not start them."
+    correct_option: a
+    explanation: "Identify normal components before blaming a client."
+
+  - id: ats036-030-03-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Understand the client address behind a Service."
+    source_readings:
+      - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+    prompt: "A Pod sends a request to a Service. What address does the target Pod normally see as the source?"
+    options:
+      - id: a
+        text: "The cluster IP of the Service"
+        explanation: "The cluster IP is the destination the client used."
+      - id: b
+        text: "The IP address of the client Pod"
+        explanation: "Correct. Service routing changes the destination, normally not the source."
+      - id: c
+        text: "The address of the API server"
+        explanation: "The API server is not in this path."
+    correct_option: b
+    explanation: "A proxy or a translation step can change the source, so check it."
+
+  - id: ats036-030-03-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Handle reused addresses."
+    source_readings:
+      - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+    prompt: "A log line from last week shows an address that now belongs to a different Pod. What should you do?"
+    options:
+      - id: a
+        text: "Name the current owner of the address as the source"
+        explanation: "The current owner may not be the Pod that sent the request."
+      - id: b
+        text: "Ignore the line"
+        explanation: "The line is evidence, but it needs checking."
+      - id: c
+        text: "Compare the time of the line with the creation time of the Pod before you name a source"
+        explanation: "Correct. Pod addresses are reused after Pods are replaced."
+    correct_option: c
+    explanation: "Check the timing before you map an address."
+
+  - id: ats036-030-03-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "State what a missing log line proves."
+    source_readings:
+      - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+    prompt: "The access log of the target shows no request from a Pod that you suspect. What can you conclude?"
+    options:
+      - id: a
+        text: "Only that no logged request arrived, because logs can rotate or skip requests"
+        explanation: "Correct. Absence of a line is not proof of absence of traffic."
+      - id: b
+        text: "The Pod never connected"
+        explanation: "The connection may have used another port or been lost with the log."
+      - id: c
+        text: "The Pod is safe"
+        explanation: "Safety needs more evidence than one missing line."
+    correct_option: a
+    explanation: "Name the coverage of the evidence."
+
+  - id: ats036-030-03-q08
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Find a quiet sign of resource hijacking."
+    source_readings:
+      - sections/section-030/module-03/course-02-impact-and-resource-abuse.md
+    prompt: "Which finding most suggests a Pod could hijack node resources without any control?"
+    options:
+      - id: a
+        text: "A container with a readiness probe"
+        explanation: "A probe checks health and does not set resource use."
+      - id: b
+        text: "A container with no CPU and memory limits"
+        explanation: "Correct. Without limits one container can take much of the node."
+      - id: c
+        text: "A container with a `Never` restart policy"
+        explanation: "This policy controls restarts only."
+    correct_option: b
+    explanation: "Check requests and limits."
+
+  - id: ats036-030-03-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read a termination reason."
+    source_readings:
+      - sections/section-030/module-03/course-02-impact-and-resource-abuse.md
+    prompt: "Which value of `lastState.terminated.reason` shows that a container exceeded its memory limit?"
+    options:
+      - id: a
+        text: "`Completed`"
+        explanation: "The container exited normally."
+      - id: b
+        text: "`Evicted`"
+        explanation: "Evicted is a Pod status reason from the kubelet, not the container termination reason for exceeding its limit."
+      - id: c
+        text: "`OOMKilled`"
+        explanation: "Correct. The kernel stopped the container for using too much memory."
+    correct_option: c
+    explanation: "`OOMKilled` means the memory limit was exceeded."
+
+  - id: ats036-030-03-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Know the limit of kubectl top."
+    source_readings:
+      - sections/section-030/module-03/course-02-impact-and-resource-abuse.md
+    prompt: "`kubectl top pods` reports an error in the playground. What is the likely reason?"
+    options:
+      - id: a
+        text: "The Metrics Server add-on is not installed"
+        explanation: "Correct. The command reads data from the Metrics API, which needs that add-on."
+      - id: b
+        text: "The command works only for Pods in `kube-system`"
+        explanation: "It works for any namespace when metrics exist."
+      - id: c
+        text: "The audit policy blocks it"
+        explanation: "Audit policy records requests and does not block them."
+    correct_option: a
+    explanation: "Live use needs a metrics source."
+

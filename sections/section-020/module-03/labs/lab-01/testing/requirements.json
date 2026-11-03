@@ -1,0 +1,47 @@
+{
+  "context": "kind-astro-ats-036-lab-020-03-01",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "access-finding",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "access-finding",
+          "namespace": "starfleet"
+        },
+        "data": {
+          "subject": "system:serviceaccount:starfleet:reporter",
+          "verb": "get",
+          "resource": "secrets",
+          "binding": "reporter-secrets"
+        }
+      }
+    },
+    {
+      "kind": "rolebinding",
+      "name": "reporter-secrets",
+      "expected": {
+        "roleRef": {
+          "name": "secret-reader"
+        }
+      }
+    }
+  ],
+  "behavior": [
+    {
+      "args": [
+        "kubectl",
+        "auth",
+        "can-i",
+        "get",
+        "secrets",
+        "-n",
+        "starfleet",
+        "--as=system:serviceaccount:starfleet:reporter"
+      ],
+      "equals": "yes"
+    }
+  ]
+}
