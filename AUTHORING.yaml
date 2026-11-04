@@ -52,7 +52,7 @@ sections:
       after_reading: sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
       objective: Classify a real denied Secret request and bind the finding to its
         actor and audit identifier.
-      status: draft
+      status: alpha
       runtime_verification: pending
     practice_readings:
     - sections/section-010/module-01/course-02-guided-practice.md
@@ -74,7 +74,7 @@ sections:
       path: sections/section-010/module-02/labs/lab-01
       after_reading: sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
       objective: Store a runtime rule scoped to containers, one namespace and shell names, with a useful output.
-      status: draft
+      status: alpha
       runtime_verification: pending
   - id: module-03
     title: Detecting Command Execution Through API Audit Records
@@ -94,7 +94,7 @@ sections:
       path: sections/section-010/module-03/labs/lab-01
       after_reading: sections/section-010/module-03/course-02-who-sent-the-request-identity-and-origin.md
       objective: Bind an exec finding to its actor, Pod, stage and audit identifier.
-      status: draft
+      status: alpha
       runtime_verification: pending
 - id: section-020
   title: Detect threats within physical infrastructure, apps, networks, data, users
@@ -129,7 +129,7 @@ sections:
       after_reading: sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
       objective: Select the previous container log and record the corresponding exit
         evidence.
-      status: draft
+      status: alpha
       runtime_verification: pending
     practice_readings:
     - sections/section-020/module-01/course-03-guided-practice.md
@@ -182,7 +182,7 @@ sections:
       after_reading: sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
       objective: Classify a real denied Secret request and bind the finding to its
         actor and audit identifier.
-      status: draft
+      status: alpha
       runtime_verification: pending
     practice_readings:
     - sections/section-030/module-01/course-02-guided-practice.md
@@ -208,7 +208,7 @@ sections:
       path: sections/section-030/module-02/labs/lab-01
       after_reading: sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
       objective: Find the controller and binding behind an unexpected Pod, record them and contain both.
-      status: draft
+      status: alpha
       runtime_verification: pending
     practice_readings: []
   - id: module-03
@@ -233,7 +233,7 @@ sections:
       path: sections/section-030/module-03/labs/lab-01
       after_reading: sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
       objective: Identify the Pod that sends unexpected requests to the probe Service and record its address.
-      status: draft
+      status: alpha
       runtime_verification: pending
     practice_readings: []
 - id: section-040
@@ -264,7 +264,7 @@ sections:
       after_reading: sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
       objective: Keep a non-root workload functional with a read-only root filesystem
         and a writable scratch volume.
-      status: draft
+      status: alpha
       runtime_verification: pending
     practice_readings:
     - sections/section-040/module-01/course-02-guided-practice.md
@@ -293,7 +293,7 @@ sections:
       path: sections/section-040/module-02/labs/lab-01
       after_reading: sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
       objective: Run a workload as a non-root user with no Linux capabilities and no way to gain privileges.
-      status: draft
+      status: alpha
       runtime_verification: pending
     quiz: sections/section-040/module-02/quiz.yaml
   - id: module-03
@@ -320,14 +320,14 @@ sections:
       path: sections/section-040/module-03/labs/lab-01
       after_reading: sections/section-040/module-03/course-02-updating-by-replacement.md
       objective: Replace the Pods of a Deployment through its template so that they run version v2 with a read-only root filesystem and a writable temporary path.
-      status: draft
+      status: alpha
       runtime_verification: pending
     quiz: sections/section-040/module-03/quiz.yaml
   capstone_lab:
     path: sections/section-040/capstone/labs/lab-01
     objective: Harden a Deployment and add an admission rule that rejects new Pods with a writable root filesystem in one namespace.
     difficulty: advanced
-    status: draft
+    status: alpha
     runtime_verification: pending
 - id: section-050
   title: Use Kubernetes audit logs to monitor access
@@ -357,7 +357,7 @@ sections:
       after_reading: sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
       objective: Generate a real Secret read record and verify useful metadata without
         credential bodies.
-      status: draft
+      status: alpha
       runtime_verification: pending
     practice_readings:
     - sections/section-050/module-01/course-02-guided-practice.md
@@ -383,7 +383,7 @@ sections:
       path: sections/section-050/module-02/labs/lab-01
       after_reading: sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
       objective: Run a command in a Pod and bind its exec audit record to a report.
-      status: draft
+      status: alpha
       runtime_verification: pending
   - id: module-03
     title: Retaining And Protecting Audit Logs
@@ -407,5 +407,5 @@ sections:
       path: sections/section-050/module-03/labs/lab-01
       after_reading: sections/section-050/module-03/course-02-protecting-the-log-file.md
       objective: Read the live audit rotation flags and the log file mode and record them.
-      status: draft
+      status: alpha
       runtime_verification: pending

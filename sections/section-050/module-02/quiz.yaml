@@ -5,7 +5,7 @@ kind: question_bank
 id: ats036-050-02
 course_id: ATS036
 exam_code: CKS
-status: draft
+status: alpha
 provenance: Original practice material; not official exam questions.
 scope:
   type: section

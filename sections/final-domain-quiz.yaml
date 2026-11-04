@@ -4,7 +4,7 @@ kind: question_bank
 id: ats036-final
 course_id: ATS036
 exam_code: CKS
-status: draft
+status: alpha
 provenance: Original practice material; not official exam questions.
 scope:
   type: domain
