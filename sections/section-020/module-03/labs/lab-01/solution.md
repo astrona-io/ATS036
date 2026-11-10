@@ -16,14 +16,14 @@ Keep this connection selected throughout the task. Every script supplied by the 
 
 ## Inspect And Explain
 
-The namespace `starfleet` holds Secret `db-credentials` and two ServiceAccounts, `reporter` and `auditor`. One of them can read Secrets. Pod `data-client` and the healthy probe application are separate from that evidence.
+The namespace `starfleet-036-020-03-01` holds Secret `db-credentials` and two ServiceAccounts, `reporter` and `auditor`. One of them can read Secrets. Pod `data-client` and the healthy probe application are separate from that evidence.
 
 Inspect the relevant evidence. The option `--as` makes `kubectl` send the request as another identity (impersonation), so the API server answers for that account:
 
 ```sh
-kubectl auth can-i get secrets -n starfleet --as=system:serviceaccount:starfleet:reporter
-kubectl auth can-i get secrets -n starfleet --as=system:serviceaccount:starfleet:auditor
-kubectl -n starfleet get rolebindings -o wide
+kubectl auth can-i get secrets -n starfleet-036-020-03-01 --as=system:serviceaccount:starfleet-036-020-03-01:reporter
+kubectl auth can-i get secrets -n starfleet-036-020-03-01 --as=system:serviceaccount:starfleet-036-020-03-01:auditor
+kubectl -n starfleet-036-020-03-01 get rolebindings -o wide
 ```
 
 The first command prints `yes` and the second prints `no`. The third command lists each RoleBinding with its Role and its subjects, so you can name the binding that gives `reporter` the access. Preserve the existing RBAC objects, because the task records them and does not change them.
@@ -35,9 +35,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: access-finding
-  namespace: starfleet
+  namespace: starfleet-036-020-03-01
 data:
-  subject: system:serviceaccount:starfleet:reporter
+  subject: system:serviceaccount:starfleet-036-020-03-01:reporter
   verb: get
   resource: secrets
   binding: reporter-secrets
@@ -54,11 +54,11 @@ kubectl apply -f configmap-access-finding.yaml
 Observe the actual result.
 
 ```sh
-kubectl auth can-i get secrets -n starfleet --as=system:serviceaccount:starfleet:reporter
-kubectl -n starfleet get configmap access-finding -o jsonpath='{.data}{"\n"}'
+kubectl auth can-i get secrets -n starfleet-036-020-03-01 --as=system:serviceaccount:starfleet-036-020-03-01:reporter
+kubectl -n starfleet-036-020-03-01 get configmap access-finding -o jsonpath='{.data}{"\n"}'
 ```
 
-Do not change any RBAC object. Find the ServiceAccount that can `get` Secrets in `starfleet`. Create ConfigMap `access-finding` with `subject` set to its full user name (`system:serviceaccount:starfleet:<name>`), `verb: get`, `resource: secrets` and `binding` set to the name of the RoleBinding that grants the access.
+Do not change any RBAC object. Find the ServiceAccount that can `get` Secrets in `starfleet-036-020-03-01`. Create ConfigMap `access-finding` with `subject` set to its full user name (`system:serviceaccount:starfleet-036-020-03-01:<name>`), `verb: get`, `resource: secrets` and `binding` set to the name of the RoleBinding that grants the access.
 
 After recording the result, remove this independent lab with `astrona destroy ats-036-lab-020-03-01`.
 

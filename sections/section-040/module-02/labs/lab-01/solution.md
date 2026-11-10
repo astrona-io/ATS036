@@ -21,8 +21,8 @@ The application and client fixtures are healthy. Complete the required change wi
 Inspect the relevant evidence:
 
 ```sh
-kubectl -n starfleet get pods
-kubectl -n starfleet get pod shuttle -o jsonpath='{.spec.containers[0].securityContext}{"\n"}'
+kubectl -n starfleet-036-040-02-01 get pods
+kubectl -n starfleet-036-040-02-01 get pod shuttle -o jsonpath='{.spec.containers[0].securityContext}{"\n"}'
 ```
 
 Capabilities are set per container, and the user is set for the Pod. The fields `CapBnd`, `CapEff` and `NoNewPrivs` in `/proc/1/status` show what the running process holds. Verify the process, not only the Pod object.
@@ -34,7 +34,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: capability-free
-  namespace: starfleet
+  namespace: starfleet-036-040-02-01
 spec:
   restartPolicy: Never
   containers:
@@ -68,11 +68,11 @@ kubectl apply -f pod-capability-free.yaml
 Observe the actual result. A denied-request command returns a nonzero status when the denial works. Run denial checks separately from a shell sequence that stops on the first nonzero status.
 
 ```sh
-kubectl -n starfleet wait --for=condition=Ready pod/capability-free --timeout=180s
-kubectl -n starfleet exec capability-free -- id -u
-kubectl -n starfleet exec capability-free -- sh -c "awk '/^CapEff/ {print \$2}' /proc/1/status"
-kubectl -n starfleet exec capability-free -- sh -c "awk '/^CapBnd/ {print \$2}' /proc/1/status"
-kubectl -n starfleet exec capability-free -- sh -c "awk '/^NoNewPrivs/ {print \$2}' /proc/1/status"
+kubectl -n starfleet-036-040-02-01 wait --for=condition=Ready pod/capability-free --timeout=180s
+kubectl -n starfleet-036-040-02-01 exec capability-free -- id -u
+kubectl -n starfleet-036-040-02-01 exec capability-free -- sh -c "awk '/^CapEff/ {print \$2}' /proc/1/status"
+kubectl -n starfleet-036-040-02-01 exec capability-free -- sh -c "awk '/^CapBnd/ {print \$2}' /proc/1/status"
+kubectl -n starfleet-036-040-02-01 exec capability-free -- sh -c "awk '/^NoNewPrivs/ {print \$2}' /proc/1/status"
 ```
 
 Create Pod `capability-free` running BusyBox as user and group 2000, with `runAsNonRoot: true` and RuntimeDefault seccomp. Its container `worker` must disable privilege escalation and drop all capabilities. The process must hold no capability, `no_new_privs` must be set, and the Pod must stay running.

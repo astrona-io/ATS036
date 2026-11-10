@@ -9,10 +9,10 @@ if [[ "$(kubectl config current-context)" != "$context" ]]; then
 fi
 lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
 kubectl apply -f "$lab_directory/bootstrap/manifests/start.yaml"
-kubectl -n starfleet rollout status deployment/probe --timeout=180s
-kubectl -n starfleet wait --for=condition=Ready pod/shuttle --timeout=120s
-kubectl -n outpost wait --for=condition=Ready pod/drifter --timeout=120s
+kubectl -n starfleet-036-020-02-01 rollout status deployment/probe --timeout=180s
+kubectl -n starfleet-036-020-02-01 wait --for=condition=Ready pod/shuttle --timeout=120s
+kubectl -n outpost-036-020-02-01 wait --for=condition=Ready pod/drifter --timeout=120s
 
 kubectl apply -f "$lab_directory/bootstrap/manifests/evidence.yaml"
-kubectl -n starfleet wait --for=condition=Ready pod/suspect-pod --timeout=120s
-kubectl -n starfleet wait --for=condition=Ready pod/login-service --timeout=120s
+kubectl -n starfleet-036-020-02-01 wait --for=condition=Ready pod/suspect-pod --timeout=120s
+kubectl -n starfleet-036-020-02-01 wait --for=condition=Ready pod/login-service --timeout=120s

@@ -7,25 +7,26 @@ exam_objectives:
 
 Identify the Pod that sends unexpected requests to the probe Service and record its address.
 
+Solve this question on: `terminal`
+
+Allow 10–15 minutes for task work.
+
 ## Starting state
 
-The isolated environment runs the `probe` Deployment with two replicas and a Service in `starfleet`, and the idle Pods `shuttle` and `drifter`. One more Pod, in the `outpost` namespace, sends a request to the `probe` Service every five seconds. The required result has not been configured.
+The isolated environment runs the `probe` Deployment with two replicas and a Service in `starfleet-036-030-03-01`, and the idle Pods `shuttle` and `drifter`. One more Pod, in the `outpost-036-030-03-01` namespace, sends a request to the `probe` Service every five seconds. The required result has not been configured.
 
-Use a host shell with the private kubeconfig for this independent kind environment. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool.
+Use the private kubeconfig for `ats-036-lab-030-03-01`. In a local lab, select it with `export KUBECONFIG="$(astrona kubeconfig ats-036-lab-030-03-01)"` and check that the context is `kind-astro-ats-036-lab-030-03-01`.
 
-```sh
-export KUBECONFIG="$(astrona kubeconfig ats-036-lab-030-03-01)"
-test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-030-03-01" || exit 1
-node_name="astro-ats-036-lab-030-03-01-control-plane"
-worker_name="astro-ats-036-lab-030-03-01-worker"
-```
+## Tasks
 
-Keep this connection selected. Host-level commands name only this environment's node containers. They do not operate on the host operating system.
+1. Read probe access logs and identify the source address of the unexpected requests. Map it to Pod `intruder` in `outpost-036-030-03-01`.
+2. Create `lateral-finding` in `starfleet-036-030-03-01` with keys `sourcePod`, `sourceNamespace`, `sourceIP`, `target` and `finding`. Use the live source address, `probe` as the target and `lateral-movement-to-probe` as the finding.
+3. Verify that the reported IP belongs to the source Pod and occurs in probe access logs. Keep both workloads running.
 
-## Required result
+## Constraints
 
-Use the access log of the `probe` Pods to find the client address that sends the regular requests to `/`. Ignore the readiness probe requests of the kubelet. Map the address to a Pod. Create the ConfigMap `lateral-finding` in `starfleet` with the keys `sourcePod`, `sourceNamespace`, `sourceIP`, `target` (the value `probe`) and `finding` (the value `lateral-movement-to-probe`). Do not delete or change any Pod.
+Work only in this lab’s namespaces `starfleet-036-030-03-01` and `outpost-036-030-03-01` and its own node containers. Preserve unrelated resources and the staged evidence. Cluster startup and API restarts add time to the task estimate.
 
-## Verify The Result
+## How the answer is checked
 
-The grader checks the required object fields and actual observations. Wait for controller convergence before submitting. Preserve the task's namespace, workload names and unrelated components.
+The report connects a live source Pod to probe access logs. The grader reads live resources and evidence; it does not award points for preserving the starting state.

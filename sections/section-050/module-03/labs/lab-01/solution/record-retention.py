@@ -15,7 +15,7 @@ flags = dict(arg[2:].split('=', 1) for arg in manifest['spec']['containers'][0][
 report = {
     'apiVersion': 'v1',
     'kind': 'ConfigMap',
-    'metadata': {'name': 'audit-retention', 'namespace': 'starfleet'},
+    'metadata': {'name': 'audit-retention', 'namespace': 'starfleet-036-050-03-01'},
     'data': {
         'policyFile': flags['audit-policy-file'],
         'logPath': flags['audit-log-path'],

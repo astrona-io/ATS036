@@ -11,4 +11,4 @@ lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
 solution_directory="$lab_directory/solution"
 
 kubectl apply -f "$solution_directory/deployment-probe.yaml"
-kubectl -n starfleet rollout status deployment/probe --timeout=180s
+kubectl -n starfleet-036-040-03-01 rollout status deployment/probe --timeout=180s

@@ -11,5 +11,5 @@ lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
 solution_directory="$lab_directory/solution"
 node_name="${cluster}-control-plane"
 worker_name="${cluster}-worker"
-kubectl -n starfleet exec shuttle -- id
+kubectl -n starfleet-036-050-02-01 exec shuttle -- id
 kubectl apply -f "$solution_directory/configmap-audit-exec.yaml"

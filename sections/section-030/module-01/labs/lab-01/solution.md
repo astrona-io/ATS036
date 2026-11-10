@@ -23,7 +23,7 @@ The isolated environment has two healthy probe replicas, an internal Service and
 Inspect the current objects before changing them:
 
 ```sh
-kubectl -n starfleet get pods -o wide
+kubectl -n starfleet-036-030-01-01 get pods -o wide
 kubectl get nodes -o wide
 ```
 
@@ -36,11 +36,11 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: audit-finding
-  namespace: starfleet
+  namespace: starfleet-036-030-01-01
 data:
-  actor: system:serviceaccount:starfleet:threat-reader
+  actor: system:serviceaccount:starfleet-036-030-01-01:threat-reader
   resource: secrets
-  namespace: starfleet
+  namespace: starfleet-036-030-01-01
   code: '403'
   finding: unauthorized-secret-read
 ```
@@ -60,14 +60,17 @@ assert run('podman','inspect',NODE,'--format','{{index .Config.Labels "io.x-k8s.
 def node(*args):return run('podman','exec',NODE,*args)
 
 records=[json.loads(line) for line in node('cat','/var/log/training-audit/audit.jsonl').splitlines() if line.strip()]
-matching=[record for record in records if record.get('stage')=='ResponseComplete' and record.get('user',{}).get('username')=='system:serviceaccount:starfleet:threat-reader' and record.get('objectRef',{}).get('resource')=='secrets' and record.get('objectRef',{}).get('namespace')=='starfleet' and record.get('responseStatus',{}).get('code')==403]
+matching=[record for record in records if record.get('stage')=='ResponseComplete' and record.get('user',{}).get('username')=='system:serviceaccount:starfleet-036-030-01-01:threat-reader' and record.get('objectRef',{}).get('resource')=='secrets' and record.get('objectRef',{}).get('namespace')=='starfleet-036-030-01-01' and record.get('responseStatus',{}).get('code')==403]
 assert matching, 'Wait for a real denied API record'
 record=matching[-1]
 report_name='audit-finding';report={'actor':record['user']['username'],'resource':record['objectRef']['resource'],'namespace':record['objectRef']['namespace'],'code':str(record['responseStatus']['code']),'finding':'unauthorized-secret-read','auditID':record['auditID'],'stage':record['stage'],'requestURI':record['requestURI']}
 
+pod=json.loads(run('kubectl','-n','starfleet-036-030-01-01','get','pod','threat-client','-o','json'))
+report.update(podName=pod['metadata']['name'], podUID=pod['metadata']['uid'], sourceIP=pod['status']['podIP'])
+
 with tempfile.TemporaryDirectory(prefix='training-report-') as temporary:
     source=Path(temporary)/'configmap-report.json'
-    source.write_text(json.dumps({'apiVersion':'v1','kind':'ConfigMap','metadata':{'name':report_name,'namespace':'starfleet'},'data':report}))
+    source.write_text(json.dumps({'apiVersion':'v1','kind':'ConfigMap','metadata':{'name':report_name,'namespace':'starfleet-036-030-01-01'},'data':report}))
     run('kubectl','apply','-f',str(source))
 
 ```
@@ -78,13 +81,15 @@ Apply the scoped correction:
 python3 record-audit.py
 ```
 
+The report also records `podName`, `podUID` and `sourceIP`. Compare these with the audit event’s bound Pod attributes and source addresses. A Pod name alone can refer to a replacement; its UID identifies this instance.
+
 ## Verify The Result
 
 Observe the actual result. A denied request returns a nonzero status when the denial works, so run it separately from a shell sequence that stops on error. Status convergence and a successful request establish different parts of the result.
 
 ```sh
-kubectl -n starfleet get configmaps
-kubectl -n starfleet get deployment probe -o yaml
+kubectl -n starfleet-036-030-01-01 get configmaps
+kubectl -n starfleet-036-030-01-01 get deployment probe -o yaml
 ```
 
 Classify a real denied Secret request and bind the finding to its actor and audit identifier. The commands above deliberately target one environment. Keep its remaining components available so an unrelated failure cannot stand in for the required denial or correction. No example command output is presented as evidence of a completed run. A matching field alone does not establish that a process used it or that a controller reconciled it.

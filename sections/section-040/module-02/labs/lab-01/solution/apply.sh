@@ -11,4 +11,4 @@ lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
 solution_directory="$lab_directory/solution"
 
 kubectl apply -f "$solution_directory/pod-capability-free.yaml"
-kubectl -n starfleet wait --for=condition=Ready pod/capability-free --timeout=180s
+kubectl -n starfleet-036-040-02-01 wait --for=condition=Ready pod/capability-free --timeout=180s

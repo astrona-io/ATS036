@@ -13,5 +13,5 @@ node_name="${cluster}-control-plane"
 worker_name="${cluster}-worker"
 
 kubectl apply -f "$solution_directory/configmap-persistence-finding.yaml"
-kubectl -n starfleet scale deployment/cache-sync --replicas=0
-kubectl -n starfleet delete rolebinding build-helper-edit --ignore-not-found
+kubectl -n starfleet-036-030-02-01 scale deployment/cache-sync --replicas=0
+kubectl -n starfleet-036-030-02-01 delete rolebinding build-helper-edit --ignore-not-found

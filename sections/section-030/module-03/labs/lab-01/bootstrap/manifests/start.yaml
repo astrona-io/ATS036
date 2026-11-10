@@ -1,22 +1,22 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: starfleet
+  name: starfleet-036-030-03-01
   labels:
     project: ckad
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: outpost
+  name: outpost-036-030-03-01
   labels:
-    project: outpost
+    project: outpost-036-030-03-01
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: probe-code
-  namespace: starfleet
+  namespace: starfleet-036-030-03-01
 data:
   server.py: "from http.server import BaseHTTPRequestHandler, HTTPServer\nfrom pathlib\
     \ import Path\nimport os\nimport socket\n\nclass Handler(BaseHTTPRequestHandler):\n\
@@ -33,7 +33,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: probe
-  namespace: starfleet
+  namespace: starfleet-036-030-03-01
 spec:
   replicas: 2
   selector:
@@ -82,7 +82,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: probe
-  namespace: starfleet
+  namespace: starfleet-036-030-03-01
 spec:
   selector:
     app: probe
@@ -96,7 +96,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: shuttle
-  namespace: starfleet
+  namespace: starfleet-036-030-03-01
   labels:
     app: shuttle
 spec:
@@ -113,7 +113,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: drifter
-  namespace: outpost
+  namespace: outpost-036-030-03-01
   labels:
     app: drifter
 spec:
@@ -130,7 +130,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: intruder
-  namespace: outpost
+  namespace: outpost-036-030-03-01
   labels:
     app: intruder
 spec:
@@ -140,5 +140,5 @@ spec:
     command:
     - sh
     - -c
-    - while true; do wget -q -T 2 -O /dev/null http://probe.starfleet.svc.cluster.local/ || true; sleep 5; done
+    - while true; do wget -q -T 2 -O /dev/null http://probe.starfleet-036-030-03-01.svc.cluster.local/ || true; sleep 5; done
   restartPolicy: Never

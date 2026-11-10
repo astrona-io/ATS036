@@ -10,10 +10,10 @@ def run(*args):
 assert run('kubectl','config','current-context')==CONTEXT, 'Select the private environment'
 
 def find_source():
-    ip=run('kubectl','-n','outpost','get','pod','intruder','-o','jsonpath={.status.podIP}')
+    ip=run('kubectl','-n','outpost-036-030-03-01','get','pod','intruder','-o','jsonpath={.status.podIP}')
     assert ip, 'The intruder Pod has no address yet'
     for attempt in range(30):
-        logs=run('kubectl','-n','starfleet','logs','-l','app=probe','--tail=-1')
+        logs=run('kubectl','-n','starfleet-036-030-03-01','logs','-l','app=probe','--tail=-1')
         if any(line.split(' ')[0]==ip for line in logs.splitlines()):
             return ip
         time.sleep(3)
@@ -22,8 +22,8 @@ def find_source():
 def apply_configmap(name,data):
     with tempfile.TemporaryDirectory(prefix='training-report-') as temporary:
         source=Path(temporary)/'configmap-report.json'
-        source.write_text(json.dumps({'apiVersion':'v1','kind':'ConfigMap','metadata':{'name':name,'namespace':'starfleet'},'data':data}))
+        source.write_text(json.dumps({'apiVersion':'v1','kind':'ConfigMap','metadata':{'name':name,'namespace':'starfleet-036-030-03-01'},'data':data}))
         run('kubectl','apply','-f',str(source))
 
 ip=find_source()
-apply_configmap('lateral-finding',{'sourcePod':'intruder','sourceNamespace':'outpost','sourceIP':ip,'target':'probe','finding':'lateral-movement-to-probe'})
+apply_configmap('lateral-finding',{'sourcePod':'intruder','sourceNamespace':'outpost-036-030-03-01','sourceIP':ip,'target':'probe','finding':'lateral-movement-to-probe'})

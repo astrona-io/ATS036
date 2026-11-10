@@ -4,26 +4,27 @@
     {
       "kind": "configmap",
       "name": "lateral-finding",
-      "namespace": "starfleet",
+      "namespace": "starfleet-036-030-03-01",
       "expected": {
         "apiVersion": "v1",
         "kind": "ConfigMap",
         "metadata": {
           "name": "lateral-finding",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-030-03-01"
         },
         "data": {
           "sourcePod": "intruder",
-          "sourceNamespace": "outpost",
+          "sourceNamespace": "outpost-036-030-03-01",
           "target": "probe",
           "finding": "lateral-movement-to-probe"
         }
-      }
+      },
+      "outcome": "lateral-finding"
     },
     {
       "kind": "pod",
       "name": "intruder",
-      "namespace": "outpost",
+      "namespace": "outpost-036-030-03-01",
       "state": "pod",
       "expected": {
         "metadata": {
@@ -34,7 +35,7 @@
     {
       "kind": "deployment",
       "name": "probe",
-      "namespace": "starfleet",
+      "namespace": "starfleet-036-030-03-01",
       "state": "deployment",
       "expected": {
         "spec": {
@@ -43,5 +44,7 @@
       }
     }
   ],
-  "behavior": []
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-030-03-01",
+  "namespace": "starfleet-036-030-03-01"
 }

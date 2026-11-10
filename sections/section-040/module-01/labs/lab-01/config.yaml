@@ -22,11 +22,19 @@ teardown:
   keepCluster: false
 testing:
   init:
+  - name: verify-start
+    type: file
+    source: testing/verify-start.sh
   - name: reference-result
     type: file
     source: solution/apply.sh
-validation:
-  script:
-    name: verify-contract-and-behavior
+  - name: wait-solved
     type: file
-    source: validate.sh
+    source: testing/wait-solved.sh
+validation:
+  scripts:
+  - name: restricted-reader
+    description: The non-root Pod writes only to its scratch volume
+    type: file
+    source: validation/validate-restricted-reader.sh
+    points: 2

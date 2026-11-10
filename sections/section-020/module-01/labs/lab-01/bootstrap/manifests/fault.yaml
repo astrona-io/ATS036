@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: crash-report
-  namespace: starfleet
+  namespace: starfleet-036-020-01-01
 spec:
   restartPolicy: Always
   containers:

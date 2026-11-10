@@ -8,4 +8,4 @@ if [[ "$(kubectl config current-context)" != "$context" ]]; then
   exit 1
 fi
 lab_directory="$(cd "$(dirname "$0")" && pwd)"
-python3 "$lab_directory/testing/check.py"
+python3 "$lab_directory/testing/check.py" "$@"

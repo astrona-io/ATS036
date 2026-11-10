@@ -5,30 +5,32 @@ exam_objectives:
 ---
 # Diagnose A Previous Container Exit
 
-Select the previous container log and record the corresponding exit evidence. Use the isolated `starfleet` environment to verify the result.
+Select the previous container log and record the corresponding exit evidence. Use the isolated `starfleet-036-020-01-01` environment to verify the result.
 
 ## Objective
 
 Select the previous container log and record the corresponding exit evidence.
 
+Solve this question on: `terminal`
+
+Allow 10–15 minutes for task work.
+
 ## Starting state
 
 Pod `crash-report` prints a start marker, exits with a nonzero status and restarts. The healthy probe application is separate from that evidence Pod.
 
-Use a host shell with this lab's private kubeconfig. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool. This environment is separate from the ungraded playground.
+Use the private kubeconfig for `ats-036-lab-020-01-01`. In a local lab, select it with `export KUBECONFIG="$(astrona kubeconfig ats-036-lab-020-01-01)"` and check that the context is `kind-astro-ats-036-lab-020-01-01`.
 
-```sh
-export KUBECONFIG="$(astrona kubeconfig ats-036-lab-020-01-01)"
-test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-020-01-01" || exit 1
-```
+## Tasks
 
-Keep this connection selected throughout the task. Every script supplied by the lab refuses a different context.
+1. Inspect the previous `report` container instance in Pod `crash-report`, including its termination status and previous logs.
+2. Create `crash-diagnosis` in `starfleet-036-020-01-01` with keys `container`, `exitCode` and `logMarker`. Record the container name, actual previous exit code and the `application-started` log marker.
+3. Compare the report with the live restart count and previous logs. Leave the crashing process in place so the evidence can still be inspected.
 
+## Constraints
 
-## Required result
+Work only in this lab’s namespaces `starfleet-036-020-01-01` and `outpost-036-020-01-01` and its own node containers. Preserve unrelated resources and the staged evidence. Cluster startup and API restarts add time to the task estimate.
 
-Leave Pod `crash-report` running its original restart-loop command. Read the previous instance of container `report`. Create ConfigMap `crash-diagnosis` with `container: report`, `exitCode` matching the last terminated instance, and `logMarker: application-started`. The Pod must have restarted at least once and its previous log must contain the marker. Do not delete or repair the evidence Pod.
+## How the answer is checked
 
-## Verify The Result
-
-The grader checks the stated resource fields and live evidence. Wait for controller convergence before submitting. Inspect actual results rather than relying on a sample transcript.
+The diagnosis matches the previous container instance. The grader reads live resources and evidence; it does not award points for preserving the starting state.

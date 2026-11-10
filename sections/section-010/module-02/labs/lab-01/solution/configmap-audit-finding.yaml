@@ -2,10 +2,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: audit-finding
-  namespace: starfleet
+  namespace: starfleet-036-010-02-01
 data:
-  actor: system:serviceaccount:starfleet:threat-reader
+  actor: system:serviceaccount:starfleet-036-010-02-01:threat-reader
   resource: secrets
-  namespace: starfleet
+  namespace: starfleet-036-010-02-01
   code: '403'
   finding: unauthorized-secret-read

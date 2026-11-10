@@ -7,25 +7,26 @@ exam_objectives:
 
 Find the controller and binding behind an unexpected Pod, record them and contain both.
 
+Solve this question on: `terminal`
+
+Allow 10–15 minutes for task work.
+
 ## Starting state
 
-The isolated environment runs the `cache-sync` Deployment with one replica, which uses the `build-helper` ServiceAccount, and two RoleBindings in the `starfleet` namespace. The `cache-sync` Deployment is not part of the application. The required result has not been configured.
+The isolated environment runs the `cache-sync` Deployment with one replica, which uses the `build-helper` ServiceAccount, and two RoleBindings in the `starfleet-036-030-02-01` namespace. The `cache-sync` Deployment is not part of the application. The required result has not been configured.
 
-Use a host shell with the private kubeconfig for this independent kind environment. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool.
+Use the private kubeconfig for `ats-036-lab-030-02-01`. In a local lab, select it with `export KUBECONFIG="$(astrona kubeconfig ats-036-lab-030-02-01)"` and check that the context is `kind-astro-ats-036-lab-030-02-01`.
 
-```sh
-export KUBECONFIG="$(astrona kubeconfig ats-036-lab-030-02-01)"
-test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-030-02-01" || exit 1
-node_name="astro-ats-036-lab-030-02-01-control-plane"
-worker_name="astro-ats-036-lab-030-02-01-worker"
-```
+## Tasks
 
-Keep this connection selected. Host-level commands name only this environment's node containers. They do not operate on the host operating system.
+1. Inspect Deployment `cache-sync`, its ServiceAccount and RoleBinding. Create `persistence-finding` in `starfleet-036-030-02-01` with keys `deployment`, `serviceAccount`, `binding`, `clusterRole` and `finding`. Record the observed names and `persistence-and-escalated-authority`.
+2. Scale `cache-sync` to zero replicas and wait until its Pods are gone. Keep the Deployment as evidence.
+3. Delete RoleBinding `build-helper-edit`. Preserve the `probe-reader-view` binding and the probe workload.
 
-## Required result
+## Constraints
 
-Find the Deployment that creates the unexpected `cache-sync` Pod, the ServiceAccount it runs as, the RoleBinding that gives that ServiceAccount its permissions and the ClusterRole in that binding. Create the ConfigMap `persistence-finding` in `starfleet` with the keys `deployment`, `serviceAccount`, `binding`, `clusterRole` and `finding` (the value `persistence-and-escalated-authority`). Then contain the incident: scale the Deployment to zero replicas and delete the RoleBinding you found. Do not delete the Deployment, and leave the RoleBinding `probe-reader-view` unchanged.
+Work only in this lab’s namespaces `starfleet-036-030-02-01` and `outpost-036-030-02-01` and its own node containers. Preserve unrelated resources and the staged evidence. Cluster startup and API restarts add time to the task estimate.
 
-## Verify The Result
+## How the answer is checked
 
-The grader checks the required object fields and actual observations. Wait for controller convergence before submitting. Preserve the task's namespace, workload names and unrelated components.
+The report preserves the persistence and authority relationships. The grader reads live resources and evidence; it does not award points for preserving the starting state.

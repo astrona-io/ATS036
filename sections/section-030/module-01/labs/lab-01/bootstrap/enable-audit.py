@@ -28,4 +28,4 @@ def configure_audit(policy):
     manifest['metadata'].setdefault('annotations',{})['training.astrona.io/audit-policy']=__import__('hashlib').sha256(json.dumps(policy,sort_keys=True).encode()).hexdigest()
     put('/etc/kubernetes/lab-api-pod.json',json.dumps(manifest));node('mv','/etc/kubernetes/lab-api-pod.json','/etc/kubernetes/manifests/kube-apiserver.yaml')
 
-configure_audit({'apiVersion': 'audit.k8s.io/v1', 'kind': 'Policy', 'omitStages': ['RequestReceived'], 'rules': [{'level': 'Metadata', 'namespaces': ['starfleet'], 'resources': [{'group': '', 'resources': ['secrets', 'configmaps', 'pods']}]}, {'level': 'None'}]})
+configure_audit({'apiVersion': 'audit.k8s.io/v1', 'kind': 'Policy', 'omitStages': ['RequestReceived'], 'rules': [{'level': 'Metadata', 'namespaces': ['starfleet-036-030-01-01'], 'resources': [{'group': '', 'resources': ['secrets', 'configmaps', 'pods']}]}, {'level': 'None'}]})

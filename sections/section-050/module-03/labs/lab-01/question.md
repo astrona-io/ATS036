@@ -7,25 +7,26 @@ exam_objectives:
 
 Read the live audit retention flags and the log file mode from the control plane node and record them.
 
+Solve this question on: `terminal`
+
+Allow 10–15 minutes for task work.
+
 ## Starting state
 
 The isolated environment has two healthy probe replicas, an internal Service and two client Pods. The required result has not been configured.
 
-Use a host shell with the private kubeconfig for this independent kind environment. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool.
+Use the private kubeconfig for `ats-036-lab-050-03-01`. In a local lab, select it with `export KUBECONFIG="$(astrona kubeconfig ats-036-lab-050-03-01)"` and check that the context is `kind-astro-ats-036-lab-050-03-01`.
 
-```sh
-export KUBECONFIG="$(astrona kubeconfig ats-036-lab-050-03-01)"
-test "$(kubectl config current-context)" = "kind-ats-036-lab-050-03-01" || exit 1
-node_name="astro-ats-036-lab-050-03-01-control-plane"
-worker_name="astro-ats-036-lab-050-03-01-worker"
-```
+## Tasks
 
-Keep this connection selected. Host-level commands name only this environment's node containers. They do not operate on the host operating system.
+1. Read the API server static Pod manifest on this environment’s control plane. Identify its audit policy path, log path and rotation flags.
+2. Create `audit-retention` in `starfleet-036-050-03-01` with keys `policyFile`, `logPath`, `maxAge`, `maxBackup`, `maxSize` and `logMode`. Copy the configured values and the actual log file permission mode.
+3. Verify that the log contains audit records and the API remains ready. Preserve the staged policy, paths, rotation settings and file permissions.
 
-## Required result
+## Constraints
 
-Keep the provisioned audit configuration. Read the audit flags from the `kube-apiserver` static Pod manifest on the control plane node and the permission mode of the audit log file. Create the ConfigMap `audit-retention` in `starfleet` with `policyFile`, `logPath`, `maxAge`, `maxBackup`, `maxSize` and `logMode`. The values must match the live manifest and the live file: `policyFile` and `logPath` are the paths from the flags, `maxAge` is in days, `maxBackup` is a count of files, `maxSize` is in megabytes and `logMode` is the octal mode printed by `stat -c %a`. Do not change the API server.
+Work only in this lab’s namespaces `starfleet-036-050-03-01` and `outpost-036-050-03-01` and its own node containers. Preserve unrelated resources and the staged evidence. Cluster startup and API restarts add time to the task estimate.
 
-## Verify The Result
+## How the answer is checked
 
-The grader checks the required object fields and actual observations. Wait for controller convergence before submitting. Preserve the task's namespace, workload names and unrelated components.
+The report matches live audit paths, rotation flags and file mode. The grader reads live resources and evidence; it does not award points for preserving the starting state.

@@ -9,14 +9,15 @@
         "kind": "ConfigMap",
         "metadata": {
           "name": "crash-diagnosis",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-020-01-01"
         },
         "data": {
           "container": "report",
           "exitCode": "12",
           "logMarker": "application-started"
         }
-      }
+      },
+      "outcome": "crash-diagnosis"
     }
   ],
   "behavior": [
@@ -24,7 +25,7 @@
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-020-01-01",
         "logs",
         "crash-report",
         "-c",
@@ -35,5 +36,7 @@
         "application-started"
       ]
     }
-  ]
+  ],
+  "cluster": "astro-ats-036-lab-020-01-01",
+  "namespace": "starfleet-036-020-01-01"
 }

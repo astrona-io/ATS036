@@ -11,9 +11,9 @@ lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
 node_name="${cluster}-control-plane"
 worker_name="${cluster}-worker"
 kubectl apply -f "$lab_directory/bootstrap/manifests/start.yaml"
-kubectl -n starfleet rollout status deployment/probe --timeout=180s
-kubectl -n starfleet wait --for=condition=Ready pod/shuttle --timeout=120s
-kubectl -n outpost wait --for=condition=Ready pod/drifter --timeout=120s
+kubectl -n starfleet-036-010-03-01 rollout status deployment/probe --timeout=180s
+kubectl -n starfleet-036-010-03-01 wait --for=condition=Ready pod/shuttle --timeout=120s
+kubectl -n outpost-036-010-03-01 wait --for=condition=Ready pod/drifter --timeout=120s
 python3 "$lab_directory/bootstrap/enable-audit.py"
 api_ready=0
 for attempt in $(seq 1 80); do
@@ -22,4 +22,4 @@ for attempt in $(seq 1 80); do
 done
 test "$api_ready" -eq 1
 
-kubectl -n starfleet exec deploy/probe -- sh -c 'id'
+kubectl -n starfleet-036-010-03-01 exec deploy/probe -- sh -c 'id'

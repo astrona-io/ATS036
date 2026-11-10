@@ -11,7 +11,7 @@ lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
 node_name="${cluster}-control-plane"
 worker_name="${cluster}-worker"
 kubectl apply -f "$lab_directory/bootstrap/manifests/start.yaml"
-kubectl -n starfleet rollout status deployment/probe --timeout=180s
-kubectl -n starfleet wait --for=condition=Ready pod/shuttle --timeout=120s
-kubectl -n outpost wait --for=condition=Ready pod/drifter --timeout=120s
-kubectl -n outpost wait --for=condition=Ready pod/intruder --timeout=120s
+kubectl -n starfleet-036-030-03-01 rollout status deployment/probe --timeout=180s
+kubectl -n starfleet-036-030-03-01 wait --for=condition=Ready pod/shuttle --timeout=120s
+kubectl -n outpost-036-030-03-01 wait --for=condition=Ready pod/drifter --timeout=120s
+kubectl -n outpost-036-030-03-01 wait --for=condition=Ready pod/intruder --timeout=120s

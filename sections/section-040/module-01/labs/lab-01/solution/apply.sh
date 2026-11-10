@@ -12,4 +12,4 @@ solution_directory="$lab_directory/solution"
 cluster_name="astro-ats-036-lab-040-01-01"
 
 kubectl apply -f "$solution_directory/pod-restricted-reader.yaml"
-kubectl -n starfleet wait --for=condition=Ready pod/restricted-reader --timeout=180s
+kubectl -n starfleet-036-040-01-01 wait --for=condition=Ready pod/restricted-reader --timeout=180s

@@ -4,13 +4,13 @@
     {
       "kind": "configmap",
       "name": "persistence-finding",
-      "namespace": "starfleet",
+      "namespace": "starfleet-036-030-02-01",
       "expected": {
         "apiVersion": "v1",
         "kind": "ConfigMap",
         "metadata": {
           "name": "persistence-finding",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-030-02-01"
         },
         "data": {
           "deployment": "cache-sync",
@@ -19,22 +19,24 @@
           "clusterRole": "edit",
           "finding": "persistence-and-escalated-authority"
         }
-      }
+      },
+      "outcome": "persistence-finding"
     },
     {
       "kind": "deployment",
       "name": "cache-sync",
-      "namespace": "starfleet",
+      "namespace": "starfleet-036-030-02-01",
       "expected": {
         "spec": {
           "replicas": 0
         }
-      }
+      },
+      "outcome": "stop-persistence"
     },
     {
       "kind": "rolebinding",
       "name": "probe-reader-view",
-      "namespace": "starfleet",
+      "namespace": "starfleet-036-030-02-01",
       "expected": {
         "roleRef": {
           "kind": "ClusterRole",
@@ -43,5 +45,7 @@
       }
     }
   ],
-  "behavior": []
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-030-02-01",
+  "namespace": "starfleet-036-030-02-01"
 }

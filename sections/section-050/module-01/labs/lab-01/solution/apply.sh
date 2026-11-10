@@ -11,5 +11,5 @@ lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
 solution_directory="$lab_directory/solution"
 node_name="${cluster}-control-plane"
 worker_name="${cluster}-worker"
-kubectl -n starfleet get secret audit-token -o name
+kubectl -n starfleet-036-050-01-01 get secret audit-token -o name
 kubectl apply -f "$solution_directory/configmap-audit-review.yaml"

@@ -9,15 +9,16 @@
         "kind": "ConfigMap",
         "metadata": {
           "name": "access-finding",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-020-03-01"
         },
         "data": {
-          "subject": "system:serviceaccount:starfleet:reporter",
+          "subject": "system:serviceaccount:starfleet-036-020-03-01:reporter",
           "verb": "get",
           "resource": "secrets",
           "binding": "reporter-secrets"
         }
-      }
+      },
+      "outcome": "access-finding"
     },
     {
       "kind": "rolebinding",
@@ -38,10 +39,12 @@
         "get",
         "secrets",
         "-n",
-        "starfleet",
-        "--as=system:serviceaccount:starfleet:reporter"
+        "starfleet-036-020-03-01",
+        "--as=system:serviceaccount:starfleet-036-020-03-01:reporter"
       ],
       "equals": "yes"
     }
-  ]
+  ],
+  "cluster": "astro-ats-036-lab-020-03-01",
+  "namespace": "starfleet-036-020-03-01"
 }

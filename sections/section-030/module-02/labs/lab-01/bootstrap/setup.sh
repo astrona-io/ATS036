@@ -11,4 +11,4 @@ lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
 node_name="${cluster}-control-plane"
 worker_name="${cluster}-worker"
 kubectl apply -f "$lab_directory/bootstrap/manifests/start.yaml"
-kubectl -n starfleet rollout status deployment/cache-sync --timeout=180s
+kubectl -n starfleet-036-030-02-01 rollout status deployment/cache-sync --timeout=180s
