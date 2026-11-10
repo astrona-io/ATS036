@@ -29,3 +29,8 @@ This course has 5 ungraded module playgrounds and 5 draft independent labs. Task
 | 030/01 | Attribute An API Attempt To A Workload Identity |
 | 040/01 | Run With A Restricted Security Context |
 | 050/01 | Verify Metadata Audit Records Exclude Secret Payloads |
+
+## Authoring and verification
+
+See [AUTHORING.md](AUTHORING.md) for the lab lifecycle and review workflow, and
+[LAB-COVERAGE.md](LAB-COVERAGE.md) for preparation lessons and graded outcomes.

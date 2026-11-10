@@ -44,6 +44,7 @@ env:
   ASTRONA_SHA256: "9e0e5d9b67d6a8b6ff62cf47276163933d072585f498671a5a4e0477ebab82ee"
   KIND_VERSION: "0.33.0"
   ASTRONA_NO_UPDATE_CHECK: "1"
+  ASTRONA_CONTAINER_ENGINE: docker
 
 jobs:
   list:
@@ -62,6 +63,8 @@ jobs:
         run: python3 scripts/ci/test-grading-runtime.py
       - name: Check lesson and lab structure
         run: python3 scripts/ci/check-course-structure.py
+      - name: Check lab coverage map
+        run: python3 scripts/ci/lab-coverage.py
       - id: list
         name: List the environments to test
         env:
