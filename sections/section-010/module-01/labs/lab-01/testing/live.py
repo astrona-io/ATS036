@@ -1,4 +1,5 @@
-records=[json.loads(line) for line in command(['podman','exec','astro-ats-036-lab-010-01-01-control-plane','cat','/var/log/training-audit/audit.jsonl']).stdout.splitlines() if line.strip()]
+import os
+records=[json.loads(line) for line in command([(os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'exec',(os.environ.get("ASTRONA_KIND_CLUSTER", "astro-ats-036-lab-010-01-01")+"-control-plane"),'cat','/var/log/training-audit/audit.jsonl']).stdout.splitlines() if line.strip()]
 report=get('configmap','audit-finding')['data']
 record=next(record for record in records if record.get('auditID')==report['auditID'] and record.get('stage')=='ResponseComplete')
 assert record['user']['username']==report['actor']=='system:serviceaccount:starfleet:threat-reader'

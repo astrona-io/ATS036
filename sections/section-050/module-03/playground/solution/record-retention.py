@@ -1,3 +1,4 @@
+import os
 import json
 import subprocess
 import sys
@@ -6,7 +7,7 @@ node_name = sys.argv[1]
 
 
 def on_node(*args):
-    return subprocess.run(['podman', 'exec', node_name, *args], check=True, text=True, capture_output=True).stdout.strip()
+    return subprocess.run([(os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"), 'exec', node_name, *args], check=True, text=True, capture_output=True).stdout.strip()
 
 
 manifest = json.loads(on_node('cat', '/etc/kubernetes/manifests/kube-apiserver.yaml'))

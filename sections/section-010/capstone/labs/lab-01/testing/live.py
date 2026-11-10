@@ -1,4 +1,5 @@
-records=[json.loads(line) for line in command(['podman','exec','astro-ats-036-capstone-010-control-plane','cat','/var/log/training-audit/audit.jsonl']).stdout.splitlines() if line.strip()]
+import os
+records=[json.loads(line) for line in command([(os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'exec',(os.environ.get("ASTRONA_KIND_CLUSTER", "astro-ats-036-capstone-010")+"-control-plane"),'cat','/var/log/training-audit/audit.jsonl']).stdout.splitlines() if line.strip()]
 report=get('configmap','incident-report')['data']
 denied=next(r for r in records if r.get('auditID')==report['deniedAuditID'] and r.get('stage')=='ResponseComplete')
 assert denied['user']['username']==report['deniedActor'] and denied['objectRef']['resource']=='secrets' and denied['responseStatus']['code']==403, 'deniedAuditID must be the denied Secret request'

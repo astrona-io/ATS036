@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 """Read resource contracts and run bounded behavior checks in one lab context."""
 import json
 from pathlib import Path
@@ -72,7 +73,7 @@ def behavior_check(check):
 
 def main():
     requirements = json.loads((DIRECTORY / 'requirements.json').read_text())
-    assert kubectl('config', 'current-context') == requirements['context'], 'Refusing to operate on another Kubernetes context'
+    assert kubectl('config', 'current-context') == (os.environ.get('ASTRONA_KUBE_CONTEXT') or requirements['context']), 'Refusing to operate on another Kubernetes context'
     for check in requirements['resources']:
         resource_check(check)
     for check in requirements.get('behavior', []):

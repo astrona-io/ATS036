@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
-if [[ "$(kubectl config current-context)" != "kind-astro-ats-036-capstone-010" ]]; then
+context="${ASTRONA_KUBE_CONTEXT:-kind-astro-ats-036-capstone-010}"
+cluster="${ASTRONA_KIND_CLUSTER:-astro-ats-036-capstone-010}"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
+if [[ "$(kubectl config current-context)" != "$context" ]]; then
   printf 'Refusing to operate on another Kubernetes context\n' >&2
   exit 1
 fi

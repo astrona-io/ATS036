@@ -1,4 +1,5 @@
-records=[json.loads(line) for line in command(['podman','exec','astro-ats-036-playground-010-03-control-plane','cat','/var/log/training-audit/audit.jsonl']).stdout.splitlines() if line.strip()]
+import os
+records=[json.loads(line) for line in command([(os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'exec',(os.environ.get("ASTRONA_KIND_CLUSTER", "astro-ats-036-playground-010-03")+"-control-plane"),'cat','/var/log/training-audit/audit.jsonl']).stdout.splitlines() if line.strip()]
 report=get('configmap','exec-finding')['data']
 record=next(record for record in records if record.get('auditID')==report['auditID'] and record.get('stage')==report['stage'])
 assert record['stage'] in ('ResponseStarted','ResponseComplete'), 'Use a stage that the API server logged for the exec request'

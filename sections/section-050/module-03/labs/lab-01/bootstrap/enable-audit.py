@@ -1,17 +1,19 @@
+import os
 import json,subprocess,tempfile
 from pathlib import Path
-CONTEXT="kind-astro-ats-036-lab-050-03-01"
-NODE="astro-ats-036-lab-050-03-01-control-plane"
+CONTEXT=os.environ.get("ASTRONA_KUBE_CONTEXT") or "kind-astro-ats-036-lab-050-03-01"
+CLUSTER=os.environ.get("ASTRONA_KIND_CLUSTER") or "astro-ats-036-lab-050-03-01"
+NODE=CLUSTER+"-control-plane"
 def run(*args):
     result=subprocess.run(args,check=True,text=True,capture_output=True,timeout=30)
     return result.stdout.strip()
 assert run('kubectl','config','current-context')==CONTEXT, 'Select the private environment'
-assert run('podman','inspect',NODE,'--format','{{index .Config.Labels "io.x-k8s.kind.cluster"}}')=='astro-ats-036-lab-050-03-01', 'Refusing an unrelated node container'
-def node(*args):return run('podman','exec',NODE,*args)
+assert run((os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'inspect',NODE,'--format','{{index .Config.Labels "io.x-k8s.kind.cluster"}}')==CLUSTER, 'Refusing an unrelated node container'
+def node(*args):return run((os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'exec',NODE,*args)
 def put(path,content):
     with tempfile.TemporaryDirectory(prefix='training-node-') as temporary:
         source=Path(temporary)/'content';source.write_text(content)
-        run('podman','cp',str(source),NODE+':'+path)
+        run((os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'cp',str(source),NODE+':'+path)
 def api_manifest():
     with tempfile.TemporaryDirectory(prefix='training-api-') as temporary:
         source=Path(temporary)/'pod.yaml';source.write_text(node('cat','/etc/kubernetes/manifests/kube-apiserver.yaml'))

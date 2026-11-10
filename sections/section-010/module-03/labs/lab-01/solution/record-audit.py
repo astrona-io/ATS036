@@ -1,13 +1,15 @@
+import os
 import json,subprocess,tempfile
 from pathlib import Path
-CONTEXT="kind-astro-ats-036-lab-010-03-01"
-NODE="astro-ats-036-lab-010-03-01-control-plane"
+CONTEXT=os.environ.get("ASTRONA_KUBE_CONTEXT") or "kind-astro-ats-036-lab-010-03-01"
+CLUSTER=os.environ.get("ASTRONA_KIND_CLUSTER") or "astro-ats-036-lab-010-03-01"
+NODE=CLUSTER+"-control-plane"
 def run(*args):
     result=subprocess.run(args,check=True,text=True,capture_output=True,timeout=30)
     return result.stdout.strip()
 assert run('kubectl','config','current-context')==CONTEXT, 'Select the private environment'
-assert run('podman','inspect',NODE,'--format','{{index .Config.Labels "io.x-k8s.kind.cluster"}}')=='astro-ats-036-lab-010-03-01', 'Refusing an unrelated node container'
-def node(*args):return run('podman','exec',NODE,*args)
+assert run((os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'inspect',NODE,'--format','{{index .Config.Labels "io.x-k8s.kind.cluster"}}')==CLUSTER, 'Refusing an unrelated node container'
+def node(*args):return run((os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'exec',NODE,*args)
 
 records=[json.loads(line) for line in node('cat','/var/log/training-audit/audit.jsonl').splitlines() if line.strip()]
 matching=[record for record in records if record.get('verb')=='create' and record.get('objectRef',{}).get('resource')=='pods' and record.get('objectRef',{}).get('subresource')=='exec' and record.get('objectRef',{}).get('namespace')=='starfleet' and record.get('objectRef',{}).get('name','').startswith('probe-') and record.get('stage') in ('ResponseStarted','ResponseComplete')]

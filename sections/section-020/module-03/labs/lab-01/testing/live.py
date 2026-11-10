@@ -1,3 +1,4 @@
+import os
 reader='--as=system:serviceaccount:starfleet:reporter'
 auditor='--as=system:serviceaccount:starfleet:auditor'
 assert command(['kubectl','auth','can-i','get','secrets','-n','starfleet',reader]).stdout.strip()=='yes', 'Preserve the access under review'
