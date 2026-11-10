@@ -87,7 +87,7 @@ Now compare the record with the live objects. The first command prints the IP ad
 kubectl -n starfleet get pod threat-client -o jsonpath='{.status.podIP}{" "}{.metadata.uid}{"\n"}'
 ```
 
-The address should match the value in `sourceIPs`, because the request came from inside that Pod. If the `extra` field has the key `authentication.kubernetes.io/pod-uid`, its value should match the UID. When both agree, you can say that the request came from the Pod `threat-client` under the `threat-reader` identity. When the Pod is deleted later, the UID in the record stays unique, so a replacement Pod with the same name cannot be mistaken for the original.
+Record the live Pod IP and the audit source address separately. NAT or a proxy can make them differ, so an address mismatch alone does not disprove the credential binding. Compare `authentication.kubernetes.io/pod-name` and `authentication.kubernetes.io/pod-uid` in `user.extra` with the live Pod. These attributes identify the Pod that received the token; they do not prove that the token was never copied elsewhere. The UID distinguishes this instance from a replacement with the same name.
 
 ## What the identity proves
 

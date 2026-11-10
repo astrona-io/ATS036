@@ -24,7 +24,7 @@ record=matching[-1]
 report_name='audit-finding';report={'actor':record['user']['username'],'resource':record['objectRef']['resource'],'namespace':record['objectRef']['namespace'],'code':str(record['responseStatus']['code']),'finding':'unauthorized-secret-read','auditID':record['auditID'],'stage':record['stage'],'requestURI':record['requestURI']}
 
 pod=json.loads(run('kubectl','-n','starfleet-036-030-01-01','get','pod','threat-client','-o','json'))
-report.update(podName=pod['metadata']['name'], podUID=pod['metadata']['uid'], sourceIP=pod['status']['podIP'])
+report.update(podName=pod['metadata']['name'], podUID=pod['metadata']['uid'], podIP=pod['status']['podIP'], sourceIP=record['sourceIPs'][0])
 
 with tempfile.TemporaryDirectory(prefix='training-report-') as temporary:
     source=Path(temporary)/'configmap-report.json'

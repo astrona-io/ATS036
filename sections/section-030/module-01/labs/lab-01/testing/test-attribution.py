@@ -22,7 +22,7 @@ RECORD = {
 REPORT = {'auditID': RECORD['auditID'], 'stage': RECORD['stage'], 'actor': ACTOR,
           'resource': 'secrets', 'namespace': NAMESPACE, 'code': '403',
           'requestURI': RECORD['requestURI'], 'podName': 'threat-client',
-          'podUID': 'live-uid', 'sourceIP': '10.244.1.3'}
+          'podUID': 'live-uid', 'podIP': '10.244.1.3', 'sourceIP': '10.244.1.3'}
 CODE = compile(Path(__file__).with_name('live.py').read_text(), 'live.py', 'exec')
 
 
@@ -37,9 +37,13 @@ class AttributionTests(unittest.TestCase):
     def test_observed_identity_passes(self):
         grade(REPORT, RECORD)
 
+    def test_nat_address_preserves_bound_identity(self):
+        grade(dict(REPORT, sourceIP='172.18.0.3'),
+              dict(RECORD, sourceIPs=['172.18.0.3']))
+
     def test_stale_and_unrelated_reports_fail(self):
         for key, value in [('auditID', 'another-request'), ('podUID', 'old-uid'),
-                           ('sourceIP', '10.244.1.9'), ('podName', 'another-pod'),
+                           ('sourceIP', '10.244.1.9'), ('podIP', '10.244.1.9'), ('podName', 'another-pod'),
                            ('actor', 'system:serviceaccount:other:threat-reader')]:
             with self.subTest(key=key):
                 with self.assertRaises(AssertionError):

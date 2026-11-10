@@ -21,7 +21,7 @@ Use the private kubeconfig for `ats-036-lab-030-01-01`. In a local lab, select i
 
 1. Find the denied Secret request from `threat-reader` and inspect its audit ID, stage, authenticated identity, source addresses and bound Pod attributes.
 2. Create `audit-finding` in `starfleet-036-030-01-01` with keys `actor`, `resource`, `namespace`, `code`, `finding`, `auditID`, `stage` and `requestURI`. Set `finding` to `unauthorized-secret-read` and copy the other values from the `ResponseComplete` record.
-3. Add `podName`, `podUID` and `sourceIP` to that report. Match them to `threat-client`, its live UID and IP, and the bound Pod attributes and source address in the audit event. Do not infer a human identity from the ServiceAccount.
+3. Add `podName`, `podUID`, `podIP` and `sourceIP` to that report. Match the name and UID to `threat-client` and the audit event’s bound Pod attributes. Record its live Pod IP separately from an address in the event’s `sourceIPs`; NAT can make these differ. Do not infer a human identity from the ServiceAccount.
 
 ## Constraints
 

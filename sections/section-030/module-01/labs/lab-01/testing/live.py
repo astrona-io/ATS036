@@ -14,7 +14,7 @@ if wants('actor-attribution'):
     assert pod['spec']['serviceAccountName']=='threat-reader', 'Preserve the workload identity'
     assert report['podName']==pod['metadata']['name'], 'Report the live Pod name'
     assert report['podUID']==pod['metadata']['uid'], 'Report the live Pod UID'
-    assert report['sourceIP']==pod['status']['podIP'], 'Report the live source address'
+    assert report['podIP']==pod['status']['podIP'], 'Report the live Pod address'
     extra=record['user'].get('extra', {})
     assert report['podUID'] in extra.get('authentication.kubernetes.io/pod-uid', []), 'Bind the audit identity to the Pod UID'
     assert report['podName'] in extra.get('authentication.kubernetes.io/pod-name', []), 'Bind the audit identity to the Pod name'
