@@ -6,7 +6,7 @@ if wants('exec-finding'):
     assert record is not None, "No audit event matches the submitted identity and stage"
     assert record['stage'] in ('ResponseStarted','ResponseComplete'), 'Use a stage that the API server logged for the exec request'
     assert record['user']['username']==report['actor'], 'Bind the finding to the authenticated user'
-    assert record['verb']==report['verb']=='create'
+    assert record['verb']==report['verb'] and record['verb'] in ('create','get')
     assert record['objectRef']['resource']==report['resource']=='pods' and record['objectRef']['subresource']==report['subresource']=='exec'
     assert record['objectRef']['namespace']==report['namespace']=='starfleet-036-010-03-01'
     assert record['objectRef']['name']==report['podName'] and report['podName'].startswith('probe-'), 'Name the Pod that received the exec request'

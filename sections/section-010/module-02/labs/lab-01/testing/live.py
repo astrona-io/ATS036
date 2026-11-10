@@ -7,7 +7,9 @@ if wants('shell-rule'):
     normalized=' '.join(condition_text.replace('>','').split())
     assert 'spawned_process' in normalized and 'container' in normalized, 'Match process creation inside containers'
     assert 'k8s.ns.name = starfleet-036-010-02-01' in normalized, 'Scope the rule to the starfleet-036-010-02-01 namespace'
-    assert any(shell in normalized for shell in ('proc.name in (sh','proc.name = sh')), 'Match shell process names'
+    import re
+    shell_names = re.search(r'proc\.name\s+in\s*\(([^)]+)\)', normalized)
+    assert shell_names and {'sh', 'bash', 'ash'} <= {name.strip().strip("\"'") for name in shell_names.group(1).split(',')}, 'Match sh, bash and ash process names'
     output_text=rules_text.split('output:',1)[1].split('priority:',1)[0] if 'priority:' in rules_text else ''
     assert '%k8s.pod.name' in output_text and '%proc.cmdline' in output_text, 'Output must name the pod and the command line'
     assert 'priority: WARNING' in rules_text, 'Use priority WARNING'

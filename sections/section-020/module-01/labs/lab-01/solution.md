@@ -16,7 +16,7 @@ Keep this connection selected throughout the task. Every script supplied by the 
 
 ## Inspect And Explain
 
-Pod `crash-report` prints a start marker, exits with a nonzero status and restarts. The healthy probe application is separate from that evidence Pod.
+Pod `crash-report` prints a start marker, exits once with a nonzero status and then stays running after its restart. An emptyDir marker prevents further crashes so the previous logs remain available. The healthy probe application is separate from that evidence Pod.
 
 Inspect the relevant evidence:
 
@@ -56,7 +56,7 @@ Observe the actual result. A denied-request command returns a nonzero status whe
 kubectl -n starfleet-036-020-01-01 logs crash-report -c report --previous
 ```
 
-Leave Pod `crash-report` running its original restart-loop command. Read the previous instance of container `report`. Create ConfigMap `crash-diagnosis` with `container: report`, `exitCode` matching the last terminated instance, and `logMarker: application-started`. The Pod must have restarted at least once and its previous log must contain the marker. Do not delete or repair the evidence Pod.
+Leave Pod `crash-report` running its original command. Read the previous instance of container `report`. Create ConfigMap `crash-diagnosis` with `container: report`, `exitCode` matching the last terminated instance, and `logMarker: application-started`. The Pod must have restarted at least once and its previous log must contain the marker. Do not delete or repair the evidence Pod.
 
 After recording the result, remove this independent lab with `astrona destroy ats-036-lab-020-01-01`.
 

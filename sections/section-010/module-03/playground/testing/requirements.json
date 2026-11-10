@@ -13,7 +13,6 @@
           "namespace": "starfleet"
         },
         "data": {
-          "verb": "create",
           "resource": "pods",
           "subresource": "exec",
           "namespace": "starfleet",

@@ -21,7 +21,7 @@ Use the private kubeconfig for `ats-036-lab-010-03-01`. In a local lab, select i
 
 1. Find a logged exec request to a `probe-` Pod. Identify the actor, Pod name, audit ID and a `ResponseStarted` or `ResponseComplete` stage.
 2. Create `exec-finding` in `starfleet-036-010-03-01` with keys `actor`, `verb`, `resource`, `subresource`, `namespace`, `podName`, `finding`, `auditID`, `stage` and `requestURI`. Set `finding` to `unexpected-exec`; copy the request fields from that record.
-3. Verify that the event represents `create` on `pods/exec`, includes the command in its URI, and excludes request and response bodies.
+3. Verify that the event represents `create` or `get` on `pods/exec`, includes the command in its URI, and excludes request and response bodies.
 
 ## Constraints
 

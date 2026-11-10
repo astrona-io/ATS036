@@ -17,7 +17,7 @@ kubectl apply -f "$lab_directory/bootstrap/manifests/fault.yaml"
 previous_instance_ready=0
 for attempt in $(seq 1 60); do
   restart_count="$(kubectl -n starfleet-036-020-01-01 get pod crash-report -o jsonpath='{.status.containerStatuses[0].restartCount}')"
-  if [[ "${restart_count:-0}" -ge 1 ]]; then previous_instance_ready=1; break; fi
+  if [[ "${restart_count:-0}" -ge 1 ]] && kubectl -n starfleet-036-020-01-01 logs crash-report -c report --previous | grep -q application-started; then previous_instance_ready=1; break; fi
   sleep 2
 done
 test "$previous_instance_ready" -eq 1

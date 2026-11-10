@@ -62,7 +62,7 @@ assert run('podman','inspect',NODE,'--format','{{index .Config.Labels "io.x-k8s.
 def node(*args):return run('podman','exec',NODE,*args)
 
 records=[json.loads(line) for line in node('cat','/var/log/training-audit/audit.jsonl').splitlines() if line.strip()]
-matching=[record for record in records if record.get('verb')=='create' and record.get('objectRef',{}).get('resource')=='pods' and record.get('objectRef',{}).get('subresource')=='exec' and record.get('objectRef',{}).get('namespace')=='starfleet' and record.get('objectRef',{}).get('name','').startswith('probe-') and record.get('stage') in ('ResponseStarted','ResponseComplete')]
+matching=[record for record in records if record.get('verb') in ('create','get') and record.get('objectRef',{}).get('resource')=='pods' and record.get('objectRef',{}).get('subresource')=='exec' and record.get('objectRef',{}).get('namespace')=='starfleet' and record.get('objectRef',{}).get('name','').startswith('probe-') and record.get('stage') in ('ResponseStarted','ResponseComplete')]
 assert matching, 'Wait for a real exec audit record'
 record=matching[0]
 report_name='exec-finding';report={'actor':record['user']['username'],'verb':record['verb'],'resource':record['objectRef']['resource'],'subresource':record['objectRef']['subresource'],'namespace':record['objectRef']['namespace'],'podName':record['objectRef']['name'],'finding':'unexpected-exec','auditID':record['auditID'],'stage':record['stage'],'requestURI':record['requestURI']}

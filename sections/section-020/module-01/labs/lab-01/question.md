@@ -17,7 +17,7 @@ Allow 10–15 minutes for task work.
 
 ## Starting state
 
-Pod `crash-report` prints a start marker, exits with a nonzero status and restarts. The healthy probe application is separate from that evidence Pod.
+Pod `crash-report` prints a start marker, exits once with a nonzero status and then stays running after its restart. An emptyDir marker prevents further crashes so the previous logs remain available. The healthy probe application is separate from that evidence Pod.
 
 Use the private kubeconfig for `ats-036-lab-020-01-01`. In a local lab, select it with `export KUBECONFIG="$(astrona kubeconfig ats-036-lab-020-01-01)"` and check that the context is `kind-astro-ats-036-lab-020-01-01`.
 
@@ -25,7 +25,7 @@ Use the private kubeconfig for `ats-036-lab-020-01-01`. In a local lab, select i
 
 1. Inspect the previous `report` container instance in Pod `crash-report`, including its termination status and previous logs.
 2. Create `crash-diagnosis` in `starfleet-036-020-01-01` with keys `container`, `exitCode` and `logMarker`. Record the container name, actual previous exit code and the `application-started` log marker.
-3. Compare the report with the live restart count and previous logs. Leave the crashing process in place so the evidence can still be inspected.
+3. Compare the report with the live restart count and previous logs. Leave the restarted process in place so the evidence can still be inspected.
 
 ## Constraints
 
