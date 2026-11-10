@@ -1,7 +1,7 @@
 import os
 pods=json.loads(kubectl('-n','starfleet','get','pods','-l','app=cache-sync','-o','json'))['items']
 assert not pods, 'The cache-sync Pods must be gone'
-assert command(['kubectl','-n','starfleet','get','rolebinding','build-helper-edit'],success=False).returncode!=0, 'The attacker binding must be removed'
+assert not kubectl('-n','starfleet','get','rolebinding','build-helper-edit','--ignore-not-found','-o','name'), 'The attacker binding must be removed'
 pod_ip=kubectl('-n','outpost','get','pod','intruder','-o','jsonpath={.status.podIP}')
 report=get('configmap','incident-report')['data']
 assert report['sourceIP']==pod_ip, 'The recorded address must belong to the intruder Pod'

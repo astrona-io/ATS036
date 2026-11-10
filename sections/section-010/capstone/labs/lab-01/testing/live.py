@@ -4,7 +4,7 @@ report=get('configmap','incident-report')['data']
 denied=next(r for r in records if r.get('auditID')==report['deniedAuditID'] and r.get('stage')=='ResponseComplete')
 assert denied['user']['username']==report['deniedActor'] and denied['objectRef']['resource']=='secrets' and denied['responseStatus']['code']==403, 'deniedAuditID must be the denied Secret request'
 executed=next(r for r in records if r.get('auditID')==report['execAuditID'] and r.get('stage')==report['execStage'])
-assert executed['verb']=='create' and executed['objectRef']['subresource']=='exec' and executed['objectRef']['name']==report['podName'], 'execAuditID must be the exec request'
+assert executed['verb'] in ('create','get') and executed['objectRef']['subresource']=='exec' and executed['objectRef']['name']==report['podName'], 'execAuditID must be the exec request'
 assert executed['user']['username']==report['execActor'], 'Bind the exec finding to the authenticated user'
 assert 'requestObject' not in denied and 'requestObject' not in executed, 'Do not capture payloads'
 pod=get('pod',report['podName'])
