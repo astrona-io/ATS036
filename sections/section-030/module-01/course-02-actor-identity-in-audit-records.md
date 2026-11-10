@@ -95,6 +95,20 @@ The record proves that someone or something presented valid credentials for `thr
 
 State the finding with the limits: "ServiceAccount `threat-reader`, Pod `threat-client`, UID `<uid>`, requested `get secrets/audit-token`, denied with `403`, audit ID `<auditID>`." The practice task on the next page asks for exactly this kind of finding. Afterwards, the timeline shows how this event fits with others.
 
+## Preserve the source of each field
+
+Build the report from one selected audit event and the live Pod it identifies. Keep the event's `auditID`, `stage` and `requestURI` together; mixing values from different requests creates a finding that no record supports. `user.username` supplies the authenticated account. Bound Pod attributes in `user.extra` supply the token's Pod name and UID, which you compare with the live Pod metadata.
+
+Read the live identity without exposing a token:
+
+```sh
+kubectl -n starfleet get pod threat-client -o jsonpath='{.metadata.name}{"\t"}{.metadata.uid}{"\t"}{.status.podIP}{"\n"}'
+```
+
+The UID distinguishes a replacement Pod from an earlier Pod with the same name. Record the current Pod IP as `podIP` and an address actually present in the audit event's `sourceIPs` as `sourceIP`. Network address translation can make the two addresses different. Do not replace the audit address with the Pod IP just to make the fields agree.
+
+Use `kubectl create configmap <report> --from-literal=<key>=<value>` to record the selected values, or write a ConfigMap manifest with quoted data values. Re-read the report and compare every field with its source. Preserve the Pod and original audit event so the finding remains verifiable.
+
 ## Common pitfalls
 
 > [!WARNING]
