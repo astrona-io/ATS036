@@ -4,13 +4,15 @@ The course has teaching material for its registered lab tasks, but its readings 
 
 `TEACHING-COVERAGE.yaml` names the preparation set for every lab. `LAB-COVERAGE.md` renders both directions: lab to preparation and reading to assessment. A preparation link means the reading teaches something used by that task, not that every operation in the reading is graded. The additional-reading list makes material without a module assessment visible. Capstones combine selected skills and do not silently count as coverage of every reading.
 
+## Live assessment additions
+
+New QEMU labs collect real Falco events with Kubernetes namespace, Pod name and UID, and deliver scoped API audit events over authenticated TLS to a receiver outside the control-plane container. Negative cases test an overly broad detection rule and disclosure of Secret bodies.
+
 ## Remaining practical gaps and boundaries
 
-- The new QEMU lab runs real Falco with positive and negative process events. It scopes host accounts; it does not verify Kubernetes metadata enrichment or namespace-scoped detection. The kind lab checks that rule document separately.
-- Audit retention grading reads live flags and permissions; it does not wait for age-based deletion or prove off-node delivery. Webhook forwarding and retention design are reference topics.
-- Physical infrastructure telemetry and a complete incident response program exceed the local fixtures. Investigation labs grade evidence from the supplied Kubernetes incident.
-
-These are explicit limits, not completed assessments. When closing one, add or extend a runnable environment, teach the actual commands and evidence, add a live grader with negative cases, and update the mapping. Do not mark a reference procedure as practiced just because it contains a command block.
+- Falco tests use controlled shell events and an explicit command exception; they do not establish complete intrusion detection.
+- The audit receiver shares the disposable VM. Delivery is tested, but durable off-VM storage, retention expiry and disaster recovery are not.
+- Physical infrastructure telemetry and a complete incident-response exercise remain outside these fixtures.
 
 ## Runtime choice
 
