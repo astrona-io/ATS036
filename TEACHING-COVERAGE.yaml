@@ -1,0 +1,148 @@
+version: 1
+labs:
+  sections/section-010/module-01/labs/lab-01:
+    preparation:
+    - sections/section-010/module-01/course-01-expected-behavior-of-a-workload.md
+    - sections/section-010/module-01/course-03-audit-records-as-behavioral-evidence.md
+  sections/section-010/module-02/labs/lab-01:
+    preparation:
+    - sections/section-010/module-02/course-01-anatomy-of-a-falco-rule-file.md
+    - sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
+  sections/section-010/module-02/labs/lab-02:
+    preparation:
+    - sections/section-010/module-02/course-01-anatomy-of-a-falco-rule-file.md
+    - sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
+    - sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
+  sections/section-010/module-03/labs/lab-01:
+    preparation:
+    - sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
+    - sections/section-010/module-03/course-02-who-sent-the-request-identity-and-origin.md
+  sections/section-010/capstone/labs/lab-01:
+    preparation:
+    - sections/section-010/module-01/course-01-expected-behavior-of-a-workload.md
+    - sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
+    - sections/section-010/module-01/course-03-audit-records-as-behavioral-evidence.md
+    - sections/section-010/module-01/course-04-triage-tuning-and-response.md
+    - sections/section-010/module-02/course-01-anatomy-of-a-falco-rule-file.md
+    - sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
+    - sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
+    - sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
+    - sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
+    - sections/section-010/module-03/course-02-who-sent-the-request-identity-and-origin.md
+    - sections/section-010/module-03/course-03-correlating-audit-records-with-other-evidence.md
+  sections/section-020/module-01/labs/lab-01:
+    preparation:
+    - sections/section-020/module-01/course-01-security-signals-by-layer.md
+    - sections/section-020/module-01/course-02-workload-logs-restarts-and-exit-evidence.md
+  sections/section-020/module-02/labs/lab-01:
+    preparation:
+    - sections/section-020/module-02/course-01-kubernetes-events-as-a-short-lived-signal.md
+    - sections/section-020/module-02/course-02-reading-a-pod-specification-for-risky-settings.md
+  sections/section-020/module-03/labs/lab-01:
+    preparation:
+    - sections/section-020/module-03/course-01-serviceaccounts-and-user-identity.md
+    - sections/section-020/module-03/course-02-who-can-read-secrets.md
+  sections/section-020/capstone/labs/lab-01:
+    preparation:
+    - sections/section-020/module-01/course-01-security-signals-by-layer.md
+    - sections/section-020/module-01/course-02-workload-logs-restarts-and-exit-evidence.md
+    - sections/section-020/module-01/course-03-network-traffic-application-logs-and-evidence-gaps.md
+    - sections/section-020/module-02/course-01-kubernetes-events-as-a-short-lived-signal.md
+    - sections/section-020/module-02/course-02-reading-a-pod-specification-for-risky-settings.md
+    - sections/section-020/module-02/course-03-application-log-signals-of-abuse.md
+    - sections/section-020/module-03/course-01-serviceaccounts-and-user-identity.md
+    - sections/section-020/module-03/course-02-who-can-read-secrets.md
+    - sections/section-020/module-03/course-03-secret-exposure-paths.md
+  sections/section-030/module-01/labs/lab-01:
+    preparation:
+    - sections/section-030/module-01/course-01-attack-phases-in-kubernetes.md
+    - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
+  sections/section-030/module-02/labs/lab-01:
+    preparation:
+    - sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
+    - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+  sections/section-030/module-03/labs/lab-01:
+    preparation:
+    - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+  sections/section-030/capstone/labs/lab-01:
+    preparation:
+    - sections/section-030/module-01/course-01-attack-phases-in-kubernetes.md
+    - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
+    - sections/section-030/module-01/course-03-building-a-timeline-from-several-sources.md
+    - sections/section-030/module-01/course-04-containment-and-evidence-preservation.md
+    - sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
+    - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+    - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+    - sections/section-030/module-03/course-02-impact-and-resource-abuse.md
+  sections/section-040/module-01/labs/lab-01:
+    preparation:
+    - sections/section-040/module-01/course-01-the-writable-container-layer.md
+    - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
+  sections/section-040/module-02/labs/lab-01:
+    preparation:
+    - sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
+    - sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
+  sections/section-040/module-03/labs/lab-01:
+    preparation:
+    - sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
+    - sections/section-040/module-03/course-02-updating-by-replacement.md
+  sections/section-040/capstone/labs/lab-01:
+    preparation:
+    - sections/section-040/module-01/course-01-the-writable-container-layer.md
+    - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
+    - sections/section-040/module-01/course-03-limits-of-a-read-only-filesystem-and-pod-security-admission.md
+    - sections/section-040/module-01/course-04-verifying-and-enforcing-immutability.md
+    - sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
+    - sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
+    - sections/section-040/module-02/course-03-privileged-containers-and-verifying-process-privileges.md
+    - sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
+    - sections/section-040/module-03/course-02-updating-by-replacement.md
+    - sections/section-040/module-03/course-03-pinning-images-and-detecting-drift.md
+  sections/section-050/module-01/labs/lab-01:
+    preparation:
+    - sections/section-050/module-01/course-01-the-audit-event-model.md
+    - sections/section-050/module-01/course-02-writing-an-audit-policy.md
+    - sections/section-050/module-01/course-03-api-server-flags-backends-and-troubleshooting.md
+    - sections/section-050/module-01/course-04-reading-audit-records-to-monitor-access.md
+  sections/section-050/module-02/labs/lab-01:
+    preparation:
+    - sections/section-050/module-02/course-01-subresources-in-audit-policy-rules.md
+    - sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
+  sections/section-050/module-03/labs/lab-01:
+    preparation:
+    - sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
+    - sections/section-050/module-03/course-02-protecting-the-log-file.md
+  sections/section-050/capstone/labs/lab-01:
+    preparation:
+    - sections/section-050/module-01/course-01-the-audit-event-model.md
+    - sections/section-050/module-01/course-02-writing-an-audit-policy.md
+    - sections/section-050/module-01/course-03-api-server-flags-backends-and-troubleshooting.md
+    - sections/section-050/module-01/course-04-reading-audit-records-to-monitor-access.md
+    - sections/section-050/module-02/course-01-subresources-in-audit-policy-rules.md
+    - sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
+    - sections/section-050/module-02/course-03-choosing-rules-and-levels-for-interactive-access.md
+    - sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
+    - sections/section-050/module-03/course-02-protecting-the-log-file.md
+    - sections/section-050/module-03/course-03-forwarding-and-retention-policy.md
+  sections/section-010/module-02/labs/lab-03:
+    preparation:
+    - sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+  sections/section-050/module-03/labs/lab-02:
+    preparation:
+    - sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
+additional_readings:
+- sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
+- sections/section-010/module-01/course-04-triage-tuning-and-response.md
+- sections/section-010/module-03/course-03-correlating-audit-records-with-other-evidence.md
+- sections/section-020/module-01/course-03-network-traffic-application-logs-and-evidence-gaps.md
+- sections/section-020/module-02/course-03-application-log-signals-of-abuse.md
+- sections/section-020/module-03/course-03-secret-exposure-paths.md
+- sections/section-030/module-01/course-03-building-a-timeline-from-several-sources.md
+- sections/section-030/module-01/course-04-containment-and-evidence-preservation.md
+- sections/section-030/module-03/course-02-impact-and-resource-abuse.md
+- sections/section-040/module-01/course-03-limits-of-a-read-only-filesystem-and-pod-security-admission.md
+- sections/section-040/module-01/course-04-verifying-and-enforcing-immutability.md
+- sections/section-040/module-02/course-03-privileged-containers-and-verifying-process-privileges.md
+- sections/section-040/module-03/course-03-pinning-images-and-detecting-drift.md
+- sections/section-050/module-02/course-03-choosing-rules-and-levels-for-interactive-access.md
+- sections/section-050/module-03/course-03-forwarding-and-retention-policy.md

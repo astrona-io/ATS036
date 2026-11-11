@@ -9,14 +9,15 @@
         "kind": "ConfigMap",
         "metadata": {
           "name": "pod-risk-report",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-020-02-01"
         },
         "data": {
           "pod": "suspect-pod",
           "privileged": "true",
           "hostPath": "/etc"
         }
-      }
+      },
+      "outcome": "pod-risk-report"
     }
   ],
   "behavior": [
@@ -24,7 +25,7 @@
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-020-02-01",
         "get",
         "pod",
         "suspect-pod",
@@ -33,5 +34,7 @@
       ],
       "equals": "true"
     }
-  ]
+  ],
+  "cluster": "astro-ats-036-lab-020-02-01",
+  "namespace": "starfleet-036-020-02-01"
 }

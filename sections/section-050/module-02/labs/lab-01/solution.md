@@ -21,16 +21,16 @@ Keep this connection selected. Host-level commands name only this environment's 
 The isolated environment has two healthy probe replicas, an internal Service and two client Pods. The required result has not been configured.
 
 ```sh
-kubectl -n starfleet get pods -o wide
+kubectl -n starfleet-036-050-02-01 get pods -o wide
 kubectl get nodes -o wide
 ```
 
-Keep the provisioned audit Policy as it is: it records `pods/exec` in `starfleet` at the `Metadata` level. Run the command `id` inside the `shuttle` Pod in `starfleet` through the API server, so that an exec record exists. Create the ConfigMap `audit-exec` in `starfleet` with `resource` set to `pods`, `subresource` set to `exec`, `podName` set to `shuttle`, `command` set to `id` and `level` set to `Metadata`. The audit log must contain the record of that exec request without `requestObject` or `responseObject`. Keep API access ready.
+Keep the provisioned audit Policy as it is: it records `pods/exec` in `starfleet-036-050-02-01` at the `Metadata` level. Run the command `id` inside the `shuttle` Pod in `starfleet-036-050-02-01` through the API server, so that an exec record exists. Create the ConfigMap `audit-exec` in `starfleet-036-050-02-01` with `resource` set to `pods`, `subresource` set to `exec`, `podName` set to `shuttle`, `command` set to `id` and `level` set to `Metadata`. The audit log must contain the record of that exec request without `requestObject` or `responseObject`. Keep API access ready.
 
 Run the command in the `shuttle` Pod. The API server audits this request:
 
 ```sh
-kubectl -n starfleet exec shuttle -- id
+kubectl -n starfleet-036-050-02-01 exec shuttle -- id
 ```
 
 Save this as `configmap-audit-exec.yaml`:
@@ -40,7 +40,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: audit-exec
-  namespace: starfleet
+  namespace: starfleet-036-050-02-01
 data:
   resource: pods
   subresource: exec
@@ -60,7 +60,7 @@ kubectl apply -f configmap-audit-exec.yaml
 Check the report and look for the exec request in the log on the control plane node:
 
 ```sh
-kubectl -n starfleet get configmap audit-exec -o yaml
+kubectl -n starfleet-036-050-02-01 get configmap audit-exec -o yaml
 podman exec "$node_name" grep -c 'pods/shuttle/exec' /var/log/training-audit/audit.jsonl
 ```
 

@@ -1,17 +1,19 @@
+import os
 import json,subprocess,tempfile
 from pathlib import Path
-CONTEXT="kind-astro-ats-036-lab-030-01-01"
-NODE="astro-ats-036-lab-030-01-01-control-plane"
+CONTEXT=os.environ.get("ASTRONA_KUBE_CONTEXT") or "kind-astro-ats-036-lab-030-01-01"
+CLUSTER=os.environ.get("ASTRONA_KIND_CLUSTER") or "astro-ats-036-lab-030-01-01"
+NODE=CLUSTER+"-control-plane"
 def run(*args):
     result=subprocess.run(args,check=True,text=True,capture_output=True,timeout=30)
     return result.stdout.strip()
 assert run('kubectl','config','current-context')==CONTEXT, 'Select the private environment'
-assert run('podman','inspect',NODE,'--format','{{index .Config.Labels "io.x-k8s.kind.cluster"}}')=='astro-ats-036-lab-030-01-01', 'Refusing an unrelated node container'
-def node(*args):return run('podman','exec',NODE,*args)
+assert run((os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'inspect',NODE,'--format','{{index .Config.Labels "io.x-k8s.kind.cluster"}}')==CLUSTER, 'Refusing an unrelated node container'
+def node(*args):return run((os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'exec',NODE,*args)
 def put(path,content):
     with tempfile.TemporaryDirectory(prefix='training-node-') as temporary:
         source=Path(temporary)/'content';source.write_text(content)
-        run('podman','cp',str(source),NODE+':'+path)
+        run((os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'cp',str(source),NODE+':'+path)
 def api_manifest():
     with tempfile.TemporaryDirectory(prefix='training-api-') as temporary:
         source=Path(temporary)/'pod.yaml';source.write_text(node('cat','/etc/kubernetes/manifests/kube-apiserver.yaml'))
@@ -26,4 +28,20 @@ def configure_audit(policy):
     manifest['metadata'].setdefault('annotations',{})['training.astrona.io/audit-policy']=__import__('hashlib').sha256(json.dumps(policy,sort_keys=True).encode()).hexdigest()
     put('/etc/kubernetes/lab-api-pod.json',json.dumps(manifest));node('mv','/etc/kubernetes/lab-api-pod.json','/etc/kubernetes/manifests/kube-apiserver.yaml')
 
-configure_audit({'apiVersion': 'audit.k8s.io/v1', 'kind': 'Policy', 'omitStages': ['RequestReceived'], 'rules': [{'level': 'Metadata', 'namespaces': ['starfleet'], 'resources': [{'group': '', 'resources': ['secrets', 'configmaps', 'pods']}]}, {'level': 'None'}]})
+    # Wait for the replacement API server, not the still-ready old process.
+    import time
+    expected = manifest['metadata']['annotations']['training.astrona.io/audit-policy']
+    for attempt in range(80):
+        try:
+            mirror = json.loads(run('kubectl', '--request-timeout=3s', '-n', 'kube-system', 'get', 'pod', 'kube-apiserver-'+NODE, '-o', 'json'))
+            current = mirror['metadata'].get('annotations', {}).get('training.astrona.io/audit-policy')
+            ready = any(c.get('type') == 'Ready' and c.get('status') == 'True' for c in mirror.get('status', {}).get('conditions', []))
+            if current == expected and ready and run('kubectl', '--request-timeout=3s', 'get', '--raw=/readyz') == 'ok':
+                break
+        except (subprocess.SubprocessError, ValueError, KeyError):
+            pass
+        time.sleep(2)
+    else:
+        raise RuntimeError('The replacement API server did not become ready with the audit policy')
+
+configure_audit({'apiVersion': 'audit.k8s.io/v1', 'kind': 'Policy', 'omitStages': ['RequestReceived'], 'rules': [{'level': 'Metadata', 'namespaces': ['starfleet-036-030-01-01'], 'resources': [{'group': '', 'resources': ['secrets', 'configmaps', 'pods']}]}, {'level': 'None'}]})

@@ -16,13 +16,13 @@ Keep this connection selected throughout the task. Every script supplied by the 
 
 ## Inspect And Explain
 
-Pod `crash-report` prints a start marker, exits with a nonzero status and restarts. The healthy probe application is separate from that evidence Pod.
+Pod `crash-report` prints a start marker, exits once with a nonzero status and then stays running after its restart. An emptyDir marker prevents further crashes so the previous logs remain available. The healthy probe application is separate from that evidence Pod.
 
 Inspect the relevant evidence:
 
 ```sh
-kubectl -n starfleet get pod crash-report -o json
-kubectl -n starfleet logs crash-report -c report --previous --timestamps
+kubectl -n starfleet-036-020-01-01 get pod crash-report -o json
+kubectl -n starfleet-036-020-01-01 logs crash-report -c report --previous --timestamps
 ```
 
 A restart creates a new container instance in the same Pod. Current logs and previous logs describe different instances. The last terminated status supplies the exit code for that previous process. Preserve the evidence Pod so the recorded diagnosis can be checked against the runtime.
@@ -35,7 +35,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: crash-diagnosis
-  namespace: starfleet
+  namespace: starfleet-036-020-01-01
 data:
   container: report
   exitCode: '12'
@@ -53,10 +53,10 @@ kubectl apply -f configmap-crash-diagnosis.yaml
 Observe the actual result. A denied-request command returns a nonzero status when the denial works. Run denial checks separately from a shell sequence that stops on the first nonzero status.
 
 ```sh
-kubectl -n starfleet logs crash-report -c report --previous
+kubectl -n starfleet-036-020-01-01 logs crash-report -c report --previous
 ```
 
-Leave Pod `crash-report` running its original restart-loop command. Read the previous instance of container `report`. Create ConfigMap `crash-diagnosis` with `container: report`, `exitCode` matching the last terminated instance, and `logMarker: application-started`. The Pod must have restarted at least once and its previous log must contain the marker. Do not delete or repair the evidence Pod.
+Leave Pod `crash-report` running its original command. Read the previous instance of container `report`. Create ConfigMap `crash-diagnosis` with `container: report`, `exitCode` matching the last terminated instance, and `logMarker: application-started`. The Pod must have restarted at least once and its previous log must contain the marker. Do not delete or repair the evidence Pod.
 
 After recording the result, remove this independent lab with `astrona destroy ats-036-lab-020-01-01`.
 

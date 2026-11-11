@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: capability-free
-  namespace: starfleet
+  namespace: starfleet-036-040-02-01
 spec:
   restartPolicy: Never
   containers:

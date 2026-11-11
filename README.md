@@ -16,7 +16,7 @@ Each module has a landing page, deep-dive parts, a summary and a knowledge check
 
 ## Author Review
 
-See [curriculum coverage](CURRICULUM.md), [primary sources](SOURCES.md), [question-bank documentation](ASSESSMENTS.md) and [contribution instructions](CONTRIBUTING.md). No runtime execution is claimed.
+See [curriculum coverage](CURRICULUM.md), [primary sources](SOURCES.md), [question-bank documentation](ASSESSMENTS.md) and [contribution instructions](CONTRIBUTING.md). Runtime results are recorded in the PR and GitHub Actions.
 
 ## Hands-On Coverage
 
@@ -29,3 +29,10 @@ This course has 5 ungraded module playgrounds and 5 draft independent labs. Task
 | 030/01 | Attribute An API Attempt To A Workload Identity |
 | 040/01 | Run With A Restricted Security Context |
 | 050/01 | Verify Metadata Audit Records Exclude Secret Payloads |
+
+## Authoring and verification
+
+See [AUTHORING.md](AUTHORING.md) for the lab lifecycle and review workflow, and
+[LAB-COVERAGE.md](LAB-COVERAGE.md) for preparation lessons and graded outcomes.
+
+See [lesson and lab links](LAB-COVERAGE.md) and [remaining practical gaps](COVERAGE-REVIEW.md) for the current assessment scope.

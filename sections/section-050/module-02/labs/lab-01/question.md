@@ -7,25 +7,26 @@ exam_objectives:
 
 Run a command in a Pod through the API server and bind the audit record of that exec request to a report.
 
+Solve this question on: `terminal`
+
+Allow 10–15 minutes for task work.
+
 ## Starting state
 
 The isolated environment has two healthy probe replicas, an internal Service and two client Pods. The required result has not been configured.
 
-Use a host shell with the private kubeconfig for this independent kind environment. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool.
+Use the private kubeconfig for `ats-036-lab-050-02-01`. In a local lab, select it with `export KUBECONFIG="$(astrona kubeconfig ats-036-lab-050-02-01)"` and check that the context is `kind-astro-ats-036-lab-050-02-01`.
 
-```sh
-export KUBECONFIG="$(astrona kubeconfig ats-036-lab-050-02-01)"
-test "$(kubectl config current-context)" = "kind-ats-036-lab-050-02-01" || exit 1
-node_name="astro-ats-036-lab-050-02-01-control-plane"
-worker_name="astro-ats-036-lab-050-02-01-worker"
-```
+## Tasks
 
-Keep this connection selected. Host-level commands name only this environment's node containers. They do not operate on the host operating system.
+1. Inspect the staged audit policy for `pods/exec`, then run `id` in Pod `shuttle` through the Kubernetes API.
+2. Find its audit event and verify that it identifies the Pod, namespace and `command=id`, uses `Metadata` level and contains no request or response body.
+3. Create `audit-exec` in `starfleet-036-050-02-01` with `resource: pods`, `subresource: exec`, `podName: shuttle`, `command: id` and `level: Metadata`. Keep the policy and API available.
 
-## Required result
+## Constraints
 
-Keep the provisioned audit Policy as it is: it records `pods/exec` in `starfleet` at the `Metadata` level. Run the command `id` inside the `shuttle` Pod in `starfleet` through the API server, so that an exec record exists. Create the ConfigMap `audit-exec` in `starfleet` with `resource` set to `pods`, `subresource` set to `exec`, `podName` set to `shuttle`, `command` set to `id` and `level` set to `Metadata`. The audit log must contain the record of that exec request without `requestObject` or `responseObject`. Keep API access ready.
+Work only in this lab’s namespaces `starfleet-036-050-02-01` and `outpost-036-050-02-01` and its own node containers. Preserve unrelated resources and the staged evidence. Cluster startup and API restarts add time to the task estimate.
 
-## Verify The Result
+## How the answer is checked
 
-The grader checks the required object fields and actual observations. Wait for controller convergence before submitting. Preserve the task's namespace, workload names and unrelated components.
+A real exec request is audited at Metadata level. The grader reads live resources and evidence; it does not award points for preserving the starting state.

@@ -9,7 +9,7 @@
         "kind": "Deployment",
         "metadata": {
           "name": "probe",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-040-03-01"
         },
         "spec": {
           "replicas": 2,
@@ -57,7 +57,8 @@
           }
         }
       },
-      "state": "deployment"
+      "state": "deployment",
+      "outcome": "immutable-rollout"
     }
   ],
   "behavior": [
@@ -65,7 +66,7 @@
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-03-01",
         "exec",
         "shuttle",
         "--",
@@ -77,13 +78,14 @@
       ],
       "contains": [
         "version=v2"
-      ]
+      ],
+      "outcome": "immutable-rollout"
     },
     {
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-03-01",
         "exec",
         "deploy/probe",
         "--",
@@ -91,13 +93,14 @@
         "-c",
         "printf ok > /tmp/scratch-check; cat /tmp/scratch-check"
       ],
-      "equals": "ok"
+      "equals": "ok",
+      "outcome": "immutable-rollout"
     },
     {
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-03-01",
         "exec",
         "deploy/probe",
         "--",
@@ -108,20 +111,24 @@
       "denied": true,
       "failure_markers": [
         "read-only file system"
-      ]
+      ],
+      "outcome": "immutable-rollout"
     },
     {
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-03-01",
         "get",
         "deployment",
         "probe",
         "-o",
         "jsonpath={.spec.template.spec.volumes[*].hostPath}"
       ],
-      "equals": ""
+      "equals": "",
+      "outcome": "immutable-rollout"
     }
-  ]
+  ],
+  "cluster": "astro-ats-036-lab-040-03-01",
+  "namespace": "starfleet-036-040-03-01"
 }

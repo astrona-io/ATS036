@@ -53,7 +53,8 @@
               "name": "scratch",
               "emptyDir": {}
             }
-          ]
+          ],
+          "automountServiceAccountToken": false
         }
       },
       "state": "pod"

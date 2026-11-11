@@ -5,6 +5,6 @@ exam_objectives:
 ---
 # Starting Environment
 
-The isolated environment runs the `cache-sync` Deployment with one replica, which uses the `build-helper` ServiceAccount, and two RoleBindings in the `starfleet` namespace. The `cache-sync` Deployment is not part of the application. The required result has not been configured.
+The isolated environment runs the `cache-sync` Deployment with one replica, which uses the `build-helper` ServiceAccount, and two RoleBindings in the `starfleet-036-030-02-01` namespace. The `cache-sync` Deployment is not part of the application. The required result has not been configured.
 
 Find the controller and binding behind an unexpected Pod, record them and contain both.

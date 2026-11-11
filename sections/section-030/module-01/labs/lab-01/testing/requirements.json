@@ -4,23 +4,26 @@
     {
       "kind": "configmap",
       "name": "audit-finding",
-      "namespace": "starfleet",
+      "namespace": "starfleet-036-030-01-01",
       "expected": {
         "apiVersion": "v1",
         "kind": "ConfigMap",
         "metadata": {
           "name": "audit-finding",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-030-01-01"
         },
         "data": {
-          "actor": "system:serviceaccount:starfleet:threat-reader",
+          "actor": "system:serviceaccount:starfleet-036-030-01-01:threat-reader",
           "resource": "secrets",
-          "namespace": "starfleet",
+          "namespace": "starfleet-036-030-01-01",
           "code": "403",
           "finding": "unauthorized-secret-read"
         }
-      }
+      },
+      "outcome": "actor-attribution"
     }
   ],
-  "behavior": []
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-030-01-01",
+  "namespace": "starfleet-036-030-01-01"
 }

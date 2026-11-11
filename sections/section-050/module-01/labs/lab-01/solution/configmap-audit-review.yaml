@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: audit-review
-  namespace: starfleet
+  namespace: starfleet-036-050-01-01
 data:
   level: Metadata
   resource: secrets

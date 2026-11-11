@@ -39,6 +39,7 @@ metadata:
   name: restricted-reader
   namespace: starfleet
 spec:
+  automountServiceAccountToken: false
   restartPolicy: Never
   containers:
   - name: reader

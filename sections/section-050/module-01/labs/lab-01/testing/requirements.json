@@ -4,21 +4,24 @@
     {
       "kind": "configmap",
       "name": "audit-review",
-      "namespace": "starfleet",
+      "namespace": "starfleet-036-050-01-01",
       "expected": {
         "apiVersion": "v1",
         "kind": "ConfigMap",
         "metadata": {
           "name": "audit-review",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-050-01-01"
         },
         "data": {
           "level": "Metadata",
           "resource": "secrets",
           "result": "payload-excluded"
         }
-      }
+      },
+      "outcome": "audit-review"
     }
   ],
-  "behavior": []
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-050-01-01",
+  "namespace": "starfleet-036-050-01-01"
 }

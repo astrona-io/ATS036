@@ -23,8 +23,8 @@ The isolated environment has two healthy probe replicas, an internal Service and
 Inspect the current objects before changing them:
 
 ```sh
-kubectl -n starfleet get pods -o wide
-kubectl -n starfleet get configmaps
+kubectl -n starfleet-036-010-02-01 get pods -o wide
+kubectl -n starfleet-036-010-02-01 get configmaps
 ```
 
 The rule file is a list with one rule. The condition combines the macros `spawned_process` and `container` with a namespace test and a list of shell names. The output names the pod and the command line so that an analyst can start triage from the alert alone.
@@ -36,14 +36,14 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: shell-in-probe-rule
-  namespace: starfleet
+  namespace: starfleet-036-010-02-01
 data:
   rules.yaml: |
     - rule: Shell started in probe namespace
-      desc: A shell started inside a container of the starfleet namespace
+      desc: A shell started inside a container of the starfleet-036-010-02-01 namespace
       condition: >
         spawned_process and container
-        and k8s.ns.name = starfleet
+        and k8s.ns.name = starfleet-036-010-02-01
         and proc.name in (sh, bash, ash)
       output: >
         Shell started (pod=%k8s.pod.name namespace=%k8s.ns.name
@@ -65,8 +65,8 @@ kubectl apply -f configmap-shell-rule.yaml
 Read the stored rule back and confirm that the condition, output and priority are present.
 
 ```sh
-kubectl -n starfleet get configmap shell-in-probe-rule -o jsonpath='{.data.rules\.yaml}'
-kubectl -n starfleet get deployment probe
+kubectl -n starfleet-036-010-02-01 get configmap shell-in-probe-rule -o jsonpath='{.data.rules\.yaml}'
+kubectl -n starfleet-036-010-02-01 get deployment probe
 ```
 
 The ConfigMap only stores the text. Falco applies a rule file after it is loaded with the `-r` option or mounted in the rules directory, and a rule that Falco has not loaded detects nothing.

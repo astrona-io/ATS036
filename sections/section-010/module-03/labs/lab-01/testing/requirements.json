@@ -4,23 +4,25 @@
     {
       "kind": "configmap",
       "name": "exec-finding",
-      "namespace": "starfleet",
+      "namespace": "starfleet-036-010-03-01",
       "expected": {
         "apiVersion": "v1",
         "kind": "ConfigMap",
         "metadata": {
           "name": "exec-finding",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-010-03-01"
         },
         "data": {
-          "verb": "create",
           "resource": "pods",
           "subresource": "exec",
-          "namespace": "starfleet",
+          "namespace": "starfleet-036-010-03-01",
           "finding": "unexpected-exec"
         }
-      }
+      },
+      "outcome": "exec-finding"
     }
   ],
-  "behavior": []
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-010-03-01",
+  "namespace": "starfleet-036-010-03-01"
 }

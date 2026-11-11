@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: pod-risk-report
-  namespace: starfleet
+  namespace: starfleet-036-020-02-01
 data:
   pod: suspect-pod
   privileged: 'true'

@@ -28,3 +28,10 @@ Applied the local astrona-course-expand-material skill with CLAUDE.md plain-Engl
 - https://kubernetes.io/docs/tutorials/security/seccomp/
 - https://kubernetes.io/docs/tutorials/security/apparmor/
 - https://falco.org/docs/concepts/
+
+## Live assessment review — 2026-11-11
+
+Falco chart 9.2.2 (Falco 0.45.2); Helm 4.3.1; Kubernetes 1.35. QEMU fixtures pin the Ubuntu image and verify architecture-specific downloads where supplied. Package repositories and vulnerability data remain time-dependent.
+
+- [Falco Kubernetes metadata](https://falco.org/blog/falco-k8smeta-plugin/)
+- [Kubernetes auditing](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/)

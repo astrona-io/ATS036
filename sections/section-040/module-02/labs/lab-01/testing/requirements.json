@@ -9,7 +9,7 @@
         "kind": "Pod",
         "metadata": {
           "name": "capability-free",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-040-02-01"
         },
         "spec": {
           "restartPolicy": "Never",
@@ -42,7 +42,8 @@
           }
         }
       },
-      "state": "pod"
+      "state": "pod",
+      "outcome": "capability-free"
     }
   ],
   "behavior": [
@@ -50,20 +51,21 @@
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-02-01",
         "exec",
         "capability-free",
         "--",
         "id",
         "-u"
       ],
-      "equals": "2000"
+      "equals": "2000",
+      "outcome": "capability-free"
     },
     {
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-02-01",
         "exec",
         "capability-free",
         "--",
@@ -71,13 +73,14 @@
         "-c",
         "awk '/^CapEff/ {print $2}' /proc/1/status"
       ],
-      "equals": "0000000000000000"
+      "equals": "0000000000000000",
+      "outcome": "capability-free"
     },
     {
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-02-01",
         "exec",
         "capability-free",
         "--",
@@ -85,13 +88,14 @@
         "-c",
         "awk '/^CapBnd/ {print $2}' /proc/1/status"
       ],
-      "equals": "0000000000000000"
+      "equals": "0000000000000000",
+      "outcome": "capability-free"
     },
     {
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-02-01",
         "exec",
         "capability-free",
         "--",
@@ -99,13 +103,14 @@
         "-c",
         "awk '/^NoNewPrivs/ {print $2}' /proc/1/status"
       ],
-      "equals": "1"
+      "equals": "1",
+      "outcome": "capability-free"
     },
     {
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-02-01",
         "exec",
         "capability-free",
         "--",
@@ -113,7 +118,10 @@
         "-c",
         "awk '/^Seccomp:/ {print $2}' /proc/1/status"
       ],
-      "equals": "2"
+      "equals": "2",
+      "outcome": "capability-free"
     }
-  ]
+  ],
+  "cluster": "astro-ats-036-lab-040-02-01",
+  "namespace": "starfleet-036-040-02-01"
 }

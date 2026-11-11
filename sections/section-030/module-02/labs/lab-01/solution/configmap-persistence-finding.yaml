@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: persistence-finding
-  namespace: starfleet
+  namespace: starfleet-036-030-02-01
 data:
   deployment: cache-sync
   serviceAccount: build-helper

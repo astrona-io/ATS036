@@ -22,11 +22,19 @@ teardown:
   keepCluster: false
 testing:
   init:
+  - name: verify-start
+    type: file
+    source: testing/verify-start.sh
   - name: reference-result
     type: file
     source: solution/apply.sh
-validation:
-  script:
-    name: verify-contract-and-behavior
+  - name: wait-solved
     type: file
-    source: validate.sh
+    source: testing/wait-solved.sh
+validation:
+  scripts:
+  - name: access-finding
+    description: The report identifies the binding that grants Secret access
+    type: file
+    source: validation/validate-access-finding.sh
+    points: 2

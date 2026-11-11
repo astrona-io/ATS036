@@ -21,8 +21,8 @@ Pod `suspect-pod` runs a container with extra privileges and mounts a directory 
 Inspect the relevant evidence:
 
 ```sh
-kubectl -n starfleet get pod suspect-pod -o jsonpath='{.spec.containers[0].securityContext.privileged}{"\n"}'
-kubectl -n starfleet get pod suspect-pod -o jsonpath='{.spec.volumes[*].hostPath.path}{"\n"}'
+kubectl -n starfleet-036-020-02-01 get pod suspect-pod -o jsonpath='{.spec.containers[0].securityContext.privileged}{"\n"}'
+kubectl -n starfleet-036-020-02-01 get pod suspect-pod -o jsonpath='{.spec.volumes[*].hostPath.path}{"\n"}'
 ```
 
 The first command prints the `privileged` setting of the container. The second prints the node directory that the Pod mounts. Both settings come from the Pod specification, which is the record of what the Pod is allowed to do. Preserve the evidence Pod so the recorded report can be checked against the runtime.
@@ -34,7 +34,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: pod-risk-report
-  namespace: starfleet
+  namespace: starfleet-036-020-02-01
 data:
   pod: suspect-pod
   privileged: 'true'
@@ -52,8 +52,8 @@ kubectl apply -f configmap-pod-risk-report.yaml
 Observe the actual result.
 
 ```sh
-kubectl -n starfleet get pod suspect-pod -o jsonpath='{.spec.containers[0].securityContext.privileged}{"\n"}'
-kubectl -n starfleet get configmap pod-risk-report -o jsonpath='{.data}{"\n"}'
+kubectl -n starfleet-036-020-02-01 get pod suspect-pod -o jsonpath='{.spec.containers[0].securityContext.privileged}{"\n"}'
+kubectl -n starfleet-036-020-02-01 get configmap pod-risk-report -o jsonpath='{.data}{"\n"}'
 ```
 
 Leave Pod `suspect-pod` running. Read its specification. Create ConfigMap `pod-risk-report` with `pod: suspect-pod`, `privileged` matching the container `securityContext`, and `hostPath` matching the node directory that the Pod mounts. Do not delete or change the evidence Pod.

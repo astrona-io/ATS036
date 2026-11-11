@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: crash-report
-  namespace: starfleet
+  namespace: starfleet-036-020-01-01
 spec:
   restartPolicy: Always
   containers:
@@ -11,4 +11,10 @@ spec:
     command:
     - sh
     - -c
-    - printf "application-started\n"; sleep 2; exit 12
+    - printf "application-started\n"; if [ ! -f /state/crashed ]; then touch /state/crashed; sleep 2; exit 12; fi; sleep 86400
+    volumeMounts:
+    - name: state
+      mountPath: /state
+  volumes:
+  - name: state
+    emptyDir: {}

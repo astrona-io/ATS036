@@ -87,13 +87,27 @@ Now compare the record with the live objects. The first command prints the IP ad
 kubectl -n starfleet get pod threat-client -o jsonpath='{.status.podIP}{" "}{.metadata.uid}{"\n"}'
 ```
 
-The address should match the value in `sourceIPs`, because the request came from inside that Pod. If the `extra` field has the key `authentication.kubernetes.io/pod-uid`, its value should match the UID. When both agree, you can say that the request came from the Pod `threat-client` under the `threat-reader` identity. When the Pod is deleted later, the UID in the record stays unique, so a replacement Pod with the same name cannot be mistaken for the original.
+Record the live Pod IP and the audit source address separately. NAT or a proxy can make them differ, so an address mismatch alone does not disprove the credential binding. Compare `authentication.kubernetes.io/pod-name` and `authentication.kubernetes.io/pod-uid` in `user.extra` with the live Pod. These attributes identify the Pod that received the token; they do not prove that the token was never copied elsewhere. The UID distinguishes this instance from a replacement with the same name.
 
 ## What the identity proves
 
 The record proves that someone or something presented valid credentials for `threat-reader` and asked for the Secret. It does not prove who wrote the code in the Pod. It does not show how that code arrived. It proves nothing about a human, because a ServiceAccount has no person behind it in the record. For a human user name, the record shows the credential holder, and a stolen certificate looks the same as the real owner.
 
 State the finding with the limits: "ServiceAccount `threat-reader`, Pod `threat-client`, UID `<uid>`, requested `get secrets/audit-token`, denied with `403`, audit ID `<auditID>`." The practice task on the next page asks for exactly this kind of finding. Afterwards, the timeline shows how this event fits with others.
+
+## Preserve the source of each field
+
+Build the report from one selected audit event and the live Pod it identifies. Keep the event's `auditID`, `stage` and `requestURI` together; mixing values from different requests creates a finding that no record supports. `user.username` supplies the authenticated account. Bound Pod attributes in `user.extra` supply the token's Pod name and UID, which you compare with the live Pod metadata.
+
+Read the live identity without exposing a token:
+
+```sh
+kubectl -n starfleet get pod threat-client -o jsonpath='{.metadata.name}{"\t"}{.metadata.uid}{"\t"}{.status.podIP}{"\n"}'
+```
+
+The UID distinguishes a replacement Pod from an earlier Pod with the same name. Record the current Pod IP as `podIP` and an address actually present in the audit event's `sourceIPs` as `sourceIP`. Network address translation can make the two addresses different. Do not replace the audit address with the Pod IP just to make the fields agree.
+
+Use `kubectl create configmap <report> --from-literal=<key>=<value>` to record the selected values, or write a ConfigMap manifest with quoted data values. Re-read the report and compare every field with its source. Preserve the Pod and original audit event so the finding remains verifiable.
 
 ## Common pitfalls
 

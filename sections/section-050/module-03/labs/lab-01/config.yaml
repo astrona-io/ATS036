@@ -24,11 +24,19 @@ teardown:
   keepCluster: false
 testing:
   init:
+  - name: verify-start
+    type: file
+    source: testing/verify-start.sh
   - name: reference-result
     type: file
     source: solution/apply.sh
-validation:
-  script:
-    name: verify-fields-and-live-evidence
+  - name: wait-solved
     type: file
-    source: validate.sh
+    source: testing/wait-solved.sh
+validation:
+  scripts:
+  - name: audit-retention
+    description: The report matches live audit paths, rotation flags and file mode
+    type: file
+    source: validation/validate-audit-retention.sh
+    points: 2
