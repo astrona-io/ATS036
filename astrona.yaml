@@ -1,9 +1,9 @@
 training:
   id: ATS036
   title: 'CKS: Monitoring, Logging and Runtime Security'
-  description: 'Detailed reading material and reusable YAML knowledge checks for CKS:
-    Monitoring, Logging and Runtime Security. Technical content remains draft. Each
-    module has a playground, a graded lab and a knowledge check.'
+  description: 'Detailed reading material and reusable YAML knowledge checks for CKS: Monitoring, Logging
+    and Runtime Security. Technical content remains draft. Each module has a playground, a graded lab
+    and a knowledge check.'
   certification:
     name: Certified Kubernetes Security Specialist
     code: CKS
@@ -12,8 +12,7 @@ training:
     weight: 20
     competencies:
     - Perform behavioral analytics to detect malicious activities
-    - Detect threats within physical infrastructure, apps, networks, data, users and
-      workloads
+    - Detect threats within physical infrastructure, apps, networks, data, users and workloads
     - Investigate and identify phases of attack and bad actors within the environment
     - Ensure immutability of containers at runtime
     - Use Kubernetes audit logs to monitor access
@@ -36,27 +35,26 @@ modules:
     path: sections/intro/course-03-how-this-course-is-made.md
 - id: module-010
   title: Perform behavioral analytics to detect malicious activities
-  description: Developed reading and reasoning for Perform behavioral analytics to
-    detect malicious activities.
+  description: Developed reading and reasoning for Perform behavioral analytics to detect malicious activities.
   status: alpha
   content:
   - type: reading
     title: Perform behavioral analytics to detect malicious activities
     path: sections/section-010/README.md
   - type: reading
-    title: "Behavioral Detection With Runtime Context"
+    title: Behavioral Detection With Runtime Context
     path: sections/section-010/module-01/course.md
   - type: reading
-    title: "Expected Behavior Of A Workload"
+    title: Expected Behavior Of A Workload
     path: sections/section-010/module-01/course-01-expected-behavior-of-a-workload.md
   - type: reading
-    title: "Syscalls, eBPF And Falco Rules"
+    title: Syscalls, eBPF And Falco Rules
     path: sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
   - type: reading
-    title: "Audit Records As Behavioral Evidence"
+    title: Audit Records As Behavioral Evidence
     path: sections/section-010/module-01/course-03-audit-records-as-behavioral-evidence.md
   - type: reading
-    title: Detect A Denied API Access Attempt — Task
+    title: "Detect A Denied API Access Attempt \u2014 Task"
     path: sections/section-010/module-01/labs/lab-01/question.md
   - type: lab
     title: Detect A Denied API Access Attempt
@@ -66,22 +64,21 @@ modules:
     topic: audit-detection
     task_kind: build
     learning_goals:
-    - Classify a real denied Secret request and bind the finding to its actor and
-      audit identifier.
+    - Classify a real denied Secret request and bind the finding to its actor and audit identifier.
     tags:
     - cks
     - audit-detection
   - type: reading
-    title: Detect A Denied API Access Attempt — Solution
+    title: "Detect A Denied API Access Attempt \u2014 Solution"
     path: sections/section-010/module-01/labs/lab-01/solution.md
   - type: reading
-    title: "Triage, Tuning And Response To An Alert"
+    title: Triage, Tuning And Response To An Alert
     path: sections/section-010/module-01/course-04-triage-tuning-and-response.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-010/module-01/course-05-summary.md
   - type: quiz
-    title: "Knowledge Check: Behavioral Detection With Runtime Context"
+    title: 'Knowledge Check: Behavioral Detection With Runtime Context'
     path: sections/section-010/module-01/quiz.yaml
     question_count: 10
     pass_score: 70
@@ -95,7 +92,7 @@ modules:
     title: Scope A Shell Rule To A Namespace
     path: sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
   - type: reading
-    title: Write A Scoped Shell Detection Rule — Task
+    title: "Write A Scoped Shell Detection Rule \u2014 Task"
     path: sections/section-010/module-02/labs/lab-01/question.md
   - type: lab
     title: Write A Scoped Shell Detection Rule
@@ -110,16 +107,16 @@ modules:
     - cks
     - rule-writing
   - type: reading
-    title: Write A Scoped Shell Detection Rule — Solution
+    title: "Write A Scoped Shell Detection Rule \u2014 Solution"
     path: sections/section-010/module-02/labs/lab-01/solution.md
   - type: reading
-    title: "Exceptions, Testing And Limits Of A Rule"
+    title: Exceptions, Testing And Limits Of A Rule
     path: sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
   - type: reading
     title: Test A Live Sensor In A Linux VM
     path: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
   - type: reading
-    title: Test A Falco Rule Against Live Processes — Task
+    title: "Test A Falco Rule Against Live Processes \u2014 Task"
     path: sections/section-010/module-02/labs/lab-02/question.md
   - type: lab
     title: Test A Falco Rule Against Live Processes
@@ -130,15 +127,35 @@ modules:
     task_kind: build
     learning_goals:
     - Prove live shell detection and a narrow exception with real kernel events.
-    tags: [cks, falco, qemu]
+    tags:
+    - cks
+    - falco
+    - qemu
   - type: reading
-    title: Test A Falco Rule Against Live Processes — Solution
+    title: "Test A Falco Rule Against Live Processes \u2014 Solution"
     path: sections/section-010/module-02/labs/lab-02/solution.md
+  - type: reading
+    title: Join A Runtime Event To Kubernetes Identity
+    path: sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+  - type: reading
+    title: "Scope Live Falco Events With Kubernetes Metadata \u2014 Task"
+    path: sections/section-010/module-02/labs/lab-03/question.md
+  - type: lab
+    title: Scope Live Falco Events With Kubernetes Metadata
+    path: sections/section-010/module-02/labs/lab-03
+    difficulty: intermediate
+    estimated_duration: 15m
+    learning_goals:
+    - Fresh shell events in the protected namespace include real Kubernetes identity
+    - Approved commands and an outside namespace remain silent while a later protected event is detected
+  - type: reading
+    title: "Scope Live Falco Events With Kubernetes Metadata \u2014 Solution"
+    path: sections/section-010/module-02/labs/lab-03/solution.md
   - type: reading
     title: Summary
     path: sections/section-010/module-02/course-04-summary.md
   - type: quiz
-    title: "Knowledge Check: Writing Runtime Detection Rules"
+    title: 'Knowledge Check: Writing Runtime Detection Rules'
     path: sections/section-010/module-02/quiz.yaml
     question_count: 10
     pass_score: 70
@@ -149,10 +166,10 @@ modules:
     title: Exec And Port-Forward In The Audit Log
     path: sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
   - type: reading
-    title: "Who Sent The Request: Identity And Origin"
+    title: 'Who Sent The Request: Identity And Origin'
     path: sections/section-010/module-03/course-02-who-sent-the-request-identity-and-origin.md
   - type: reading
-    title: Find The Audit Record Of A Pod Exec — Task
+    title: "Find The Audit Record Of A Pod Exec \u2014 Task"
     path: sections/section-010/module-03/labs/lab-01/question.md
   - type: lab
     title: Find The Audit Record Of A Pod Exec
@@ -167,7 +184,7 @@ modules:
     - cks
     - exec-audit
   - type: reading
-    title: Find The Audit Record Of A Pod Exec — Solution
+    title: "Find The Audit Record Of A Pod Exec \u2014 Solution"
     path: sections/section-010/module-03/labs/lab-01/solution.md
   - type: reading
     title: Correlating Audit Records With Other Evidence
@@ -176,12 +193,12 @@ modules:
     title: Summary
     path: sections/section-010/module-03/course-04-summary.md
   - type: quiz
-    title: "Knowledge Check: Detecting Command Execution Through API Audit Records"
+    title: 'Knowledge Check: Detecting Command Execution Through API Audit Records'
     path: sections/section-010/module-03/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: Report And Contain Suspicious Behavior From Audit Evidence — Task
+    title: "Report And Contain Suspicious Behavior From Audit Evidence \u2014 Task"
     path: sections/section-010/capstone/labs/lab-01/question.md
   - type: lab
     title: Report And Contain Suspicious Behavior From Audit Evidence
@@ -191,35 +208,34 @@ modules:
     topic: behavior-capstone
     task_kind: build
     learning_goals:
-    - Report a denied Secret request and an exec from the audit log, then quarantine the Pod without deleting it.
+    - Report a denied Secret request and an exec from the audit log, then quarantine the Pod without deleting
+      it.
     tags:
     - cks
     - behavior-capstone
   - type: reading
-    title: Report And Contain Suspicious Behavior From Audit Evidence — Solution
+    title: "Report And Contain Suspicious Behavior From Audit Evidence \u2014 Solution"
     path: sections/section-010/capstone/labs/lab-01/solution.md
 - id: module-020
-  title: Detect threats within physical infrastructure, apps, networks, data, users
-    and workloads
-  description: Developed reading and reasoning for Detect threats within physical
-    infrastructure, apps, networks, data, users and workloads.
+  title: Detect threats within physical infrastructure, apps, networks, data, users and workloads
+  description: Developed reading and reasoning for Detect threats within physical infrastructure, apps,
+    networks, data, users and workloads.
   status: alpha
   content:
   - type: reading
-    title: Detect threats within physical infrastructure, apps, networks, data, users
-      and workloads
+    title: Detect threats within physical infrastructure, apps, networks, data, users and workloads
     path: sections/section-020/README.md
   - type: reading
-    title: "Security Observability And Evidence Quality"
+    title: Security Observability And Evidence Quality
     path: sections/section-020/module-01/course.md
   - type: reading
-    title: "Security Signals By Layer"
+    title: Security Signals By Layer
     path: sections/section-020/module-01/course-01-security-signals-by-layer.md
   - type: reading
-    title: "Workload Logs, Restarts And Exit Evidence"
+    title: Workload Logs, Restarts And Exit Evidence
     path: sections/section-020/module-01/course-02-workload-logs-restarts-and-exit-evidence.md
   - type: reading
-    title: Diagnose A Previous Container Exit — Task
+    title: "Diagnose A Previous Container Exit \u2014 Task"
     path: sections/section-020/module-01/labs/lab-01/question.md
   - type: lab
     title: Diagnose A Previous Container Exit
@@ -234,33 +250,33 @@ modules:
     - cks
     - previous-logs
   - type: reading
-    title: Diagnose A Previous Container Exit — Solution
+    title: "Diagnose A Previous Container Exit \u2014 Solution"
     path: sections/section-020/module-01/labs/lab-01/solution.md
   - type: reading
-    title: "Network Traffic, Application Logs And Evidence Gaps"
+    title: Network Traffic, Application Logs And Evidence Gaps
     path: sections/section-020/module-01/course-03-network-traffic-application-logs-and-evidence-gaps.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-020/module-01/course-04-summary.md
   - type: quiz
-    title: "Knowledge Check: Security Observability And Evidence Quality"
+    title: 'Knowledge Check: Security Observability And Evidence Quality'
     path: sections/section-020/module-01/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: "Detecting Risky Workloads From Events, Specifications And Logs"
+    title: Detecting Risky Workloads From Events, Specifications And Logs
     path: sections/section-020/module-02/course.md
   - type: reading
-    title: "Kubernetes Events As A Short-Lived Signal"
+    title: Kubernetes Events As A Short-Lived Signal
     path: sections/section-020/module-02/course-01-kubernetes-events-as-a-short-lived-signal.md
   - type: reading
-    title: "Reading A Pod Specification For Risky Settings"
+    title: Reading A Pod Specification For Risky Settings
     path: sections/section-020/module-02/course-02-reading-a-pod-specification-for-risky-settings.md
   - type: reading
-    title: "Report A Risky Pod Specification — Task"
+    title: "Report A Risky Pod Specification \u2014 Task"
     path: sections/section-020/module-02/labs/lab-01/question.md
   - type: lab
-    title: "Report A Risky Pod Specification"
+    title: Report A Risky Pod Specification
     path: sections/section-020/module-02/labs/lab-01
     difficulty: intermediate
     estimated_duration: 25m
@@ -272,33 +288,33 @@ modules:
     - cks
     - pod-spec-review
   - type: reading
-    title: "Report A Risky Pod Specification — Solution"
+    title: "Report A Risky Pod Specification \u2014 Solution"
     path: sections/section-020/module-02/labs/lab-01/solution.md
   - type: reading
-    title: "Application Log Signals Of Abuse"
+    title: Application Log Signals Of Abuse
     path: sections/section-020/module-02/course-03-application-log-signals-of-abuse.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-020/module-02/course-04-summary.md
   - type: quiz
-    title: "Knowledge Check: Detecting Risky Workloads From Events, Specifications And Logs"
+    title: 'Knowledge Check: Detecting Risky Workloads From Events, Specifications And Logs'
     path: sections/section-020/module-02/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: "Detecting Threats To Data And User Accounts"
+    title: Detecting Threats To Data And User Accounts
     path: sections/section-020/module-03/course.md
   - type: reading
-    title: "ServiceAccounts And User Identity"
+    title: ServiceAccounts And User Identity
     path: sections/section-020/module-03/course-01-serviceaccounts-and-user-identity.md
   - type: reading
-    title: "Who Can Read Secrets"
+    title: Who Can Read Secrets
     path: sections/section-020/module-03/course-02-who-can-read-secrets.md
   - type: reading
-    title: "Find Which Account Can Read Secrets — Task"
+    title: "Find Which Account Can Read Secrets \u2014 Task"
     path: sections/section-020/module-03/labs/lab-01/question.md
   - type: lab
-    title: "Find Which Account Can Read Secrets"
+    title: Find Which Account Can Read Secrets
     path: sections/section-020/module-03/labs/lab-01
     difficulty: intermediate
     estimated_duration: 25m
@@ -310,24 +326,24 @@ modules:
     - cks
     - secret-access-review
   - type: reading
-    title: "Find Which Account Can Read Secrets — Solution"
+    title: "Find Which Account Can Read Secrets \u2014 Solution"
     path: sections/section-020/module-03/labs/lab-01/solution.md
   - type: reading
-    title: "Secret Exposure Paths"
+    title: Secret Exposure Paths
     path: sections/section-020/module-03/course-03-secret-exposure-paths.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-020/module-03/course-04-summary.md
   - type: quiz
-    title: "Knowledge Check: Detecting Threats To Data And User Accounts"
+    title: 'Knowledge Check: Detecting Threats To Data And User Accounts'
     path: sections/section-020/module-03/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: "Triage Four Findings And Revoke Secret Access — Task"
+    title: "Triage Four Findings And Revoke Secret Access \u2014 Task"
     path: sections/section-020/capstone/labs/lab-01/question.md
   - type: lab
-    title: "Triage Four Findings And Revoke Secret Access"
+    title: Triage Four Findings And Revoke Secret Access
     path: sections/section-020/capstone/labs/lab-01
     difficulty: advanced
     estimated_duration: 50m
@@ -340,28 +356,28 @@ modules:
     - threat-triage-capstone
     - capstone
   - type: reading
-    title: "Triage Four Findings And Revoke Secret Access — Solution"
+    title: "Triage Four Findings And Revoke Secret Access \u2014 Solution"
     path: sections/section-020/capstone/labs/lab-01/solution.md
 - id: module-030
   title: Investigate and identify phases of attack and bad actors within the environment
-  description: Developed reading and reasoning for Investigate and identify phases
-    of attack and bad actors within the environment.
+  description: Developed reading and reasoning for Investigate and identify phases of attack and bad actors
+    within the environment.
   status: alpha
   content:
   - type: reading
     title: Investigate and identify phases of attack and bad actors within the environment
     path: sections/section-030/README.md
   - type: reading
-    title: "Reconstructing Attack Phases And Actor Authority"
+    title: Reconstructing Attack Phases And Actor Authority
     path: sections/section-030/module-01/course.md
   - type: reading
-    title: "Attack Phases In Kubernetes"
+    title: Attack Phases In Kubernetes
     path: sections/section-030/module-01/course-01-attack-phases-in-kubernetes.md
   - type: reading
-    title: "Actor Identity In Audit Records"
+    title: Actor Identity In Audit Records
     path: sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
   - type: reading
-    title: Attribute An API Attempt To A Workload Identity — Task
+    title: "Attribute An API Attempt To A Workload Identity \u2014 Task"
     path: sections/section-030/module-01/labs/lab-01/question.md
   - type: lab
     title: Attribute An API Attempt To A Workload Identity
@@ -371,39 +387,38 @@ modules:
     topic: audit-attribution
     task_kind: build
     learning_goals:
-    - Classify a real denied Secret request and bind the finding to its actor and
-      audit identifier.
+    - Classify a real denied Secret request and bind the finding to its actor and audit identifier.
     tags:
     - cks
     - audit-attribution
   - type: reading
-    title: Attribute An API Attempt To A Workload Identity — Solution
+    title: "Attribute An API Attempt To A Workload Identity \u2014 Solution"
     path: sections/section-030/module-01/labs/lab-01/solution.md
   - type: reading
-    title: "Building A Timeline From Several Sources"
+    title: Building A Timeline From Several Sources
     path: sections/section-030/module-01/course-03-building-a-timeline-from-several-sources.md
   - type: reading
-    title: "Containment And Evidence Preservation"
+    title: Containment And Evidence Preservation
     path: sections/section-030/module-01/course-04-containment-and-evidence-preservation.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-030/module-01/course-05-summary.md
   - type: quiz
-    title: "Knowledge Check: Reconstructing Attack Phases And Actor Authority"
+    title: 'Knowledge Check: Reconstructing Attack Phases And Actor Authority'
     path: sections/section-030/module-01/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: "Finding Persistence And Escalated Authority"
+    title: Finding Persistence And Escalated Authority
     path: sections/section-030/module-02/course.md
   - type: reading
-    title: "Persistence In Workload Templates And Schedules"
+    title: Persistence In Workload Templates And Schedules
     path: sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
   - type: reading
-    title: "Privilege Escalation Through Bindings And Pod Settings"
+    title: Privilege Escalation Through Bindings And Pod Settings
     path: sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
   - type: reading
-    title: Contain A Persistent Workload And Its Binding — Task
+    title: "Contain A Persistent Workload And Its Binding \u2014 Task"
     path: sections/section-030/module-02/labs/lab-01/question.md
   - type: lab
     title: Contain A Persistent Workload And Its Binding
@@ -418,24 +433,24 @@ modules:
     - cks
     - persistence-containment
   - type: reading
-    title: Contain A Persistent Workload And Its Binding — Solution
+    title: "Contain A Persistent Workload And Its Binding \u2014 Solution"
     path: sections/section-030/module-02/labs/lab-01/solution.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-030/module-02/course-03-summary.md
   - type: quiz
-    title: "Knowledge Check: Finding Persistence And Escalated Authority"
+    title: 'Knowledge Check: Finding Persistence And Escalated Authority'
     path: sections/section-030/module-02/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: "Tracing Lateral Movement And Impact"
+    title: Tracing Lateral Movement And Impact
     path: sections/section-030/module-03/course.md
   - type: reading
-    title: "Lateral Movement And Network Evidence"
+    title: Lateral Movement And Network Evidence
     path: sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
   - type: reading
-    title: Trace A Connection To Its Source Pod — Task
+    title: "Trace A Connection To Its Source Pod \u2014 Task"
     path: sections/section-030/module-03/labs/lab-01/question.md
   - type: lab
     title: Trace A Connection To Its Source Pod
@@ -450,21 +465,21 @@ modules:
     - cks
     - lateral-movement-tracing
   - type: reading
-    title: Trace A Connection To Its Source Pod — Solution
+    title: "Trace A Connection To Its Source Pod \u2014 Solution"
     path: sections/section-030/module-03/labs/lab-01/solution.md
   - type: reading
-    title: "Impact And Resource Abuse"
+    title: Impact And Resource Abuse
     path: sections/section-030/module-03/course-02-impact-and-resource-abuse.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-030/module-03/course-03-summary.md
   - type: quiz
-    title: "Knowledge Check: Tracing Lateral Movement And Impact"
+    title: 'Knowledge Check: Tracing Lateral Movement And Impact'
     path: sections/section-030/module-03/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: Investigate And Contain A Multi-Phase Incident — Task
+    title: "Investigate And Contain A Multi-Phase Incident \u2014 Task"
     path: sections/section-030/capstone/labs/lab-01/question.md
   - type: lab
     title: Investigate And Contain A Multi-Phase Incident
@@ -474,33 +489,33 @@ modules:
     topic: incident-capstone
     task_kind: build
     learning_goals:
-    - Combine audit, ownership, binding and network evidence into one incident report and contain the workload and its authority.
+    - Combine audit, ownership, binding and network evidence into one incident report and contain the
+      workload and its authority.
     tags:
     - cks
     - incident-capstone
   - type: reading
-    title: Investigate And Contain A Multi-Phase Incident — Solution
+    title: "Investigate And Contain A Multi-Phase Incident \u2014 Solution"
     path: sections/section-030/capstone/labs/lab-01/solution.md
 - id: module-040
   title: Ensure immutability of containers at runtime
-  description: Developed reading and reasoning for Ensure immutability of containers
-    at runtime.
+  description: Developed reading and reasoning for Ensure immutability of containers at runtime.
   status: alpha
   content:
   - type: reading
     title: Ensure immutability of containers at runtime
     path: sections/section-040/README.md
   - type: reading
-    title: "Constraining Runtime Mutation And Writable Paths"
+    title: Constraining Runtime Mutation And Writable Paths
     path: sections/section-040/module-01/course.md
   - type: reading
-    title: "The Writable Container Layer"
+    title: The Writable Container Layer
     path: sections/section-040/module-01/course-01-the-writable-container-layer.md
   - type: reading
-    title: "Read-Only Root Filesystem And Security Context"
+    title: Read-Only Root Filesystem And Security Context
     path: sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
   - type: reading
-    title: Run With A Restricted Security Context — Task
+    title: "Run With A Restricted Security Context \u2014 Task"
     path: sections/section-040/module-01/labs/lab-01/question.md
   - type: lab
     title: Run With A Restricted Security Context
@@ -510,39 +525,38 @@ modules:
     topic: security-context
     task_kind: build
     learning_goals:
-    - Keep a non-root workload functional with a read-only root filesystem and a writable
-      scratch volume.
+    - Keep a non-root workload functional with a read-only root filesystem and a writable scratch volume.
     tags:
     - cks
     - security-context
   - type: reading
-    title: Run With A Restricted Security Context — Solution
+    title: "Run With A Restricted Security Context \u2014 Solution"
     path: sections/section-040/module-01/labs/lab-01/solution.md
   - type: reading
-    title: "Limits Of A Read-Only Filesystem And Pod Security Admission"
+    title: Limits Of A Read-Only Filesystem And Pod Security Admission
     path: sections/section-040/module-01/course-03-limits-of-a-read-only-filesystem-and-pod-security-admission.md
   - type: reading
-    title: "Verifying And Enforcing Immutability"
+    title: Verifying And Enforcing Immutability
     path: sections/section-040/module-01/course-04-verifying-and-enforcing-immutability.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-040/module-01/course-05-summary.md
   - type: quiz
-    title: "Knowledge Check: Constraining Runtime Mutation And Writable Paths"
+    title: 'Knowledge Check: Constraining Runtime Mutation And Writable Paths'
     path: sections/section-040/module-01/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: "Dropping Privileges: Identity, Capabilities And Privilege Escalation"
+    title: 'Dropping Privileges: Identity, Capabilities And Privilege Escalation'
     path: sections/section-040/module-02/course.md
   - type: reading
-    title: "Linux Capabilities And What A Container Starts With"
+    title: Linux Capabilities And What A Container Starts With
     path: sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
   - type: reading
-    title: "Non-Root Identity And Privilege Escalation"
+    title: Non-Root Identity And Privilege Escalation
     path: sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
   - type: reading
-    title: "Drop All Capabilities And Block Privilege Escalation — Task"
+    title: "Drop All Capabilities And Block Privilege Escalation \u2014 Task"
     path: sections/section-040/module-02/labs/lab-01/question.md
   - type: lab
     title: Drop All Capabilities And Block Privilege Escalation
@@ -557,30 +571,30 @@ modules:
     - cks
     - capability-drop
   - type: reading
-    title: "Drop All Capabilities And Block Privilege Escalation — Solution"
+    title: "Drop All Capabilities And Block Privilege Escalation \u2014 Solution"
     path: sections/section-040/module-02/labs/lab-01/solution.md
   - type: reading
-    title: "Privileged Containers And Verifying Process Privileges"
+    title: Privileged Containers And Verifying Process Privileges
     path: sections/section-040/module-02/course-03-privileged-containers-and-verifying-process-privileges.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-040/module-02/course-04-summary.md
   - type: quiz
-    title: "Knowledge Check: Dropping Privileges: Identity, Capabilities And Privilege Escalation"
+    title: 'Knowledge Check: Dropping Privileges: Identity, Capabilities And Privilege Escalation'
     path: sections/section-040/module-02/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: "Host Mounts And Replacement-Based Updates"
+    title: Host Mounts And Replacement-Based Updates
     path: sections/section-040/module-03/course.md
   - type: reading
-    title: "Volumes That Reach The Host"
+    title: Volumes That Reach The Host
     path: sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
   - type: reading
-    title: "Updating By Replacement"
+    title: Updating By Replacement
     path: sections/section-040/module-03/course-02-updating-by-replacement.md
   - type: reading
-    title: "Update A Workload By Replacement With A Read-Only Root — Task"
+    title: "Update A Workload By Replacement With A Read-Only Root \u2014 Task"
     path: sections/section-040/module-03/labs/lab-01/question.md
   - type: lab
     title: Update A Workload By Replacement With A Read-Only Root
@@ -590,26 +604,27 @@ modules:
     topic: replacement-update
     task_kind: build
     learning_goals:
-    - Replace the Pods of a Deployment through its template so that they run version v2 with a read-only root filesystem and a writable temporary path.
+    - Replace the Pods of a Deployment through its template so that they run version v2 with a read-only
+      root filesystem and a writable temporary path.
     tags:
     - cks
     - replacement-update
   - type: reading
-    title: "Update A Workload By Replacement With A Read-Only Root — Solution"
+    title: "Update A Workload By Replacement With A Read-Only Root \u2014 Solution"
     path: sections/section-040/module-03/labs/lab-01/solution.md
   - type: reading
-    title: "Pinning Images And Detecting Drift"
+    title: Pinning Images And Detecting Drift
     path: sections/section-040/module-03/course-03-pinning-images-and-detecting-drift.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-040/module-03/course-04-summary.md
   - type: quiz
-    title: "Knowledge Check: Host Mounts And Replacement-Based Updates"
+    title: 'Knowledge Check: Host Mounts And Replacement-Based Updates'
     path: sections/section-040/module-03/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: "Harden A Workload And Enforce A Read-Only Root Filesystem Policy — Task"
+    title: "Harden A Workload And Enforce A Read-Only Root Filesystem Policy \u2014 Task"
     path: sections/section-040/capstone/labs/lab-01/question.md
   - type: lab
     title: Harden A Workload And Enforce A Read-Only Root Filesystem Policy
@@ -619,40 +634,40 @@ modules:
     topic: immutability-capstone
     task_kind: build
     learning_goals:
-    - Harden a Deployment and add an admission rule that rejects new Pods with a writable root filesystem in one namespace.
+    - Harden a Deployment and add an admission rule that rejects new Pods with a writable root filesystem
+      in one namespace.
     tags:
     - cks
     - immutability-capstone
     - capstone
   - type: reading
-    title: "Harden A Workload And Enforce A Read-Only Root Filesystem Policy — Solution"
+    title: "Harden A Workload And Enforce A Read-Only Root Filesystem Policy \u2014 Solution"
     path: sections/section-040/capstone/labs/lab-01/solution.md
 - id: module-050
   title: Use Kubernetes audit logs to monitor access
-  description: Developed reading and reasoning for Use Kubernetes audit logs to monitor
-    access.
+  description: Developed reading and reasoning for Use Kubernetes audit logs to monitor access.
   status: alpha
   content:
   - type: reading
     title: Use Kubernetes audit logs to monitor access
     path: sections/section-050/README.md
   - type: reading
-    title: "Using Kubernetes Audit Logs To Monitor Access"
+    title: Using Kubernetes Audit Logs To Monitor Access
     path: sections/section-050/module-01/course.md
   - type: reading
-    title: "The Audit Event Model"
+    title: The Audit Event Model
     path: sections/section-050/module-01/course-01-the-audit-event-model.md
   - type: reading
-    title: "Writing An Audit Policy"
+    title: Writing An Audit Policy
     path: sections/section-050/module-01/course-02-writing-an-audit-policy.md
   - type: reading
-    title: "API Server Flags, Backends And Troubleshooting"
+    title: API Server Flags, Backends And Troubleshooting
     path: sections/section-050/module-01/course-03-api-server-flags-backends-and-troubleshooting.md
   - type: reading
-    title: "Reading Audit Records To Monitor Access"
+    title: Reading Audit Records To Monitor Access
     path: sections/section-050/module-01/course-04-reading-audit-records-to-monitor-access.md
   - type: reading
-    title: Verify Metadata Audit Records Exclude Secret Payloads — Task
+    title: "Verify Metadata Audit Records Exclude Secret Payloads \u2014 Task"
     path: sections/section-050/module-01/labs/lab-01/question.md
   - type: lab
     title: Verify Metadata Audit Records Exclude Secret Payloads
@@ -662,33 +677,32 @@ modules:
     topic: audit-redaction
     task_kind: build
     learning_goals:
-    - Generate a real Secret read record and verify useful metadata without credential
-      bodies.
+    - Generate a real Secret read record and verify useful metadata without credential bodies.
     tags:
     - cks
     - audit-redaction
   - type: reading
-    title: Verify Metadata Audit Records Exclude Secret Payloads — Solution
+    title: "Verify Metadata Audit Records Exclude Secret Payloads \u2014 Solution"
     path: sections/section-050/module-01/labs/lab-01/solution.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-050/module-01/course-05-summary.md
   - type: quiz
-    title: "Knowledge Check: Using Kubernetes Audit Logs To Monitor Access"
+    title: 'Knowledge Check: Using Kubernetes Audit Logs To Monitor Access'
     path: sections/section-050/module-01/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: "Auditing Interactive Access To Pods"
+    title: Auditing Interactive Access To Pods
     path: sections/section-050/module-02/course.md
   - type: reading
-    title: "Subresources In Audit Policy Rules"
+    title: Subresources In Audit Policy Rules
     path: sections/section-050/module-02/course-01-subresources-in-audit-policy-rules.md
   - type: reading
-    title: "Recording And Reading Exec Events"
+    title: Recording And Reading Exec Events
     path: sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
   - type: reading
-    title: Record Interactive Pod Access In The Audit Log — Task
+    title: "Record Interactive Pod Access In The Audit Log \u2014 Task"
     path: sections/section-050/module-02/labs/lab-01/question.md
   - type: lab
     title: Record Interactive Pod Access In The Audit Log
@@ -703,30 +717,30 @@ modules:
     - cks
     - audit-exec
   - type: reading
-    title: Record Interactive Pod Access In The Audit Log — Solution
+    title: "Record Interactive Pod Access In The Audit Log \u2014 Solution"
     path: sections/section-050/module-02/labs/lab-01/solution.md
   - type: reading
-    title: "Choosing Rules And Levels For Interactive Access"
+    title: Choosing Rules And Levels For Interactive Access
     path: sections/section-050/module-02/course-03-choosing-rules-and-levels-for-interactive-access.md
   - type: reading
-    title: "Summary"
+    title: Summary
     path: sections/section-050/module-02/course-04-summary.md
   - type: quiz
-    title: "Knowledge Check: Auditing Interactive Access To Pods"
+    title: 'Knowledge Check: Auditing Interactive Access To Pods'
     path: sections/section-050/module-02/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: "Retaining And Protecting Audit Logs"
+    title: Retaining And Protecting Audit Logs
     path: sections/section-050/module-03/course.md
   - type: reading
-    title: "Rotation Flags And Disk Use"
+    title: Rotation Flags And Disk Use
     path: sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
   - type: reading
-    title: "Protecting The Log File"
+    title: Protecting The Log File
     path: sections/section-050/module-03/course-02-protecting-the-log-file.md
   - type: reading
-    title: Record The Audit Retention Settings And Log File Protection — Task
+    title: "Record The Audit Retention Settings And Log File Protection \u2014 Task"
     path: sections/section-050/module-03/labs/lab-01/question.md
   - type: lab
     title: Record The Audit Retention Settings And Log File Protection
@@ -741,21 +755,38 @@ modules:
     - cks
     - audit-retention
   - type: reading
-    title: Record The Audit Retention Settings And Log File Protection — Solution
+    title: "Record The Audit Retention Settings And Log File Protection \u2014 Solution"
     path: sections/section-050/module-03/labs/lab-01/solution.md
   - type: reading
-    title: "Forwarding And Retention Policy"
+    title: Forwarding And Retention Policy
     path: sections/section-050/module-03/course-03-forwarding-and-retention-policy.md
   - type: reading
-    title: "Summary"
+    title: Verify Delivery To An Audit Webhook
+    path: sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
+  - type: reading
+    title: "Deliver Audit Metadata Outside The Control Plane \u2014 Task"
+    path: sections/section-050/module-03/labs/lab-02/question.md
+  - type: lab
+    title: Deliver Audit Metadata Outside The Control Plane
+    path: sections/section-050/module-03/labs/lab-02
+    difficulty: intermediate
+    estimated_duration: 15m
+    learning_goals:
+    - A fresh audit event reaches the authenticated TLS collector outside the control-plane container
+    - Only the scoped namespace is collected and Secret bodies remain absent
+  - type: reading
+    title: "Deliver Audit Metadata Outside The Control Plane \u2014 Solution"
+    path: sections/section-050/module-03/labs/lab-02/solution.md
+  - type: reading
+    title: Summary
     path: sections/section-050/module-03/course-04-summary.md
   - type: quiz
-    title: "Knowledge Check: Retaining And Protecting Audit Logs"
+    title: 'Knowledge Check: Retaining And Protecting Audit Logs'
     path: sections/section-050/module-03/quiz.yaml
     question_count: 10
     pass_score: 70
   - type: reading
-    title: Investigate Secret, Denied And Exec Access From The Audit Log — Task
+    title: "Investigate Secret, Denied And Exec Access From The Audit Log \u2014 Task"
     path: sections/section-050/capstone/labs/lab-01/question.md
   - type: lab
     title: Investigate Secret, Denied And Exec Access From The Audit Log
@@ -770,7 +801,7 @@ modules:
     - cks
     - audit-investigation
   - type: reading
-    title: Investigate Secret, Denied And Exec Access From The Audit Log — Solution
+    title: "Investigate Secret, Denied And Exec Access From The Audit Log \u2014 Solution"
     path: sections/section-050/capstone/labs/lab-01/solution.md
   - type: quiz
     title: Final Domain Quiz

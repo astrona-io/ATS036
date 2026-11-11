@@ -19,4 +19,10 @@ Key facts:
 - Read the file mode with `stat`, and check the directory too.
 - Use `json` format for parsing tools.
 
+
+
+## Independent live assessment
+
+Prepare with [Verify Delivery To An Audit Webhook](course-03a-verify-audit-webhook-delivery.md). [Deliver Audit Metadata Outside The Control Plane](labs/lab-02/question.md) uses its own qemu environment. A fresh audit event reaches the authenticated TLS collector outside the control-plane container; Only the scoped namespace is collected and Secret bodies remain absent.
+
 <!-- astrona:playground:destroy -->

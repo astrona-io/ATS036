@@ -34,3 +34,7 @@ Audit logging is on. The log file is `/var/log/training-audit/audit.jsonl` insid
 Launch your playground now, and keep it running while you read the parts:
 
 <!-- astrona:playground -->
+
+## Independent live assessment
+
+Prepare with [Verify Delivery To An Audit Webhook](course-03a-verify-audit-webhook-delivery.md). [Deliver Audit Metadata Outside The Control Plane](labs/lab-02/question.md) uses its own qemu environment. A fresh audit event reaches the authenticated TLS collector outside the control-plane container; Only the scoped namespace is collected and Secret bodies remain absent.

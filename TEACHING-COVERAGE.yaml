@@ -124,6 +124,12 @@ labs:
     - sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
     - sections/section-050/module-03/course-02-protecting-the-log-file.md
     - sections/section-050/module-03/course-03-forwarding-and-retention-policy.md
+  sections/section-010/module-02/labs/lab-03:
+    preparation:
+    - sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+  sections/section-050/module-03/labs/lab-02:
+    preparation:
+    - sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
 additional_readings:
 - sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
 - sections/section-010/module-01/course-04-triage-tuning-and-response.md
