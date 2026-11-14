@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://astrona.io/courses/certified-kubernetes-security-specialist">
+    <img src="https://astrona.io/courses/certified-kubernetes-security-specialist/domains/ATS036.svg" alt="ATS036: Monitoring, Logging and Runtime Security, part of the Certified Kubernetes Security Specialist course on Astrona" width="100%">
+  </a>
+</p>
+
 # Monitoring, Logging and Runtime Security (ATS036)
 
 Certified Kubernetes Security Specialist (CKS): Monitoring, Logging and Runtime Security, worth 20% of the official curriculum. This course belongs to ATP007.
