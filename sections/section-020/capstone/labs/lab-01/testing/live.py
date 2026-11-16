@@ -1,3 +1,4 @@
+import os
 crash=get('pod','crash-report')
 crash_status=next(status for status in crash['status']['containerStatuses'] if status['name']=='report')
 assert crash_status['restartCount']>=1, 'Preserve the crashing evidence Pod'

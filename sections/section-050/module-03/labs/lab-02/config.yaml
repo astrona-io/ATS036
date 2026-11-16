@@ -1,0 +1,51 @@
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-036-lab-050-03-02
+  docs:
+    prerequisites: docs/prerequisites.md
+    examQuestion: question.md
+    caseStudy: docs/case-study.md
+    guide: solution.md
+runtime:
+  type: qemu
+  qemu:
+  - image:
+      type: url
+      source: https://cloud-images.ubuntu.com/releases/noble/release-20261017/ubuntu-24.04-server-cloudimg-{ARCH}.img
+      checksums:
+        amd64: sha256:04e8f2461a16a44e78a370284471f29616cdd9baf1893df25807b71f985b6c94
+        arm64: sha256:50e24e1fb79e89116e939d90aa7738f7af48c442fa1bc2510131e0b39c50348e
+    cpus: 4
+    memoryMB: 6144
+    diskSizeGB: 24
+bootstrap:
+  init:
+  - name: prepare-environment
+    type: file
+    source: bootstrap/setup.sh
+testing:
+  init:
+  - name: verify-start
+    type: file
+    source: testing/verify-start.sh
+  - name: reference-solution
+    type: file
+    source: solution/apply.sh
+  - name: negative-cases
+    type: file
+    source: testing/regression.sh
+validation:
+  scripts:
+  - name: remote-delivery
+    description: A fresh audit event reaches the authenticated TLS collector outside the control-plane
+      container
+    type: file
+    source: validation/validate-remote-delivery.sh
+    points: 1
+  - name: metadata-boundary
+    description: Only the scoped namespace is collected and Secret bodies remain absent
+    type: file
+    source: validation/validate-metadata-boundary.sh
+    points: 1
+teardown:
+  keepCluster: false

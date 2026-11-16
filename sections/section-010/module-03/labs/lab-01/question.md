@@ -7,25 +7,26 @@ exam_objectives:
 
 Find the audit record of an interactive command run in a probe Pod and bind the finding to the identity and audit identifier.
 
+Solve this question on: `terminal`
+
+Allow 10–15 minutes for task work.
+
 ## Starting state
 
-The isolated environment has two healthy probe replicas, an internal Service and two client Pods. The API server writes an audit log at Metadata level for Pods, Pod `exec` and `portforward` requests, ConfigMaps and Secrets in the starfleet namespace. Setup has already run one `kubectl exec` into a probe Pod. The required result has not been configured.
+The isolated environment has two healthy probe replicas, an internal Service and two client Pods. The API server writes an audit log at Metadata level for Pods, Pod `exec` and `portforward` requests, ConfigMaps and Secrets in the starfleet-036-010-03-01 namespace. Setup has already run one `kubectl exec` into a probe Pod. The required result has not been configured.
 
-Use a host shell with the private kubeconfig for this independent kind environment. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool.
+Use the private kubeconfig for `ats-036-lab-010-03-01`. In a local lab, select it with `export KUBECONFIG="$(astrona kubeconfig ats-036-lab-010-03-01)"` and check that the context is `kind-astro-ats-036-lab-010-03-01`.
 
-```sh
-export KUBECONFIG="$(astrona kubeconfig ats-036-lab-010-03-01)"
-test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-010-03-01" || exit 1
-node_name="astro-ats-036-lab-010-03-01-control-plane"
-worker_name="astro-ats-036-lab-010-03-01-worker"
-```
+## Tasks
 
-Keep this connection selected. Host-level commands name only this environment's node containers. They do not operate on the host operating system.
+1. Find a logged exec request to a `probe-` Pod. Identify the actor, Pod name, audit ID and a `ResponseStarted` or `ResponseComplete` stage.
+2. Create `exec-finding` in `starfleet-036-010-03-01` with keys `actor`, `verb`, `resource`, `subresource`, `namespace`, `podName`, `finding`, `auditID`, `stage` and `requestURI`. Set `finding` to `unexpected-exec`; copy the request fields from that record.
+3. Verify that the event represents `create` or `get` on `pods/exec`, includes the command in its URI, and excludes request and response bodies.
 
-## Required result
+## Constraints
 
-Use the API audit log to find the `create` request for the `exec` subresource of a probe Pod in the starfleet namespace. Create the ConfigMap exec-finding in the starfleet namespace with the keys actor, verb, resource, subresource, namespace, podName, finding, auditID, stage and requestURI, copied from the actual record. The value of finding is unexpected-exec. Use the stage that the API server logged for the request. Do not copy any request or response body. This is API evidence of who asked for a command; it does not show what the command did inside the container.
+Work only in this lab’s namespaces `starfleet-036-010-03-01` and `outpost-036-010-03-01` and its own node containers. Preserve unrelated resources and the staged evidence. Cluster startup and API restarts add time to the task estimate.
 
-## Verify The Result
+## How the answer is checked
 
-The grader checks the required object fields and actual observations. Wait for controller convergence before submitting. Preserve the task's namespace, workload names and unrelated components.
+The finding identifies the actual Pod exec request. The grader reads live resources and evidence; it does not award points for preserving the starting state.

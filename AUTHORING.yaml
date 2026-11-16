@@ -1,6 +1,6 @@
 version: 1
-approval: Maintainer requested CKA and CKS playgrounds and graded labs on 2026-10-13,
-  superseding the earlier reading-only scope.
+approval: Maintainer requested CKA and CKS playgrounds and graded labs on 2026-10-13, superseding the
+  earlier reading-only scope.
 course:
   id: ATS036
   certification:
@@ -11,8 +11,7 @@ course:
     weight: 20
     competencies:
     - Perform behavioral analytics to detect malicious activities
-    - Detect threats within physical infrastructure, apps, networks, data, users and
-      workloads
+    - Detect threats within physical infrastructure, apps, networks, data, users and workloads
     - Investigate and identify phases of attack and bad actors within the environment
     - Ensure immutability of containers at runtime
     - Use Kubernetes audit logs to monitor access
@@ -50,8 +49,7 @@ sections:
     - id: lab-01
       path: sections/section-010/module-01/labs/lab-01
       after_reading: sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
-      objective: Classify a real denied Secret request and bind the finding to its
-        actor and audit identifier.
+      objective: Classify a real denied Secret request and bind the finding to its actor and audit identifier.
       status: alpha
       runtime_verification: pending
     practice_readings:
@@ -63,19 +61,52 @@ sections:
     - Write a rule condition limited to containers, a namespace and a set of process names.
     - Add an exception for approved behavior without disabling the rule.
     - Explain what a process rule cannot see.
+    - Prove live shell detection and a narrow exception with real kernel events.
+    - Report a denied Secret request and an exec from the audit log, then quarantine the Pod without deleting
+      it.
+    - Fresh shell events in the protected namespace include real Kubernetes identity; Approved commands
+      and an outside namespace remain silent while a later protected event is detected
     outline:
     - Anatomy Of A Falco Rule File
     - Scope A Shell Rule To A Namespace
     - Exceptions, Testing And Limits Of A Rule
+    - Test A Live Sensor In A Linux VM
+    - Join A Runtime Event To Kubernetes Identity
     playground: true
     module_lab: true
     labs:
     - id: lab-01
       path: sections/section-010/module-02/labs/lab-01
       after_reading: sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
-      objective: Store a runtime rule scoped to containers, one namespace and shell names, with a useful output.
+      objective: Store a runtime rule scoped to containers, one namespace and shell names, with a useful
+        output.
       status: alpha
       runtime_verification: pending
+    - id: lab-02
+      path: sections/section-010/module-02/labs/lab-02
+      after_reading: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
+      objective: Prove live shell detection and a narrow exception with real kernel events.
+      status: alpha
+      runtime_verification: pending
+    - id: lab-01
+      path: sections/section-010/capstone/labs/lab-01
+      after_reading: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
+      objective: Report a denied Secret request and an exec from the audit log, then quarantine the Pod
+        without deleting it.
+      status: alpha
+      runtime_verification: pending
+    - id: lab-03
+      path: sections/section-010/module-02/labs/lab-03
+      after_reading: sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+      objective: Fresh shell events in the protected namespace include real Kubernetes identity; Approved
+        commands and an outside namespace remain silent while a later protected event is detected
+      status: alpha
+      runtime_verification: pending
+    sources:
+    - reading: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
+      adapted_from: null
+    - reading: sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+      adapted_from: null
   - id: module-03
     title: Detecting Command Execution Through API Audit Records
     objectives:
@@ -97,10 +128,8 @@ sections:
       status: alpha
       runtime_verification: pending
 - id: section-020
-  title: Detect threats within physical infrastructure, apps, networks, data, users
-    and workloads
-  curriculum_item: Detect threats within physical infrastructure, apps, networks,
-    data, users and workloads
+  title: Detect threats within physical infrastructure, apps, networks, data, users and workloads
+  curriculum_item: Detect threats within physical infrastructure, apps, networks, data, users and workloads
   capstone: true
   section_quiz: false
   modules:
@@ -127,8 +156,7 @@ sections:
     - id: lab-01
       path: sections/section-020/module-01/labs/lab-01
       after_reading: sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
-      objective: Select the previous container log and record the corresponding exit
-        evidence.
+      objective: Select the previous container log and record the corresponding exit evidence.
       status: alpha
       runtime_verification: pending
     practice_readings:
@@ -155,8 +183,7 @@ sections:
     - Secret Exposure Paths
 - id: section-030
   title: Investigate and identify phases of attack and bad actors within the environment
-  curriculum_item: Investigate and identify phases of attack and bad actors within
-    the environment
+  curriculum_item: Investigate and identify phases of attack and bad actors within the environment
   capstone: true
   section_quiz: false
   modules:
@@ -180,8 +207,7 @@ sections:
     - id: lab-01
       path: sections/section-030/module-01/labs/lab-01
       after_reading: sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
-      objective: Classify a real denied Secret request and bind the finding to its
-        actor and audit identifier.
+      objective: Classify a real denied Secret request and bind the finding to its actor and audit identifier.
       status: alpha
       runtime_verification: pending
     practice_readings:
@@ -262,14 +288,14 @@ sections:
     - id: lab-01
       path: sections/section-040/module-01/labs/lab-01
       after_reading: sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
-      objective: Keep a non-root workload functional with a read-only root filesystem
-        and a writable scratch volume.
+      objective: Keep a non-root workload functional with a read-only root filesystem and a writable scratch
+        volume.
       status: alpha
       runtime_verification: pending
     practice_readings:
     - sections/section-040/module-01/course-02-guided-practice.md
   - id: module-02
-    title: "Dropping Privileges: Identity, Capabilities And Privilege Escalation"
+    title: 'Dropping Privileges: Identity, Capabilities And Privilege Escalation'
     objectives:
     - Name the default capabilities of a container and the risk of each.
     - Drop all capabilities and read the result from /proc/1/status.
@@ -319,13 +345,15 @@ sections:
     - id: lab-01
       path: sections/section-040/module-03/labs/lab-01
       after_reading: sections/section-040/module-03/course-02-updating-by-replacement.md
-      objective: Replace the Pods of a Deployment through its template so that they run version v2 with a read-only root filesystem and a writable temporary path.
+      objective: Replace the Pods of a Deployment through its template so that they run version v2 with
+        a read-only root filesystem and a writable temporary path.
       status: alpha
       runtime_verification: pending
     quiz: sections/section-040/module-03/quiz.yaml
   capstone_lab:
     path: sections/section-040/capstone/labs/lab-01
-    objective: Harden a Deployment and add an admission rule that rejects new Pods with a writable root filesystem in one namespace.
+    objective: Harden a Deployment and add an admission rule that rejects new Pods with a writable root
+      filesystem in one namespace.
     difficulty: advanced
     status: alpha
     runtime_verification: pending
@@ -355,8 +383,7 @@ sections:
     - id: lab-01
       path: sections/section-050/module-01/labs/lab-01
       after_reading: sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
-      objective: Generate a real Secret read record and verify useful metadata without
-        credential bodies.
+      objective: Generate a real Secret read record and verify useful metadata without credential bodies.
       status: alpha
       runtime_verification: pending
     practice_readings:
@@ -391,8 +418,11 @@ sections:
     - Read the audit rotation flags from the API server manifest.
     - Compute the disk use and the evidence period of the log.
     - Check the protection of the log file and explain the webhook modes.
+    - A fresh audit event reaches the authenticated TLS collector outside the control-plane container;
+      Only the scoped namespace is collected and Secret bodies remain absent
     outline:
     - Retaining And Protecting Audit Logs
+    - Verify Delivery To An Audit Webhook
     playground: true
     module_lab: true
     sources:
@@ -402,10 +432,19 @@ sections:
       adapted_from: null
     - reading: sections/section-050/module-03/course-03-forwarding-and-retention-policy.md
       adapted_from: null
+    - reading: sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
+      adapted_from: null
     labs:
     - id: lab-01
       path: sections/section-050/module-03/labs/lab-01
       after_reading: sections/section-050/module-03/course-02-protecting-the-log-file.md
       objective: Read the live audit rotation flags and the log file mode and record them.
+      status: alpha
+      runtime_verification: pending
+    - id: lab-02
+      path: sections/section-050/module-03/labs/lab-02
+      after_reading: sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
+      objective: A fresh audit event reaches the authenticated TLS collector outside the control-plane
+        container; Only the scoped namespace is collected and Secret bodies remain absent
       status: alpha
       runtime_verification: pending

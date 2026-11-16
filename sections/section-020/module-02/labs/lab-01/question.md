@@ -5,30 +5,32 @@ exam_objectives:
 ---
 # Report A Risky Pod Specification
 
-Record the risky settings of a Pod from its specification. Use the isolated `starfleet` environment to verify the result.
+Record the risky settings of a Pod from its specification. Use the isolated `starfleet-036-020-02-01` environment to verify the result.
 
 ## Objective
 
 Record the risky settings of a Pod from its specification.
 
+Solve this question on: `terminal`
+
+Allow 10–15 minutes for task work.
+
 ## Starting state
 
 Pod `suspect-pod` runs a container with extra privileges and mounts a directory of the node. Pod `login-service` and the healthy probe application are separate from that evidence Pod.
 
-Use a host shell with this lab's private kubeconfig. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool. This environment is separate from the ungraded playground.
+Use the private kubeconfig for `ats-036-lab-020-02-01`. In a local lab, select it with `export KUBECONFIG="$(astrona kubeconfig ats-036-lab-020-02-01)"` and check that the context is `kind-astro-ats-036-lab-020-02-01`.
 
-```sh
-export KUBECONFIG="$(astrona kubeconfig ats-036-lab-020-02-01)"
-test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-020-02-01" || exit 1
-```
+## Tasks
 
-Keep this connection selected throughout the task. Every script supplied by the lab refuses a different context.
+1. Inspect Pod `suspect-pod` in `starfleet-036-020-02-01`. Identify its privileged setting and the host path mounted into it.
+2. Create `pod-risk-report` in `starfleet-036-020-02-01` with keys `pod`, `privileged` and `hostPath`, using the observed Pod name and field values.
+3. Verify the report against the live Pod. Preserve that Pod and its configuration for the investigation.
 
+## Constraints
 
-## Required result
+Work only in this lab’s namespaces `starfleet-036-020-02-01` and `outpost-036-020-02-01` and its own node containers. Preserve unrelated resources and the staged evidence. Cluster startup and API restarts add time to the task estimate.
 
-Leave Pod `suspect-pod` running. Read its specification. Create ConfigMap `pod-risk-report` with `pod: suspect-pod`, `privileged` matching the container `securityContext`, and `hostPath` matching the node directory that the Pod mounts. Do not delete or change the evidence Pod.
+## How the answer is checked
 
-## Verify The Result
-
-The grader checks the stated resource fields and live evidence. Wait for controller convergence before submitting. Inspect actual results rather than relying on a sample transcript.
+The report matches the preserved risky Pod. The grader reads live resources and evidence; it does not award points for preserving the starting state.

@@ -5,30 +5,32 @@ exam_objectives:
 ---
 # Update A Workload By Replacement With A Read-Only Root
 
-Replace the Pods of a Deployment through its template so that they run version v2 with a read-only root filesystem and a writable temporary path. Use the isolated `starfleet` environment to verify the result.
+Replace the Pods of a Deployment through its template so that they run version v2 with a read-only root filesystem and a writable temporary path. Use the isolated `starfleet-036-040-03-01` environment to verify the result.
 
 ## Objective
 
 Replace the Pods of a Deployment through its template so that they run version v2 with a read-only root filesystem and a writable temporary path.
 
+Solve this question on: `terminal`
+
+Allow 10–15 minutes for task work.
+
 ## Starting state
 
 The `probe` Deployment runs version `v1` with a writable root filesystem. The `shuttle` Pod can call the `probe` Service. Complete the required change without replacing unrelated resources.
 
-Use a host shell with this lab's private kubeconfig. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool. This environment is separate from the ungraded playground.
+Use the private kubeconfig for `ats-036-lab-040-03-01`. In a local lab, select it with `export KUBECONFIG="$(astrona kubeconfig ats-036-lab-040-03-01)"` and check that the context is `kind-astro-ats-036-lab-040-03-01`.
 
-```sh
-export KUBECONFIG="$(astrona kubeconfig ats-036-lab-040-03-01)"
-test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-040-03-01" || exit 1
-```
+## Tasks
 
-Keep this connection selected throughout the task. Every script supplied by the lab refuses a different context.
+1. Update the `probe` Deployment in `starfleet-036-040-03-01` through its Pod template. Set its `VERSION` environment variable to `v2` and make the container root filesystem read-only.
+2. Keep the `app` ConfigMap volume mounted read-only at `/app`. Add an `emptyDir` volume named `tmp` at `/tmp`; do not add host paths.
+3. Wait for two ready replicas. Verify that the Service returns `version=v2`, writes to `/tmp` work and writes to `/root-file` fail because the filesystem is read-only.
 
+## Constraints
 
-## Required result
+Work only in this lab’s namespaces `starfleet-036-040-03-01` and `outpost-036-040-03-01` and its own node containers. Preserve unrelated resources and the staged evidence. Cluster startup and API restarts add time to the task estimate.
 
-Change Deployment `probe` in `starfleet` through its Pod template. Set the `VERSION` environment variable to `v2`. Set `readOnlyRootFilesystem: true` on the `probe` container. Keep the existing `app` volume and its read-only mount first, then add an `emptyDir` volume named `tmp` mounted at `/tmp`. Do not use a `hostPath` volume. The rollout must finish with two ready replicas, the service must answer with `version=v2`, writing to `/tmp` must work, and writing `/root-file` must fail.
+## How the answer is checked
 
-## Verify The Result
-
-The grader checks the stated resource fields and live evidence. Wait for controller convergence before submitting. Inspect actual results rather than relying on a sample transcript.
+The rollout serves v2 with a read-only root and writable temporary storage. The grader reads live resources and evidence; it does not award points for preserving the starting state.

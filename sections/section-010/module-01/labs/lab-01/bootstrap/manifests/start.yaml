@@ -1,22 +1,22 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: starfleet
+  name: starfleet-036-010-01-01
   labels:
     project: ckad
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: outpost
+  name: outpost-036-010-01-01
   labels:
-    project: outpost
+    project: outpost-036-010-01-01
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: probe-code
-  namespace: starfleet
+  namespace: starfleet-036-010-01-01
 data:
   server.py: "from http.server import BaseHTTPRequestHandler, HTTPServer\nfrom pathlib\
     \ import Path\nimport os\nimport socket\n\nclass Handler(BaseHTTPRequestHandler):\n\
@@ -33,7 +33,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: probe
-  namespace: starfleet
+  namespace: starfleet-036-010-01-01
 spec:
   replicas: 2
   selector:
@@ -82,7 +82,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: probe
-  namespace: starfleet
+  namespace: starfleet-036-010-01-01
 spec:
   selector:
     app: probe
@@ -96,7 +96,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: shuttle
-  namespace: starfleet
+  namespace: starfleet-036-010-01-01
   labels:
     app: shuttle
 spec:
@@ -113,7 +113,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: drifter
-  namespace: outpost
+  namespace: outpost-036-010-01-01
   labels:
     app: drifter
 spec:
@@ -130,16 +130,16 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: threat-reader
-  namespace: starfleet
+  namespace: starfleet-036-010-01-01
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: threat-code
-  namespace: starfleet
+  namespace: starfleet-036-010-01-01
 data:
   request.py: "from pathlib import Path\nimport ssl,urllib.request,urllib.error\n\
-    root=Path('/var/run/secrets/kubernetes.io/serviceaccount')\nrequest=urllib.request.Request('https://kubernetes.default.svc/api/v1/namespaces/starfleet/secrets/audit-token',headers={'Authorization':'Bearer\
+    root=Path('/var/run/secrets/kubernetes.io/serviceaccount')\nrequest=urllib.request.Request('https://kubernetes.default.svc/api/v1/namespaces/starfleet-036-010-01-01/secrets/audit-token',headers={'Authorization':'Bearer\
     \ '+(root/'token').read_text()})\ntry:\n    urllib.request.urlopen(request,context=ssl.create_default_context(cafile=str(root/'ca.crt')),timeout=5)\n\
     \    raise RuntimeError('Unexpected secret permission')\nexcept urllib.error.HTTPError\
     \ as error:\n    assert error.code==403\n    print('denied-secret-read')\n"
@@ -148,7 +148,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: threat-client
-  namespace: starfleet
+  namespace: starfleet-036-010-01-01
 spec:
   restartPolicy: Never
   containers:
@@ -172,7 +172,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: audit-token
-  namespace: starfleet
+  namespace: starfleet-036-010-01-01
 type: Opaque
 stringData:
   token: audit-disposable

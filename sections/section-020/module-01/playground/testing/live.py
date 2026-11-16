@@ -1,3 +1,4 @@
+import os
 evidence=get('pod','crash-report')
 assert evidence['spec']['containers'][0]['command']==['sh','-c','printf "application-started\\n"; sleep 2; exit 12'], 'Preserve the evidence process'
 status=next(status for status in evidence['status']['containerStatuses'] if status['name']=='report')

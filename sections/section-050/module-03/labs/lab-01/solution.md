@@ -21,11 +21,11 @@ Keep this connection selected. Host-level commands name only this environment's 
 The isolated environment has two healthy probe replicas, an internal Service and two client Pods. The required result has not been configured.
 
 ```sh
-kubectl -n starfleet get pods -o wide
+kubectl -n starfleet-036-050-03-01 get pods -o wide
 kubectl get nodes -o wide
 ```
 
-Keep the provisioned audit configuration. Read the audit flags from the `kube-apiserver` static Pod manifest on the control plane node and the permission mode of the audit log file. Create the ConfigMap `audit-retention` in `starfleet` with `policyFile`, `logPath`, `maxAge`, `maxBackup`, `maxSize` and `logMode`. The values must match the live manifest and the live file: `policyFile` and `logPath` are the paths from the flags, `maxAge` is in days, `maxBackup` is a count of files, `maxSize` is in megabytes and `logMode` is the octal mode printed by `stat -c %a`. Do not change the API server.
+Keep the provisioned audit configuration. Read the audit flags from the `kube-apiserver` static Pod manifest on the control plane node and the permission mode of the audit log file. Create the ConfigMap `audit-retention` in `starfleet-036-050-03-01` with `policyFile`, `logPath`, `maxAge`, `maxBackup`, `maxSize` and `logMode`. The values must match the live manifest and the live file: `policyFile` and `logPath` are the paths from the flags, `maxAge` is in days, `maxBackup` is a count of files, `maxSize` is in megabytes and `logMode` is the octal mode printed by `stat -c %a`. Do not change the API server.
 
 Read the audit flags and the file mode on the control plane node:
 
@@ -53,7 +53,7 @@ flags = dict(arg[2:].split('=', 1) for arg in manifest['spec']['containers'][0][
 report = {
     'apiVersion': 'v1',
     'kind': 'ConfigMap',
-    'metadata': {'name': 'audit-retention', 'namespace': 'starfleet'},
+    'metadata': {'name': 'audit-retention', 'namespace': 'starfleet-036-050-03-01'},
     'data': {
         'policyFile': flags['audit-policy-file'],
         'logPath': flags['audit-log-path'],
@@ -78,7 +78,7 @@ kubectl apply -f configmap-audit-retention.json
 Compare the report with the node:
 
 ```sh
-kubectl -n starfleet get configmap audit-retention -o yaml
+kubectl -n starfleet-036-050-03-01 get configmap audit-retention -o yaml
 podman exec "$node_name" ls -l /var/log/training-audit
 ```
 

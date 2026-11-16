@@ -1,3 +1,4 @@
+import os
 pod_ip=kubectl('-n','outpost','get','pod','intruder','-o','jsonpath={.status.podIP}')
 report=get('configmap','lateral-finding')['data']
 assert report['sourceIP']==pod_ip, 'The recorded address must belong to the intruder Pod'

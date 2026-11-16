@@ -65,11 +65,11 @@ Run it against the log from the node:
 podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 exec-report.py
 ```
 
-Each line is one audit event for one `exec` request. The verb is `create` and the resource name is the name of the Pod that received the request. The `requestURI` ends with the query parameters of the request, and the requested command appears as `command=` parameters. Look at the `stage` column: an `exec` request keeps a connection open, so check which stages your log contains and use the `auditID` to match the events of one request.
+Each line is one audit event for one `exec` request. The verb is `create` for POST or `get` for a WebSocket GET, and the resource name is the name of the Pod that received the request. The `requestURI` ends with the query parameters of the request, and the requested command appears as `command=` parameters. Look at the `stage` column: an `exec` request keeps a connection open, so check which stages your log contains and use the `auditID` to match the events of one request.
 
 ```mermaid
 flowchart TB
-    K["kubectl exec"] -->|"POST pods/exec"| A["kube-apiserver"]
+    K["kubectl exec"] -->|"POST or GET pods/exec"| A["kube-apiserver"]
     A -->|"audit event"| L["audit.jsonl"]
     A -->|"upgraded connection"| N["kubelet on the node"]
     N --> C["container process"]
@@ -78,6 +78,14 @@ flowchart TB
 The diagram shows that the API server records the request before it hands the connection to the kubelet, and the command runs on the node, outside the audit log.
 
 The audit event proves that an identity asked the API server to open an `exec` session to a Pod. The question that remains is who that identity is and where the request came from.
+
+## Exec transport and the recorded verb
+
+An exec session can begin with an HTTP POST or a WebSocket GET request. The audit
+verb is therefore `create` or `get`, depending on the client transport. Identify
+the operation through `objectRef.resource: pods` and `objectRef.subresource: exec`,
+then preserve the verb actually logged. Filtering only on `create` can miss a
+WebSocket session.
 
 ## Common pitfalls
 

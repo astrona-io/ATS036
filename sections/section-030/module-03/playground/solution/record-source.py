@@ -1,7 +1,9 @@
+import os
 import json,subprocess,tempfile,time
 from pathlib import Path
-CONTEXT="kind-astro-ats-036-playground-030-03"
-NODE="astro-ats-036-playground-030-03-control-plane"
+CONTEXT=os.environ.get("ASTRONA_KUBE_CONTEXT") or "kind-astro-ats-036-playground-030-03"
+CLUSTER=os.environ.get("ASTRONA_KIND_CLUSTER") or "astro-ats-036-playground-030-03"
+NODE=CLUSTER+"-control-plane"
 def run(*args):
     result=subprocess.run(args,check=True,text=True,capture_output=True,timeout=30)
     return result.stdout.strip()

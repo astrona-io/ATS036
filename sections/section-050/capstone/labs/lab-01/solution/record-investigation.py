@@ -1,9 +1,10 @@
+import os
 import json
 import subprocess
 import sys
 
 node_name = sys.argv[1]
-log = subprocess.run(['podman', 'exec', node_name, 'cat', '/var/log/training-audit/audit.jsonl'], check=True, text=True, capture_output=True).stdout
+log = subprocess.run([(os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"), 'exec', node_name, 'cat', '/var/log/training-audit/audit.jsonl'], check=True, text=True, capture_output=True).stdout
 records = [json.loads(line) for line in log.splitlines() if line.strip()]
 complete = [r for r in records if r.get('stage') == 'ResponseComplete']
 

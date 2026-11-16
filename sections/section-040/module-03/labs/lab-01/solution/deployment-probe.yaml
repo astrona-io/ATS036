@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: probe
-  namespace: starfleet
+  namespace: starfleet-036-040-03-01
 spec:
   replicas: 2
   selector:

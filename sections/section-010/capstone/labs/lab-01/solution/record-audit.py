@@ -1,17 +1,24 @@
+import os
 import json,subprocess,tempfile
 from pathlib import Path
-CONTEXT="kind-astro-ats-036-capstone-010"
-NODE="astro-ats-036-capstone-010-control-plane"
+CONTEXT=os.environ.get("ASTRONA_KUBE_CONTEXT") or "kind-astro-ats-036-capstone-010"
+CLUSTER=os.environ.get("ASTRONA_KIND_CLUSTER") or "astro-ats-036-capstone-010"
+NODE=CLUSTER+"-control-plane"
 def run(*args):
     result=subprocess.run(args,check=True,text=True,capture_output=True,timeout=30)
     return result.stdout.strip()
 assert run('kubectl','config','current-context')==CONTEXT, 'Select the private environment'
-assert run('podman','inspect',NODE,'--format','{{index .Config.Labels "io.x-k8s.kind.cluster"}}')=='astro-ats-036-capstone-010', 'Refusing an unrelated node container'
-def node(*args):return run('podman','exec',NODE,*args)
+assert run((os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'inspect',NODE,'--format','{{index .Config.Labels "io.x-k8s.kind.cluster"}}')==CLUSTER, 'Refusing an unrelated node container'
+def node(*args):return run((os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'exec',NODE,*args)
 
-records=[json.loads(line) for line in node('cat','/var/log/training-audit/audit.jsonl').splitlines() if line.strip()]
-denied=[r for r in records if r.get('stage')=='ResponseComplete' and r.get('user',{}).get('username')=='system:serviceaccount:starfleet:threat-reader' and r.get('objectRef',{}).get('resource')=='secrets' and r.get('responseStatus',{}).get('code')==403]
-execs=[r for r in records if r.get('verb')=='create' and r.get('objectRef',{}).get('subresource')=='exec' and r.get('objectRef',{}).get('namespace')=='starfleet' and r.get('objectRef',{}).get('name','').startswith('probe-') and r.get('stage') in ('ResponseStarted','ResponseComplete')]
+import time
+for attempt in range(30):
+    records=[json.loads(line) for line in node('cat','/var/log/training-audit/audit.jsonl').splitlines() if line.strip()]
+    denied=[r for r in records if r.get('stage')=='ResponseComplete' and r.get('user',{}).get('username')=='system:serviceaccount:starfleet:threat-reader' and r.get('objectRef',{}).get('resource')=='secrets' and r.get('responseStatus',{}).get('code')==403]
+    execs=[r for r in records if r.get('verb') in ('create','get') and r.get('objectRef',{}).get('subresource')=='exec' and r.get('objectRef',{}).get('namespace')=='starfleet' and r.get('objectRef',{}).get('name','').startswith('probe-') and r.get('stage') in ('ResponseStarted','ResponseComplete')]
+    if denied and execs:
+        break
+    time.sleep(1)
 assert denied and execs, 'Wait for the real audit records'
 denied_record=denied[-1]; exec_record=execs[0]
 pod_name=exec_record['objectRef']['name']

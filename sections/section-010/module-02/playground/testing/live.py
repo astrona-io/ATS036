@@ -1,3 +1,4 @@
+import os
 rules_text=get('configmap','shell-in-probe-rule')['data'].get('rules.yaml','')
 assert '- rule:' in rules_text and 'desc:' in rules_text, 'rules.yaml must contain a rule with a description'
 condition_text=rules_text.split('condition:',1)[1].split('output:',1)[0] if 'condition:' in rules_text and 'output:' in rules_text else ''

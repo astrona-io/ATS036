@@ -18,4 +18,10 @@ A process rule sees only process creation. It does not see file reads, network c
 - Tune with a narrow exception, not by disabling the rule.
 - A rule that has never been tested has not been shown to work.
 
+
+
+## Independent live assessment
+
+Prepare with [Test A Live Sensor In A Linux VM](course-03a-test-a-live-sensor-in-a-linux-vm.md). [Test A Falco Rule Against Live Processes](labs/lab-02/question.md) uses its own qemu environment. Prove live shell detection and a narrow exception with real kernel events.. [Report And Contain Suspicious Behavior From Audit Evidence](labs/lab-01/question.md) uses its own kind environment. Report a denied Secret request and an exec from the audit log, then quarantine the Pod without deleting it..
+
 <!-- astrona:playground:destroy -->

@@ -1,4 +1,5 @@
-records=[json.loads(line) for line in command(['podman','exec','astro-ats-036-capstone-050-control-plane','cat','/var/log/training-audit/audit.jsonl']).stdout.splitlines() if line.strip()]
+import os
+records=[json.loads(line) for line in command([(os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"),'exec',(os.environ.get("ASTRONA_KIND_CLUSTER", "astro-ats-036-capstone-050")+"-control-plane"),'cat','/var/log/training-audit/audit.jsonl']).stdout.splitlines() if line.strip()]
 report=get('configmap','audit-investigation')['data']
 by_id={record['auditID']:record for record in records if record.get('stage')=='ResponseComplete'}
 secret,denied,execute=(by_id[report[key]] for key in ('secretAuditID','deniedAuditID','execAuditID'))

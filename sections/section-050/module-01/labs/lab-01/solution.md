@@ -23,11 +23,11 @@ The isolated environment has two healthy probe replicas, an internal Service and
 Inspect the current objects before changing them:
 
 ```sh
-kubectl -n starfleet get pods -o wide
+kubectl -n starfleet-036-050-01-01 get pods -o wide
 kubectl get nodes -o wide
 ```
 
-Keep the provisioned audit Policy at Metadata level for starfleet Secrets. Read the disposable audit-token through the API to generate an event, and record audit-review with level Metadata, resource secrets and result payload-excluded. A ResponseComplete get record for that exact Secret must exist without requestObject or responseObject. Keep audit log storage on the node and API access ready.
+Keep the provisioned audit Policy at Metadata level for starfleet-036-050-01-01 Secrets. Read the disposable audit-token through the API to generate an event, and record audit-review with level Metadata, resource secrets and result payload-excluded. A ResponseComplete get record for that exact Secret must exist without requestObject or responseObject. Keep audit log storage on the node and API access ready.
 
 Save this as `configmap-audit-review.yaml`:
 
@@ -36,7 +36,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: audit-review
-  namespace: starfleet
+  namespace: starfleet-036-050-01-01
 data:
   level: Metadata
   resource: secrets
@@ -46,7 +46,7 @@ data:
 Apply the scoped correction:
 
 ```sh
-kubectl -n starfleet get secret audit-token -o name
+kubectl -n starfleet-036-050-01-01 get secret audit-token -o name
 kubectl apply -f configmap-audit-review.yaml
 ```
 
@@ -55,8 +55,8 @@ kubectl apply -f configmap-audit-review.yaml
 Observe the actual result. A denied request returns a nonzero status when the denial works, so run it separately from a shell sequence that stops on error. Status convergence and a successful request establish different parts of the result.
 
 ```sh
-kubectl -n starfleet get configmaps
-kubectl -n starfleet get deployment probe -o yaml
+kubectl -n starfleet-036-050-01-01 get configmaps
+kubectl -n starfleet-036-050-01-01 get deployment probe -o yaml
 ```
 
 Generate a real Secret read record and verify useful metadata without credential bodies. The commands above deliberately target one environment. Keep its remaining components available so an unrelated failure cannot stand in for the required denial or correction. No example command output is presented as evidence of a completed run. A matching field alone does not establish that a process used it or that a controller reconciled it.
