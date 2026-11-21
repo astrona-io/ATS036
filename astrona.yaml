@@ -2,7 +2,7 @@ training:
   id: ATS036
   title: 'CKS: Monitoring, Logging and Runtime Security'
   description: 'Detailed reading material and reusable YAML knowledge checks for CKS: Monitoring, Logging
-    and Runtime Security. Technical content remains draft. Each module has a playground, a graded lab
+    and Runtime Security. Each module has a playground, one or more graded labs
     and a knowledge check.'
   certification:
     name: Certified Kubernetes Security Specialist

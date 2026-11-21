@@ -205,7 +205,7 @@ The official objectives are listed in `astrona.yaml` and mapped in `CURRICULUM.m
 
 ### Playground and graded lab scope
 
-The maintainer requested playgrounds and graded labs on 2026-10-13. This supersedes the earlier reading-only instruction. Each active module has one private ungraded environment and guided practice. Register each independent graded task, launch entry and solution directly after the reading it practises. Retain draft technical pages and the existing question banks. Use context guards and bounded waits; node commands may target only this environment's containers. Record static, offline and live evidence separately.
+The maintainer requested playgrounds and graded labs on 2026-10-13. This supersedes the earlier reading-only instruction. Each active module has one private ungraded environment and guided practice. Register each independent graded task, launch entry and solution directly after the reading it practises. Retain the existing question banks. Use context guards and bounded waits; node commands may target only this environment's containers. Record static, offline and live evidence separately.
 
 ### Teaching structure and depth
 
@@ -237,9 +237,8 @@ secure or official exam questions.
 ### Review and authoring checks
 
 Preserve the shared CLAUDE.md prefix copied from ATS015. Keep course IDs, official
-domain weights and ATP links unchanged. Technical pages have `draft: true` in
-Markdown front matter until review; a module-level flag alone is insufficient.
-The ATP registration remains draft until publication is approved.
+domain weights and ATP links unchanged. Technical pages carry no `draft: true`
+front matter. The course registration in `astrona-content` is published (ATP007 version 1.0.0, approved 2026-11-21); maturity stays `alpha`.
 
 Primary author sources are recorded in `SOURCES.md`. The objective list was
 verified on 2026-10-11. Detailed reading expansions were written on 2026-10-11.

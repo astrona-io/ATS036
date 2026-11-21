@@ -1,6 +1,3 @@
----
-draft: true
----
 # Deliver Audit Metadata Outside The Control Plane
 
 Solve this question on: `terminal`

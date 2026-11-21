@@ -22,11 +22,11 @@ The [official objectives](https://training.linuxfoundation.org/certification/cer
 | 040 / 01 | Constraining Runtime Mutation And Writable Paths | Constraining Runtime Mutation And Writable Paths |
 | 050 / 01 | Audit Policy And Security Evidence | Designing Useful And Protected Audit Records |
 
-AUTHORING.yaml records measurable goals and adaptation sources. Every objective retains its section ID. All technical readings remain draft. Question banks are separate from the reading manifest and follow their declared summaries. No labs, playgrounds or runtime validation are included.
+AUTHORING.yaml records measurable goals and adaptation sources. Every objective retains its section ID. Question banks are separate from the reading manifest and follow their declared summaries. No labs, playgrounds or runtime validation are included.
 
 ## Hands-On Coverage
 
-This course has 5 ungraded module playgrounds and 5 draft independent labs. Tasks and solutions are registered around each lab immediately after its teaching reading. Static configuration, shell/Python/YAML, parser, lifecycle and offline grader checks pass. Live execution remains pending because the session cannot access Podman; installed CLI configuration validation is separately blocked by its maintenance lock.
+This course has 15 ungraded module playgrounds (all on kind) and 18 graded labs (15 on kind, 3 on a qemu VM). Each lab sits right after the reading it practises, with its task before and its solution after. Each module also has a knowledge check of 10 questions. Every lab passed `astrona validate` and `astrona test` on its own runtime, and every playground started with `scripts/ci/test-playground.sh`.
 
 | Module | Labs in teaching order |
 | --- | --- |

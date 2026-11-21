@@ -1,6 +1,3 @@
----
-draft: true
----
 # Join A Runtime Event To Kubernetes Identity
 
 A process event identifies what ran. Kubernetes metadata identifies the workload that owns that process. Falco's `k8smeta` plugin receives resource metadata from a collector and exposes fields such as namespace, Pod name and Pod UID. A Pod name can be reused after replacement; its UID identifies the particular object.

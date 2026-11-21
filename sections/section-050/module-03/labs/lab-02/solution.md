@@ -1,6 +1,3 @@
----
-draft: true
----
 # Solution
 
 Install the scoped Metadata policy and credential:

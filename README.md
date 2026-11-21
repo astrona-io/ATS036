@@ -8,7 +8,7 @@
 
 Certified Kubernetes Security Specialist (CKS): Monitoring, Logging and Runtime Security, worth 20% of the official curriculum. This course belongs to ATP007.
 
-Each module has a landing page, deep-dive parts, a summary and a knowledge check. Developed reading explains mechanisms, responsible components, examples and limits. Every section has an introduction and every module closes with a summary. Reusable YAML checks contain 5–15 questions per bank. Technical content remains draft. Private playgrounds and draft graded labs are included.
+Each module has a landing page, deep-dive parts, a summary and a knowledge check. Developed reading explains mechanisms, responsible components, examples and limits. Every section has an introduction and every module closes with a summary. Reusable YAML checks contain 5–15 questions per bank. Private playgrounds and graded labs are included.
 
 ## Course Outline
 
@@ -26,7 +26,7 @@ See [curriculum coverage](CURRICULUM.md), [primary sources](SOURCES.md), [questi
 
 ## Hands-On Coverage
 
-This course has 5 ungraded module playgrounds and 5 draft independent labs. Tasks and solutions are registered around each lab immediately after its teaching reading. Each module also has a knowledge check of 10 questions. Static and offline checks pass. Live execution of the playgrounds and labs has not been recorded.
+This course has 15 ungraded module playgrounds (all on kind) and 18 graded labs (15 on kind, 3 on a qemu VM). Each lab sits right after the reading it practises, with its task before and its solution after. Each module also has a knowledge check of 10 questions. Every lab passed `astrona validate` and `astrona test` on its own runtime, and every playground started with `scripts/ci/test-playground.sh`.
 
 | Module | Labs in teaching order |
 | --- | --- |

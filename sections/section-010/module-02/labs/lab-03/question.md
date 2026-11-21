@@ -1,6 +1,3 @@
----
-draft: true
----
 # Scope Live Falco Events With Kubernetes Metadata
 
 Solve this question on: `terminal`

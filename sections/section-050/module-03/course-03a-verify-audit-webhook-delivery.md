@@ -1,6 +1,3 @@
----
-draft: true
----
 # Verify Delivery To An Audit Webhook
 
 The audit log backend writes on the control-plane host. The webhook backend sends events to a separate receiver using a kubeconfig-style endpoint, certificate authority and credential. A configured URL does not prove delivery. This independent VM puts the receiver in a systemd service outside the kind control-plane container so you can inspect the receiving side.
