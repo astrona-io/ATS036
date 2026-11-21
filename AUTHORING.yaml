@@ -37,23 +37,34 @@ sections:
     - Explain runtime rule scope and detection limitations.
     - Choose proportionate investigation and containment evidence.
     outline:
-    - Behavioral Detection With Runtime Context
+    - Expected Behavior Of A Workload
+    - Syscalls, eBPF And Falco Rules
+    - Audit Records As Behavioral Evidence
+    - Triage, Tuning And Response To An Alert
     playground: true
     module_lab: true
     sources:
-    - reading: sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
+    - reading: sections/section-010/module-01/course-01-expected-behavior-of-a-workload.md
       adapted_from: null
-    - reading: sections/section-010/module-01/course-02-guided-practice.md
+    - reading: sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
+      adapted_from: null
+    - reading: sections/section-010/module-01/course-03-audit-records-as-behavioral-evidence.md
+      adapted_from: null
+    - reading: sections/section-010/module-01/course-04-triage-tuning-and-response.md
       adapted_from: null
     labs:
     - id: lab-01
       path: sections/section-010/module-01/labs/lab-01
-      after_reading: sections/section-010/module-01/course-01-behavioral-detection-with-runtime-context.md
+      after_reading: sections/section-010/module-01/course-03-audit-records-as-behavioral-evidence.md
       objective: Classify a real denied Secret request and bind the finding to its actor and audit identifier.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     practice_readings:
-    - sections/section-010/module-01/course-02-guided-practice.md
+    - sections/section-010/module-01/course-01-expected-behavior-of-a-workload.md
+    - sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
+    - sections/section-010/module-01/course-03-audit-records-as-behavioral-evidence.md
+    - sections/section-010/module-01/course-04-triage-tuning-and-response.md
+    quiz: sections/section-010/module-01/quiz.yaml
   - id: module-02
     title: Writing Runtime Detection Rules
     objectives:
@@ -72,6 +83,17 @@ sections:
     - Join A Runtime Event To Kubernetes Identity
     playground: true
     module_lab: true
+    sources:
+    - reading: sections/section-010/module-02/course-01-anatomy-of-a-falco-rule-file.md
+      adapted_from: null
+    - reading: sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
+      adapted_from: null
+    - reading: sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
+      adapted_from: null
+    - reading: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
+      adapted_from: null
+    - reading: sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+      adapted_from: null
     labs:
     - id: lab-01
       path: sections/section-010/module-02/labs/lab-01
@@ -79,25 +101,26 @@ sections:
       objective: Store a runtime rule scoped to containers, one namespace and shell names, with a useful
         output.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     - id: lab-02
       path: sections/section-010/module-02/labs/lab-02
       after_reading: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
       objective: Prove live shell detection and a narrow exception with real kernel events.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     - id: lab-03
       path: sections/section-010/module-02/labs/lab-03
       after_reading: sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
-      objective: Fresh shell events in the protected namespace include real Kubernetes identity; Approved
-        commands and an outside namespace remain silent while a later protected event is detected
+      objective: Fresh shell events in the protected namespace include real Kubernetes identity
       status: alpha
-      runtime_verification: pending
-    sources:
-    - reading: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
-      adapted_from: null
-    - reading: sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
-      adapted_from: null
+      runtime_verification: passed
+    practice_readings:
+    - sections/section-010/module-02/course-01-anatomy-of-a-falco-rule-file.md
+    - sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
+    - sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
+    - sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
+    - sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+    quiz: sections/section-010/module-02/quiz.yaml
   - id: module-03
     title: Detecting Command Execution Through API Audit Records
     objectives:
@@ -107,17 +130,29 @@ sections:
     - Explain what an exec audit record proves and what it does not prove.
     outline:
     - Exec And Port-Forward In The Audit Log
-    - Who Sent The Request: Identity And Origin
+    - 'Who Sent The Request: Identity And Origin'
     - Correlating Audit Records With Other Evidence
     playground: true
     module_lab: true
+    sources:
+    - reading: sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
+      adapted_from: null
+    - reading: sections/section-010/module-03/course-02-who-sent-the-request-identity-and-origin.md
+      adapted_from: null
+    - reading: sections/section-010/module-03/course-03-correlating-audit-records-with-other-evidence.md
+      adapted_from: null
     labs:
     - id: lab-01
       path: sections/section-010/module-03/labs/lab-01
       after_reading: sections/section-010/module-03/course-02-who-sent-the-request-identity-and-origin.md
       objective: Bind an exec finding to its actor, Pod, stage and audit identifier.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
+    practice_readings:
+    - sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
+    - sections/section-010/module-03/course-02-who-sent-the-request-identity-and-origin.md
+    - sections/section-010/module-03/course-03-correlating-audit-records-with-other-evidence.md
+    quiz: sections/section-010/module-03/quiz.yaml
 - id: section-020
   title: Detect threats within physical infrastructure, apps, networks, data, users and workloads
   curriculum_item: Detect threats within physical infrastructure, apps, networks, data, users and workloads
@@ -132,26 +167,30 @@ sections:
     - Relate alert quality to relevant behaviors and response ownership.
     - Identify sensitive fields and evidence gaps.
     outline:
-    - Collection, Storage And Observation Limits
-    - Security Signals Across Different Boundaries
+    - Security Signals By Layer
+    - Workload Logs, Restarts And Exit Evidence
+    - Network Traffic, Application Logs And Evidence Gaps
     playground: true
     module_lab: true
     sources:
-    - reading: sections/section-020/module-01/course-01-collection-storage-and-observation-limits.md
-      adapted_from: ATS045/sections/section-030/module-01/course-01-collection-storage-and-observation-limits.md
-    - reading: sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
-      adapted_from: ATS045/sections/section-030/module-01/course-02-security-signals-across-different-boundaries.md
-    - reading: sections/section-020/module-01/course-03-guided-practice.md
+    - reading: sections/section-020/module-01/course-01-security-signals-by-layer.md
+      adapted_from: null
+    - reading: sections/section-020/module-01/course-02-workload-logs-restarts-and-exit-evidence.md
+      adapted_from: null
+    - reading: sections/section-020/module-01/course-03-network-traffic-application-logs-and-evidence-gaps.md
       adapted_from: null
     labs:
     - id: lab-01
       path: sections/section-020/module-01/labs/lab-01
-      after_reading: sections/section-020/module-01/course-02-security-signals-across-different-boundaries.md
+      after_reading: sections/section-020/module-01/course-02-workload-logs-restarts-and-exit-evidence.md
       objective: Select the previous container log and record the corresponding exit evidence.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     practice_readings:
-    - sections/section-020/module-01/course-03-guided-practice.md
+    - sections/section-020/module-01/course-01-security-signals-by-layer.md
+    - sections/section-020/module-01/course-02-workload-logs-restarts-and-exit-evidence.md
+    - sections/section-020/module-01/course-03-network-traffic-application-logs-and-evidence-gaps.md
+    quiz: sections/section-020/module-01/quiz.yaml
   - id: module-02
     title: Detecting Risky Workloads From Events, Specifications And Logs
     objectives:
@@ -162,6 +201,27 @@ sections:
     - Kubernetes Events As A Short-Lived Signal
     - Reading A Pod Specification For Risky Settings
     - Application Log Signals Of Abuse
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-020/module-02/course-01-kubernetes-events-as-a-short-lived-signal.md
+      adapted_from: null
+    - reading: sections/section-020/module-02/course-02-reading-a-pod-specification-for-risky-settings.md
+      adapted_from: null
+    - reading: sections/section-020/module-02/course-03-application-log-signals-of-abuse.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-020/module-02/labs/lab-01
+      after_reading: sections/section-020/module-02/course-02-reading-a-pod-specification-for-risky-settings.md
+      objective: Read a Pod specification and record its privileged setting and host directory mount.
+      status: alpha
+      runtime_verification: passed
+    practice_readings:
+    - sections/section-020/module-02/course-01-kubernetes-events-as-a-short-lived-signal.md
+    - sections/section-020/module-02/course-02-reading-a-pod-specification-for-risky-settings.md
+    - sections/section-020/module-02/course-03-application-log-signals-of-abuse.md
+    quiz: sections/section-020/module-02/quiz.yaml
   - id: module-03
     title: Detecting Threats To Data And User Accounts
     objectives:
@@ -172,6 +232,28 @@ sections:
     - ServiceAccounts And User Identity
     - Who Can Read Secrets
     - Secret Exposure Paths
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-020/module-03/course-01-serviceaccounts-and-user-identity.md
+      adapted_from: null
+    - reading: sections/section-020/module-03/course-02-who-can-read-secrets.md
+      adapted_from: null
+    - reading: sections/section-020/module-03/course-03-secret-exposure-paths.md
+      adapted_from: null
+    labs:
+    - id: lab-01
+      path: sections/section-020/module-03/labs/lab-01
+      after_reading: sections/section-020/module-03/course-02-who-can-read-secrets.md
+      objective: Find the ServiceAccount that can read Secrets and record the RoleBinding that grants
+        it.
+      status: alpha
+      runtime_verification: passed
+    practice_readings:
+    - sections/section-020/module-03/course-01-serviceaccounts-and-user-identity.md
+    - sections/section-020/module-03/course-02-who-can-read-secrets.md
+    - sections/section-020/module-03/course-03-secret-exposure-paths.md
+    quiz: sections/section-020/module-03/quiz.yaml
 - id: section-030
   title: Investigate and identify phases of attack and bad actors within the environment
   curriculum_item: Investigate and identify phases of attack and bad actors within the environment
@@ -186,23 +268,34 @@ sections:
     - Relate initial access, escalation, persistence and impact hypotheses.
     - Contain compromised authority and preserve useful evidence.
     outline:
-    - Reconstructing Attack Phases And Actor Authority
+    - Attack Phases In Kubernetes
+    - Actor Identity In Audit Records
+    - Building A Timeline From Several Sources
+    - Containment And Evidence Preservation
     playground: true
     module_lab: true
     sources:
-    - reading: sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
+    - reading: sections/section-030/module-01/course-01-attack-phases-in-kubernetes.md
       adapted_from: null
-    - reading: sections/section-030/module-01/course-02-guided-practice.md
+    - reading: sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
+      adapted_from: null
+    - reading: sections/section-030/module-01/course-03-building-a-timeline-from-several-sources.md
+      adapted_from: null
+    - reading: sections/section-030/module-01/course-04-containment-and-evidence-preservation.md
       adapted_from: null
     labs:
     - id: lab-01
       path: sections/section-030/module-01/labs/lab-01
-      after_reading: sections/section-030/module-01/course-01-reconstructing-attack-phases-and-actor-authority.md
+      after_reading: sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
       objective: Classify a real denied Secret request and bind the finding to its actor and audit identifier.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     practice_readings:
-    - sections/section-030/module-01/course-02-guided-practice.md
+    - sections/section-030/module-01/course-01-attack-phases-in-kubernetes.md
+    - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
+    - sections/section-030/module-01/course-03-building-a-timeline-from-several-sources.md
+    - sections/section-030/module-01/course-04-containment-and-evidence-preservation.md
+    quiz: sections/section-030/module-01/quiz.yaml
   - id: module-02
     title: Finding Persistence And Escalated Authority
     objectives:
@@ -226,8 +319,11 @@ sections:
       after_reading: sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
       objective: Find the controller and binding behind an unexpected Pod, record them and contain both.
       status: alpha
-      runtime_verification: pending
-    practice_readings: []
+      runtime_verification: passed
+    practice_readings:
+    - sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
+    - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
+    quiz: sections/section-030/module-02/quiz.yaml
   - id: module-03
     title: Tracing Lateral Movement And Impact
     objectives:
@@ -251,8 +347,11 @@ sections:
       after_reading: sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
       objective: Identify the Pod that sends unexpected requests to the probe Service and record its address.
       status: alpha
-      runtime_verification: pending
-    practice_readings: []
+      runtime_verification: passed
+    practice_readings:
+    - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
+    - sections/section-030/module-03/course-02-impact-and-resource-abuse.md
+    quiz: sections/section-030/module-03/quiz.yaml
 - id: section-040
   title: Ensure immutability of containers at runtime
   curriculum_item: Ensure immutability of containers at runtime
@@ -267,24 +366,35 @@ sections:
     - Relate capabilities, identity and host mounts to immutability.
     - Evaluate replacement-based updates and residual compromise paths.
     outline:
-    - Constraining Runtime Mutation And Writable Paths
+    - The Writable Container Layer
+    - Read-Only Root Filesystem And Security Context
+    - Limits Of A Read-Only Filesystem And Pod Security Admission
+    - Verifying And Enforcing Immutability
     playground: true
     module_lab: true
     sources:
-    - reading: sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
+    - reading: sections/section-040/module-01/course-01-the-writable-container-layer.md
       adapted_from: null
-    - reading: sections/section-040/module-01/course-02-guided-practice.md
+    - reading: sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
+      adapted_from: null
+    - reading: sections/section-040/module-01/course-03-limits-of-a-read-only-filesystem-and-pod-security-admission.md
+      adapted_from: null
+    - reading: sections/section-040/module-01/course-04-verifying-and-enforcing-immutability.md
       adapted_from: null
     labs:
     - id: lab-01
       path: sections/section-040/module-01/labs/lab-01
-      after_reading: sections/section-040/module-01/course-01-constraining-runtime-mutation-and-writable-paths.md
+      after_reading: sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
       objective: Keep a non-root workload functional with a read-only root filesystem and a writable scratch
         volume.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     practice_readings:
-    - sections/section-040/module-01/course-02-guided-practice.md
+    - sections/section-040/module-01/course-01-the-writable-container-layer.md
+    - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
+    - sections/section-040/module-01/course-03-limits-of-a-read-only-filesystem-and-pod-security-admission.md
+    - sections/section-040/module-01/course-04-verifying-and-enforcing-immutability.md
+    quiz: sections/section-040/module-01/quiz.yaml
   - id: module-02
     title: 'Dropping Privileges: Identity, Capabilities And Privilege Escalation'
     objectives:
@@ -311,7 +421,11 @@ sections:
       after_reading: sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
       objective: Run a workload as a non-root user with no Linux capabilities and no way to gain privileges.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
+    practice_readings:
+    - sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
+    - sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
+    - sections/section-040/module-02/course-03-privileged-containers-and-verifying-process-privileges.md
     quiz: sections/section-040/module-02/quiz.yaml
   - id: module-03
     title: Host Mounts And Replacement-Based Updates
@@ -339,7 +453,11 @@ sections:
       objective: Replace the Pods of a Deployment through its template so that they run version v2 with
         a read-only root filesystem and a writable temporary path.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
+    practice_readings:
+    - sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
+    - sections/section-040/module-03/course-02-updating-by-replacement.md
+    - sections/section-040/module-03/course-03-pinning-images-and-detecting-drift.md
     quiz: sections/section-040/module-03/quiz.yaml
 - id: section-050
   title: Use Kubernetes audit logs to monitor access
@@ -348,30 +466,41 @@ sections:
   section_quiz: false
   modules:
   - id: module-01
-    title: Audit Policy And Security Evidence
+    title: Using Kubernetes Audit Logs To Monitor Access
     objectives:
     - Explain what Kubernetes audit events record.
     - Compare Metadata, Request and RequestResponse audit detail.
     - Relate audit retention and protection to investigation.
     - Distinguish API evidence from runtime and application evidence.
     outline:
-    - Designing Useful And Protected Audit Records
+    - The Audit Event Model
+    - Writing An Audit Policy
+    - API Server Flags, Backends And Troubleshooting
+    - Reading Audit Records To Monitor Access
     playground: true
     module_lab: true
     sources:
-    - reading: sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
-      adapted_from: ATS043/sections/section-070/module-01/course-01-designing-useful-and-protected-audit-records.md
-    - reading: sections/section-050/module-01/course-02-guided-practice.md
+    - reading: sections/section-050/module-01/course-01-the-audit-event-model.md
+      adapted_from: null
+    - reading: sections/section-050/module-01/course-02-writing-an-audit-policy.md
+      adapted_from: null
+    - reading: sections/section-050/module-01/course-03-api-server-flags-backends-and-troubleshooting.md
+      adapted_from: null
+    - reading: sections/section-050/module-01/course-04-reading-audit-records-to-monitor-access.md
       adapted_from: null
     labs:
     - id: lab-01
       path: sections/section-050/module-01/labs/lab-01
-      after_reading: sections/section-050/module-01/course-01-designing-useful-and-protected-audit-records.md
+      after_reading: sections/section-050/module-01/course-04-reading-audit-records-to-monitor-access.md
       objective: Generate a real Secret read record and verify useful metadata without credential bodies.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     practice_readings:
-    - sections/section-050/module-01/course-02-guided-practice.md
+    - sections/section-050/module-01/course-01-the-audit-event-model.md
+    - sections/section-050/module-01/course-02-writing-an-audit-policy.md
+    - sections/section-050/module-01/course-03-api-server-flags-backends-and-troubleshooting.md
+    - sections/section-050/module-01/course-04-reading-audit-records-to-monitor-access.md
+    quiz: sections/section-050/module-01/quiz.yaml
   - id: module-02
     title: Auditing Interactive Access To Pods
     objectives:
@@ -379,7 +508,9 @@ sections:
     - Find an exec request in the audit log and read the command from it.
     - State what an exec record proves and what it does not.
     outline:
-    - Auditing Interactive Access To Pods
+    - Subresources In Audit Policy Rules
+    - Recording And Reading Exec Events
+    - Choosing Rules And Levels For Interactive Access
     playground: true
     module_lab: true
     sources:
@@ -395,7 +526,12 @@ sections:
       after_reading: sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
       objective: Run a command in a Pod and bind its exec audit record to a report.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
+    practice_readings:
+    - sections/section-050/module-02/course-01-subresources-in-audit-policy-rules.md
+    - sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
+    - sections/section-050/module-02/course-03-choosing-rules-and-levels-for-interactive-access.md
+    quiz: sections/section-050/module-02/quiz.yaml
   - id: module-03
     title: Retaining And Protecting Audit Logs
     objectives:
@@ -405,7 +541,9 @@ sections:
     - A fresh audit event reaches the authenticated TLS collector outside the control-plane container;
       Only the scoped namespace is collected and Secret bodies remain absent
     outline:
-    - Retaining And Protecting Audit Logs
+    - Rotation Flags And Disk Use
+    - Protecting The Log File
+    - Forwarding And Retention Policy
     - Verify Delivery To An Audit Webhook
     playground: true
     module_lab: true
@@ -424,11 +562,17 @@ sections:
       after_reading: sections/section-050/module-03/course-02-protecting-the-log-file.md
       objective: Read the live audit rotation flags and the log file mode and record them.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     - id: lab-02
       path: sections/section-050/module-03/labs/lab-02
       after_reading: sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
       objective: A fresh audit event reaches the authenticated TLS collector outside the control-plane
-        container; Only the scoped namespace is collected and Secret bodies remain absent
+        container
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
+    practice_readings:
+    - sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
+    - sections/section-050/module-03/course-02-protecting-the-log-file.md
+    - sections/section-050/module-03/course-03-forwarding-and-retention-policy.md
+    - sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
+    quiz: sections/section-050/module-03/quiz.yaml
