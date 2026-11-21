@@ -4,11 +4,11 @@ exam_objectives:
 ---
 # Record The Audit Retention Settings And Log File Protection
 
+Allow about 10 minutes for the tasks.
+
 Read the live audit retention flags and the log file mode from the control plane node and record them.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

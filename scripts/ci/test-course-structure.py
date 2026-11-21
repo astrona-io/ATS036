@@ -16,9 +16,9 @@ LAB = MODULE + "/labs/lab-01"
 LESSON = MODULE + "/course-01-discovery.md"
 QUESTION = """# Question
 
-Solve this question on: `terminal`
+Allow about {minutes} minutes for the tasks.
 
-Allow 5–8 minutes for task work. Cluster startup adds time.
+Solve this question on: `terminal`
 
 ## Tasks
 
@@ -43,7 +43,7 @@ class CourseStructureTests(unittest.TestCase):
         shutil.copyfile(CHECKER, script)
         self.script = script
         self.write(LESSON, "# Discovery\n\n```sh\ninspect\n```\n")
-        self.write(LAB + "/question.md", QUESTION.format(tasks="1. Inspect the source.\n2. Repair discovery.\n3. Verify the targets.\n"))
+        self.write(LAB + "/question.md", QUESTION.format(minutes=8, tasks="1. Inspect the source.\n2. Repair discovery.\n3. Verify the targets.\n"))
         self.write(LAB + "/testing/verify-start.sh", "#!/bin/sh\nexit 0\n")
         self.write(LAB + "/solution/apply.sh", "#!/bin/sh\nexit 0\n")
         self.write(LAB + "/validation/check.sh", "#!/bin/sh\nexit 0\n")
@@ -58,7 +58,7 @@ class CourseStructureTests(unittest.TestCase):
         self.content = [
             {"type": "reading", "path": LESSON},
             {"type": "reading", "path": LAB + "/question.md"},
-            {"type": "lab", "path": LAB},
+            {"type": "lab", "path": LAB, "estimated_duration": "8m"},
         ]
         self.save_outline()
 
@@ -102,7 +102,7 @@ class CourseStructureTests(unittest.TestCase):
         self.assert_rejected("preparation lesson")
 
     def test_too_many_tasks_fail(self):
-        self.write(LAB + "/question.md", QUESTION.format(tasks="\n".join(f"{n}. Task" for n in range(1, 7))))
+        self.write(LAB + "/question.md", QUESTION.format(minutes=8, tasks="\n".join(f"{n}. Task" for n in range(1, 7))))
         self.assert_rejected("expected 3–5 tasks")
 
     def test_missing_reference_solution_fails(self):
@@ -113,6 +113,20 @@ class CourseStructureTests(unittest.TestCase):
         self.config["testing"]["init"].reverse()
         self.write_yaml(LAB + "/config.yaml", self.config)
         self.assert_rejected("verify the starting state before the solution")
+
+    def test_missing_time_line_fails(self):
+        self.write(LAB + "/question.md", QUESTION.replace("Allow about {minutes} minutes for the tasks.\n\n", "").format(
+            tasks="1. Inspect the source.\n2. Repair discovery.\n3. Verify the targets.\n"))
+        self.assert_rejected("under its title")
+
+    def test_time_line_over_exam_limit_fails(self):
+        self.write(LAB + "/question.md", QUESTION.format(minutes=25, tasks="1. A.\n2. B.\n3. C.\n"))
+        self.assert_rejected("over the 20-minute exam limit")
+
+    def test_duration_must_match_time_line(self):
+        self.content[-1]["estimated_duration"] = "25m"
+        self.save_outline()
+        self.assert_rejected("estimated_duration must be 8m")
 
     def test_runtime_collision_fails(self):
         playground = MODULE + "/playground"

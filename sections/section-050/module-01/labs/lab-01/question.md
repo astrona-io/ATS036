@@ -4,11 +4,11 @@ exam_objectives:
 ---
 # Verify Metadata Audit Records Exclude Secret Payloads
 
+Allow about 8 minutes for the tasks.
+
 Generate a real Secret read record and verify useful metadata without credential bodies.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

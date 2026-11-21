@@ -4,6 +4,8 @@ exam_objectives:
 ---
 # Test A Falco Rule Against Live Processes
 
+Allow about 15 minutes for the tasks.
+
 Solve this question on: `terminal`
 
 This independent QEMU VM runs Falco 0.45.2 with its modern eBPF sensor. The `training-falco` service loads `/etc/falco/training-rules.yaml` and writes JSON alerts to `/var/log/training-falco.jsonl`. Its initial rule never matches the exercise processes. The accounts `probe-user` and `other-user` exist, and `/opt/approved-maintenance.sh` runs a harmless fixed command.
@@ -14,7 +16,7 @@ astrona ssh ats-036-lab-010-02-02
 
 Run the following tasks inside that VM. No Kubernetes cluster is needed for this host-process exercise.
 
-Allow 10–15 minutes for task work. First boot, image download and package installation add time.
+The first boot of the VM, the image download and the package installation take extra time before the tasks start.
 
 ## Tasks
 

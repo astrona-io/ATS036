@@ -4,11 +4,11 @@ exam_objectives:
 ---
 # Write A Scoped Shell Detection Rule
 
+Allow about 8 minutes for the tasks.
+
 Write a runtime detection rule that reports shells started in the starfleet-036-010-02-01 namespace.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

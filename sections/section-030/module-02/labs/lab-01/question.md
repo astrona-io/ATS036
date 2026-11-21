@@ -4,11 +4,11 @@ exam_objectives:
 ---
 # Contain A Persistent Workload And Its Binding
 
+Allow about 10 minutes for the tasks.
+
 Find the controller and binding behind an unexpected Pod, record them and contain both.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

@@ -60,7 +60,7 @@ modules:
     title: Detect A Denied API Access Attempt
     path: sections/section-010/module-01/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 8m
     topic: audit-detection
     task_kind: build
     learning_goals:
@@ -98,7 +98,7 @@ modules:
     title: Write A Scoped Shell Detection Rule
     path: sections/section-010/module-02/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 8m
     topic: rule-writing
     task_kind: build
     learning_goals:
@@ -175,7 +175,7 @@ modules:
     title: Find The Audit Record Of A Pod Exec
     path: sections/section-010/module-03/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 8m
     topic: exec-audit
     task_kind: build
     learning_goals:
@@ -222,7 +222,7 @@ modules:
     title: Diagnose A Previous Container Exit
     path: sections/section-020/module-01/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 8m
     topic: previous-logs
     task_kind: build
     learning_goals:
@@ -260,7 +260,7 @@ modules:
     title: Report A Risky Pod Specification
     path: sections/section-020/module-02/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 6m
     topic: pod-spec-review
     task_kind: build
     learning_goals:
@@ -298,7 +298,7 @@ modules:
     title: Find Which Account Can Read Secrets
     path: sections/section-020/module-03/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 8m
     topic: secret-access-review
     task_kind: build
     learning_goals:
@@ -345,7 +345,7 @@ modules:
     title: Attribute An API Attempt To A Workload Identity
     path: sections/section-030/module-01/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 12m
     topic: audit-attribution
     task_kind: build
     learning_goals:
@@ -386,7 +386,7 @@ modules:
     title: Contain A Persistent Workload And Its Binding
     path: sections/section-030/module-02/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 10m
     topic: persistence-containment
     task_kind: build
     learning_goals:
@@ -418,7 +418,7 @@ modules:
     title: Trace A Connection To Its Source Pod
     path: sections/section-030/module-03/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 10m
     topic: lateral-movement-tracing
     task_kind: build
     learning_goals:
@@ -464,7 +464,7 @@ modules:
     title: Run With A Restricted Security Context
     path: sections/section-040/module-01/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 10m
     topic: security-context
     task_kind: build
     learning_goals:
@@ -505,7 +505,7 @@ modules:
     title: Drop All Capabilities And Block Privilege Escalation
     path: sections/section-040/module-02/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 10m
     topic: capability-drop
     task_kind: build
     learning_goals:
@@ -543,7 +543,7 @@ modules:
     title: Update A Workload By Replacement With A Read-Only Root
     path: sections/section-040/module-03/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 10m
     topic: replacement-update
     task_kind: build
     learning_goals:
@@ -596,7 +596,7 @@ modules:
     title: Verify Metadata Audit Records Exclude Secret Payloads
     path: sections/section-050/module-01/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 8m
     topic: audit-redaction
     task_kind: build
     learning_goals:
@@ -631,7 +631,7 @@ modules:
     title: Record Interactive Pod Access In The Audit Log
     path: sections/section-050/module-02/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 8m
     topic: audit-exec
     task_kind: build
     learning_goals:
@@ -669,7 +669,7 @@ modules:
     title: Record The Audit Retention Settings And Log File Protection
     path: sections/section-050/module-03/labs/lab-01
     difficulty: intermediate
-    estimated_duration: 25m
+    estimated_duration: 10m
     topic: audit-retention
     task_kind: build
     learning_goals:

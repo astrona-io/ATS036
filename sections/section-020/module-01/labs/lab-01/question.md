@@ -4,6 +4,8 @@ exam_objectives:
 ---
 # Diagnose A Previous Container Exit
 
+Allow about 8 minutes for the tasks.
+
 Select the previous container log and record the corresponding exit evidence. Use the isolated `starfleet-036-020-01-01` environment to verify the result.
 
 ## Objective
@@ -11,8 +13,6 @@ Select the previous container log and record the corresponding exit evidence. Us
 Select the previous container log and record the corresponding exit evidence.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

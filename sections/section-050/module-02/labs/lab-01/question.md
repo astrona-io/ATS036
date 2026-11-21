@@ -4,11 +4,11 @@ exam_objectives:
 ---
 # Record Interactive Pod Access In The Audit Log
 
+Allow about 8 minutes for the tasks.
+
 Run a command in a Pod through the API server and bind the audit record of that exec request to a report.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

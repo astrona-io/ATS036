@@ -1,10 +1,12 @@
 # Scope Live Falco Events With Kubernetes Metadata
 
+Allow about 15 minutes for the tasks.
+
 Solve this question on: `terminal`
 
 This independent Ubuntu VM runs a kind cluster, Falco, the Kubernetes metadata collector and its plugin. Both `monitored` and `outside` contain a `reporter` Pod. The custom rule currently selects a nonexistent namespace.
 
-Allow 10–15 minutes for task work. VM, cluster and sensor startup add several minutes.
+VM, cluster and sensor startup add several minutes.
 
 ## Tasks
 

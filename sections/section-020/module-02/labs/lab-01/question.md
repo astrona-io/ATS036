@@ -4,6 +4,8 @@ exam_objectives:
 ---
 # Report A Risky Pod Specification
 
+Allow about 6 minutes for the tasks.
+
 Record the risky settings of a Pod from its specification. Use the isolated `starfleet-036-020-02-01` environment to verify the result.
 
 ## Objective
@@ -11,8 +13,6 @@ Record the risky settings of a Pod from its specification. Use the isolated `sta
 Record the risky settings of a Pod from its specification.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

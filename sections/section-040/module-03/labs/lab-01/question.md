@@ -4,6 +4,8 @@ exam_objectives:
 ---
 # Update A Workload By Replacement With A Read-Only Root
 
+Allow about 10 minutes for the tasks.
+
 Replace the Pods of a Deployment through its template so that they run version v2 with a read-only root filesystem and a writable temporary path. Use the isolated `starfleet-036-040-03-01` environment to verify the result.
 
 ## Objective
@@ -11,8 +13,6 @@ Replace the Pods of a Deployment through its template so that they run version v
 Replace the Pods of a Deployment through its template so that they run version v2 with a read-only root filesystem and a writable temporary path.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

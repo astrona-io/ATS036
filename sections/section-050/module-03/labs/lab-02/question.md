@@ -1,10 +1,12 @@
 # Deliver Audit Metadata Outside The Control Plane
 
+Allow about 15 minutes for the tasks.
+
 Solve this question on: `terminal`
 
 The independent VM runs a kind control-plane container and a separate TLS audit collector managed by systemd. The API server's webhook backend is mounted and enabled, but its credential is wrong and its policy records nothing.
 
-Allow 10–15 minutes for task work. API server replacements add short waits.
+API server replacements add short waits.
 
 ## Tasks
 

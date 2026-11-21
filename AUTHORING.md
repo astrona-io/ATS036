@@ -12,9 +12,11 @@ the bounded change and the evidence of success. Preserve playground start,
 renew and destroy markers. Course pages end with their specific common pitfalls;
 the platform inserts the registered lab afterwards.
 
-Default to three to five related tasks and 10–15 minutes of student work. Existing
-shorter exercises may retain two tasks when they cover one complete outcome.
-Count startup and reconciliation separately. Split independent faults or different
+Default to three to five related tasks. Put `Allow about N minutes for the tasks.`
+right under the title of `question.md`, with N the exam time for a prepared
+student (at most 20), and set the lab's `estimated_duration` in `astrona.yaml`
+to the same value. Existing shorter exercises may retain two tasks when they
+cover one complete outcome. Count startup and reconciliation separately. Split independent faults or different
 investigations; do not add steps merely to reach a count. The course has no
 section capstones. Each lab must bootstrap independently, with only its assigned
 missing result or fault.

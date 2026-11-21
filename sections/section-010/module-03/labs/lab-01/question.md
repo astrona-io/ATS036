@@ -4,11 +4,11 @@ exam_objectives:
 ---
 # Find The Audit Record Of A Pod Exec
 
+Allow about 8 minutes for the tasks.
+
 Find the audit record of an interactive command run in a probe Pod and bind the finding to the identity and audit identifier.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

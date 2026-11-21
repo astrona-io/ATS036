@@ -53,8 +53,15 @@ for section in outline.get("modules", []):
             require("## Tasks" in text and 3 <= len(tasks) <= 5, f"{path}: expected 3–5 tasks, found {len(tasks)}")
             for heading in ("Solve this question on:", "## Constraints", "## How the answer is checked"):
                 require(heading in text, f"{path}: question needs {heading!r}")
-            require(re.search(r"^Allow \d+–\d+ minutes for task work\.", text, re.M) is not None,
-                    f"{path}: question needs the time line")
+            # The exam time line sits right under the title, as in ATS020.
+            timeline = re.search(r"^# [^\n]+\n\nAllow about (\d+) minutes for the tasks\.$", text, re.M)
+            require(timeline is not None,
+                    f"{path}: question needs 'Allow about N minutes for the tasks.' under its title")
+            if timeline is not None:
+                minutes = int(timeline.group(1))
+                require(minutes <= 20, f"{path}: {minutes} minutes is over the 20-minute exam limit")
+                require(item.get("estimated_duration") == f"{minutes}m",
+                        f"{path}: estimated_duration must be {minutes}m to match the time line")
 
 counts = Counter(registered)
 for path, count in counts.items():

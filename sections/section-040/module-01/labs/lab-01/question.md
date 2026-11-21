@@ -4,6 +4,8 @@ exam_objectives:
 ---
 # Run With A Restricted Security Context
 
+Allow about 10 minutes for the tasks.
+
 Keep a non-root workload functional with a read-only root filesystem and a writable scratch volume. Use the isolated `starfleet-036-040-01-01` environment to verify the result.
 
 ## Objective
@@ -11,8 +13,6 @@ Keep a non-root workload functional with a read-only root filesystem and a writa
 Keep a non-root workload functional with a read-only root filesystem and a writable scratch volume.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

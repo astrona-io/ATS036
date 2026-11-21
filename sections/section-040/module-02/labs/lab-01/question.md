@@ -4,6 +4,8 @@ exam_objectives:
 ---
 # Drop All Capabilities And Block Privilege Escalation
 
+Allow about 10 minutes for the tasks.
+
 Run a workload as a non-root user with no Linux capabilities and no way to gain privileges. Use the isolated `starfleet-036-040-02-01` environment to verify the result.
 
 ## Objective
@@ -11,8 +13,6 @@ Run a workload as a non-root user with no Linux capabilities and no way to gain 
 Run a workload as a non-root user with no Linux capabilities and no way to gain privileges.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

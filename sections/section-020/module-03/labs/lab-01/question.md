@@ -4,6 +4,8 @@ exam_objectives:
 ---
 # Find Which Account Can Read Secrets
 
+Allow about 8 minutes for the tasks.
+
 Find the ServiceAccount that can read Secrets and record the binding that grants the access. Use the isolated `starfleet-036-020-03-01` environment to verify the result.
 
 ## Objective
@@ -11,8 +13,6 @@ Find the ServiceAccount that can read Secrets and record the binding that grants
 Find the ServiceAccount that can read Secrets and record the binding that grants the access.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

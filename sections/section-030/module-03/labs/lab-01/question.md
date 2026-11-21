@@ -4,11 +4,11 @@ exam_objectives:
 ---
 # Trace A Connection To Its Source Pod
 
+Allow about 10 minutes for the tasks.
+
 Identify the Pod that sends unexpected requests to the probe Service and record its address.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 

@@ -4,11 +4,11 @@ exam_objectives:
 ---
 # Detect A Denied API Access Attempt
 
+Allow about 8 minutes for the tasks.
+
 Classify a real denied Secret request and bind the finding to its actor and audit identifier.
 
 Solve this question on: `terminal`
-
-Allow 10–15 minutes for task work.
 
 ## Starting state
 
