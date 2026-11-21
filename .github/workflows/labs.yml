@@ -40,8 +40,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  ASTRONA_VERSION: "0.4.14"
-  ASTRONA_SHA256: "9e0e5d9b67d6a8b6ff62cf47276163933d072585f498671a5a4e0477ebab82ee"
+  ASTRONA_VERSION: "0.5.17"
+  ASTRONA_SHA256: "3236d1d917eac9d096cd1cee1edfab41a4d2897fce96858fb9a09a22b9792600"
   KIND_VERSION: "0.33.0"
   ASTRONA_NO_UPDATE_CHECK: "1"
   ASTRONA_CONTAINER_ENGINE: docker
@@ -88,7 +88,7 @@ jobs:
     if: needs.list.outputs.environments != '[]'
     name: ${{ matrix.env.kind }} ${{ matrix.env.path }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       max-parallel: 10
