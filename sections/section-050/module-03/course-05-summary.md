@@ -10,6 +10,8 @@ In a kubeadm or `kind` cluster, the flags are in the `kube-apiserver` static Pod
 
 A copy of the events on another system gives stronger evidence. The webhook backend sends events to an HTTPS collector in `batch`, `blocking` or `blocking-strict` mode. `batch` protects availability and can drop events. `blocking-strict` protects the log and can stop API requests when the collector fails. A retention policy states the period, the storage, the location of the long-term copy and the behavior during a failure.
 
+A webhook URL in the configuration does not prove delivery. The webhook backend reads a kubeconfig-style file with the receiver address, the certificate authority and a credential. Delivery is shown on the receiving side: a fresh event arrives over authenticated TLS (Transport Layer Security), only the namespaces in the policy scope appear, and no Secret body is present. A receiver on the same machine is outside the control-plane container, but it is not durable storage away from that machine.
+
 Key facts:
 
 - Rotation deletes the oldest rotated file when a limit is reached.
@@ -17,11 +19,5 @@ Key facts:
 - Read the live flags from the static Pod manifest.
 - Read the file mode with `stat`, and check the directory too.
 - Use `json` format for parsing tools.
-
-
-
-## Independent live assessment
-
-Prepare with [Verify Delivery To An Audit Webhook](course-03a-verify-audit-webhook-delivery.md). [Deliver Audit Metadata Outside The Control Plane](labs/lab-02/question.md) uses its own qemu environment. A fresh audit event reaches the authenticated TLS collector outside the control-plane container; Only the scoped namespace is collected and Secret bodies remain absent.
 
 <!-- astrona:playground:destroy -->

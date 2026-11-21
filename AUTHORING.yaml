@@ -90,9 +90,9 @@ sections:
       adapted_from: null
     - reading: sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
       adapted_from: null
-    - reading: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
+    - reading: sections/section-010/module-02/course-04-test-a-live-sensor-in-a-linux-vm.md
       adapted_from: null
-    - reading: sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+    - reading: sections/section-010/module-02/course-05-detect-with-kubernetes-metadata.md
       adapted_from: null
     labs:
     - id: lab-01
@@ -104,13 +104,13 @@ sections:
       runtime_verification: passed
     - id: lab-02
       path: sections/section-010/module-02/labs/lab-02
-      after_reading: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
+      after_reading: sections/section-010/module-02/course-04-test-a-live-sensor-in-a-linux-vm.md
       objective: Prove live shell detection and a narrow exception with real kernel events.
       status: alpha
       runtime_verification: passed
     - id: lab-03
       path: sections/section-010/module-02/labs/lab-03
-      after_reading: sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+      after_reading: sections/section-010/module-02/course-05-detect-with-kubernetes-metadata.md
       objective: Fresh shell events in the protected namespace include real Kubernetes identity
       status: alpha
       runtime_verification: passed
@@ -118,8 +118,8 @@ sections:
     - sections/section-010/module-02/course-01-anatomy-of-a-falco-rule-file.md
     - sections/section-010/module-02/course-02-scope-a-shell-rule-to-a-namespace.md
     - sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
-    - sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
-    - sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+    - sections/section-010/module-02/course-04-test-a-live-sensor-in-a-linux-vm.md
+    - sections/section-010/module-02/course-05-detect-with-kubernetes-metadata.md
     quiz: sections/section-010/module-02/quiz.yaml
   - id: module-03
     title: Detecting Command Execution Through API Audit Records
@@ -554,7 +554,7 @@ sections:
       adapted_from: null
     - reading: sections/section-050/module-03/course-03-forwarding-and-retention-policy.md
       adapted_from: null
-    - reading: sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
+    - reading: sections/section-050/module-03/course-04-verify-audit-webhook-delivery.md
       adapted_from: null
     labs:
     - id: lab-01
@@ -565,7 +565,7 @@ sections:
       runtime_verification: passed
     - id: lab-02
       path: sections/section-050/module-03/labs/lab-02
-      after_reading: sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
+      after_reading: sections/section-050/module-03/course-04-verify-audit-webhook-delivery.md
       objective: A fresh audit event reaches the authenticated TLS collector outside the control-plane
         container
       status: alpha
@@ -574,5 +574,5 @@ sections:
     - sections/section-050/module-03/course-01-rotation-flags-and-disk-use.md
     - sections/section-050/module-03/course-02-protecting-the-log-file.md
     - sections/section-050/module-03/course-03-forwarding-and-retention-policy.md
-    - sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
+    - sections/section-050/module-03/course-04-verify-audit-webhook-delivery.md
     quiz: sections/section-050/module-03/quiz.yaml

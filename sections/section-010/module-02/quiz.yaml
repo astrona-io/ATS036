@@ -13,7 +13,7 @@ scope:
   title: "Writing Runtime Detection Rules"
 placement:
   position: after
-  reading: sections/section-010/module-02/course-04-summary.md
+  reading: sections/section-010/module-02/course-06-summary.md
 questions:
   - id: ats036-010-02-q01
     type: single_choice

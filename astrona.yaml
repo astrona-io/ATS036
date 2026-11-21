@@ -114,7 +114,7 @@ modules:
     path: sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
   - type: reading
     title: Test A Live Sensor In A Linux VM
-    path: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
+    path: sections/section-010/module-02/course-04-test-a-live-sensor-in-a-linux-vm.md
   - type: reading
     title: "Test A Falco Rule Against Live Processes \u2014 Task"
     path: sections/section-010/module-02/labs/lab-02/question.md
@@ -136,7 +136,7 @@ modules:
     path: sections/section-010/module-02/labs/lab-02/solution.md
   - type: reading
     title: Join A Runtime Event To Kubernetes Identity
-    path: sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+    path: sections/section-010/module-02/course-05-detect-with-kubernetes-metadata.md
   - type: reading
     title: "Scope Live Falco Events With Kubernetes Metadata \u2014 Task"
     path: sections/section-010/module-02/labs/lab-03/question.md
@@ -153,7 +153,7 @@ modules:
     path: sections/section-010/module-02/labs/lab-03/solution.md
   - type: reading
     title: Summary
-    path: sections/section-010/module-02/course-04-summary.md
+    path: sections/section-010/module-02/course-06-summary.md
   - type: quiz
     title: 'Knowledge Check: Writing Runtime Detection Rules'
     path: sections/section-010/module-02/quiz.yaml
@@ -685,7 +685,7 @@ modules:
     path: sections/section-050/module-03/course-03-forwarding-and-retention-policy.md
   - type: reading
     title: Verify Delivery To An Audit Webhook
-    path: sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
+    path: sections/section-050/module-03/course-04-verify-audit-webhook-delivery.md
   - type: reading
     title: "Deliver Audit Metadata Outside The Control Plane \u2014 Task"
     path: sections/section-050/module-03/labs/lab-02/question.md
@@ -702,7 +702,7 @@ modules:
     path: sections/section-050/module-03/labs/lab-02/solution.md
   - type: reading
     title: Summary
-    path: sections/section-050/module-03/course-04-summary.md
+    path: sections/section-050/module-03/course-05-summary.md
   - type: quiz
     title: 'Knowledge Check: Retaining And Protecting Audit Logs'
     path: sections/section-050/module-03/quiz.yaml

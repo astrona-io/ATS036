@@ -13,7 +13,7 @@ scope:
   title: "Retaining And Protecting Audit Logs"
 placement:
   position: after
-  reading: sections/section-050/module-03/course-04-summary.md
+  reading: sections/section-050/module-03/course-05-summary.md
 questions:
   - id: ats036-050-03-q01
     type: single_choice

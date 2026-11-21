@@ -63,6 +63,36 @@ for section in outline.get("modules", []):
                 require(item.get("estimated_duration") == f"{minutes}m",
                         f"{path}: estimated_duration must be {minutes}m to match the time line")
 
+# Course pages carry no links, except the Introduction's contributors, issues
+# and license links. Part files are numbered in reading order.
+INTRO_LINK = re.compile(r"^https://github\.com/[^/]+/[^/]+/(graphs/contributors|issues|blob/main/LICENSE)$")
+pages = set(ROOT.glob("sections/*/module-*/playground/docs/overview.md"))
+for section in outline.get("modules", []):
+    numbers = {}
+    for item in section.get("content", []):
+        path = item.get("path", "")
+        if item.get("type") == "reading":
+            pages.add(ROOT / path)
+            part = re.match(r"(.*/module-\d+)/course-(\d+)([a-z]?)-", path)
+            if part:
+                module, number, suffix = part.groups()
+                require(not suffix, f"{path}: number parts in reading order, without a letter suffix")
+                previous = numbers.get(module, 0)
+                require(int(number) == previous + 1,
+                        f"{path}: part number {int(number)} should be {previous + 1} in reading order")
+                numbers[module] = int(number)
+        elif item.get("type") == "lab":
+            pages.update({ROOT / path / "question.md", ROOT / path / "solution.md"})
+for page in sorted(pages):
+    if not page.is_file():
+        continue
+    prose = re.sub(r"^```.*?^```", "", page.read_text(), flags=re.M | re.S)
+    prose = re.sub(r"`[^`\n]*`", "", prose)
+    for target in re.findall(r"\]\(([^)]*)\)", prose):
+        allowed = "/intro/" in str(page) and INTRO_LINK.match(target)
+        require(bool(allowed), f"{page.relative_to(ROOT)}: course pages must not link ({target})")
+    require("Prepare with" not in prose, f"{page.relative_to(ROOT)}: replace the 'Prepare with' lab pointer with prose")
+
 counts = Counter(registered)
 for path, count in counts.items():
     require(count == 1, f"Duplicate lab registration: {path}")

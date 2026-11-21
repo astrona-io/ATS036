@@ -12,7 +12,7 @@ labs:
     preparation:
     - sections/section-010/module-02/course-01-anatomy-of-a-falco-rule-file.md
     - sections/section-010/module-02/course-03-exceptions-testing-and-limits-of-a-rule.md
-    - sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
+    - sections/section-010/module-02/course-04-test-a-live-sensor-in-a-linux-vm.md
   sections/section-010/module-03/labs/lab-01:
     preparation:
     - sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
@@ -68,10 +68,10 @@ labs:
     - sections/section-050/module-03/course-02-protecting-the-log-file.md
   sections/section-010/module-02/labs/lab-03:
     preparation:
-    - sections/section-010/module-02/course-03b-detect-with-kubernetes-metadata.md
+    - sections/section-010/module-02/course-05-detect-with-kubernetes-metadata.md
   sections/section-050/module-03/labs/lab-02:
     preparation:
-    - sections/section-050/module-03/course-03a-verify-audit-webhook-delivery.md
+    - sections/section-050/module-03/course-04-verify-audit-webhook-delivery.md
 additional_readings:
 - sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
 - sections/section-010/module-01/course-04-triage-tuning-and-response.md

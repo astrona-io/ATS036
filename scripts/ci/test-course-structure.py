@@ -128,6 +128,29 @@ class CourseStructureTests(unittest.TestCase):
         self.save_outline()
         self.assert_rejected("estimated_duration must be 8m")
 
+    def test_link_on_course_page_fails(self):
+        self.write(LESSON, "# Discovery\n\nRead [the task](labs/lab-01/question.md).\n")
+        self.assert_rejected("course pages must not link")
+
+    def test_link_inside_code_is_allowed(self):
+        self.write(LESSON, "# Discovery\n\n```sh\necho '[a](b)'\n```\n")
+        result = self.run_check()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_lettered_part_number_fails(self):
+        lettered = MODULE + "/course-01a-discovery.md"
+        self.write(lettered, "# Discovery\n")
+        self.content[0]["path"] = lettered
+        self.save_outline()
+        self.assert_rejected("without a letter suffix")
+
+    def test_part_numbers_follow_reading_order(self):
+        later = MODULE + "/course-03-later.md"
+        self.write(later, "# Later\n")
+        self.content.insert(0, {"type": "reading", "path": later})
+        self.save_outline()
+        self.assert_rejected("should be 1 in reading order")
+
     def test_runtime_collision_fails(self):
         playground = MODULE + "/playground"
         self.write_yaml(playground + "/config.yaml", {"metadata": {"name": "discovery"}})

@@ -10,17 +10,17 @@ A good rule is narrow. It combines the creation of a process with the container 
 
 Approved behavior needs an exception, not a disabled rule. An exception compares several fields at once, for example namespace, container, parent process and command line, so it excludes only the approved case. A rule is tested in three steps: validate the file, produce the behavior and check the alert, and produce the normal behavior and check that it stays quiet.
 
-A process rule sees only process creation. It does not see file reads, network connections or API calls made by a process that already runs, and it detects nothing on a node where the sensor is not running. A rule file in a ConfigMap is only stored text until the sensor loads it. The key facts to remember are these:
+A process rule sees only process creation. It does not see file reads, network connections or API calls made by a process that already runs, and it detects nothing on a node where the sensor is not running. A rule file in a ConfigMap is only stored text until the sensor loads it.
+
+A rule in a running sensor is tested with a positive case first. A quiet sensor can mean a narrow rule, an approved exception, a stopped service or a failed driver, so silence alone proves nothing. In a Linux virtual machine (VM), Falco's modern eBPF sensor sees real process events. A rule scoped to a Linux account proves detection on the host, but not that Kubernetes metadata is present.
+
+The `k8smeta` plugin joins a process event to the workload that owns it. It receives metadata from a collector and adds fields such as the namespace, the Pod name and the Pod UID. A Pod name can come back after the Pod is replaced, so the UID identifies the exact Pod object. An exception that names a namespace and a command keeps the rule active for every other shell.
+
+The key facts to remember are these:
 
 - A rule has a condition, an output and a priority.
 - Scope a rule with the container macro, a namespace and specific process names.
 - Tune with a narrow exception, not by disabling the rule.
 - A rule that has never been tested has not been shown to work.
-
-
-
-## Independent live assessment
-
-Prepare with [Test A Live Sensor In A Linux VM](course-03a-test-a-live-sensor-in-a-linux-vm.md). [Test A Falco Rule Against Live Processes](labs/lab-02/question.md) uses its own qemu environment. Prove live shell detection and a narrow exception with real kernel events.. [Report And Contain Suspicious Behavior From Audit Evidence](labs/lab-01/question.md) uses its own kind environment. Report a denied Secret request and an exec from the audit log, then quarantine the Pod without deleting it..
 
 <!-- astrona:playground:destroy -->
