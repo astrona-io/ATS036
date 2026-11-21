@@ -26,7 +26,7 @@ sections:
 - id: section-010
   title: Perform behavioral analytics to detect malicious activities
   curriculum_item: Perform behavioral analytics to detect malicious activities
-  capstone: true
+  capstone: false
   section_quiz: false
   modules:
   - id: module-01
@@ -62,8 +62,6 @@ sections:
     - Add an exception for approved behavior without disabling the rule.
     - Explain what a process rule cannot see.
     - Prove live shell detection and a narrow exception with real kernel events.
-    - Report a denied Secret request and an exec from the audit log, then quarantine the Pod without deleting
-      it.
     - Fresh shell events in the protected namespace include real Kubernetes identity; Approved commands
       and an outside namespace remain silent while a later protected event is detected
     outline:
@@ -86,13 +84,6 @@ sections:
       path: sections/section-010/module-02/labs/lab-02
       after_reading: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
       objective: Prove live shell detection and a narrow exception with real kernel events.
-      status: alpha
-      runtime_verification: pending
-    - id: lab-01
-      path: sections/section-010/capstone/labs/lab-01
-      after_reading: sections/section-010/module-02/course-03a-test-a-live-sensor-in-a-linux-vm.md
-      objective: Report a denied Secret request and an exec from the audit log, then quarantine the Pod
-        without deleting it.
       status: alpha
       runtime_verification: pending
     - id: lab-03
@@ -130,7 +121,7 @@ sections:
 - id: section-020
   title: Detect threats within physical infrastructure, apps, networks, data, users and workloads
   curriculum_item: Detect threats within physical infrastructure, apps, networks, data, users and workloads
-  capstone: true
+  capstone: false
   section_quiz: false
   modules:
   - id: module-01
@@ -184,7 +175,7 @@ sections:
 - id: section-030
   title: Investigate and identify phases of attack and bad actors within the environment
   curriculum_item: Investigate and identify phases of attack and bad actors within the environment
-  capstone: true
+  capstone: false
   section_quiz: false
   modules:
   - id: module-01
@@ -265,7 +256,7 @@ sections:
 - id: section-040
   title: Ensure immutability of containers at runtime
   curriculum_item: Ensure immutability of containers at runtime
-  capstone: true
+  capstone: false
   section_quiz: false
   modules:
   - id: module-01
@@ -350,13 +341,6 @@ sections:
       status: alpha
       runtime_verification: pending
     quiz: sections/section-040/module-03/quiz.yaml
-  capstone_lab:
-    path: sections/section-040/capstone/labs/lab-01
-    objective: Harden a Deployment and add an admission rule that rejects new Pods with a writable root
-      filesystem in one namespace.
-    difficulty: advanced
-    status: alpha
-    runtime_verification: pending
 - id: section-050
   title: Use Kubernetes audit logs to monitor access
   curriculum_item: Use Kubernetes audit logs to monitor access

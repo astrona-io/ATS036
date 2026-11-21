@@ -15,9 +15,9 @@ the platform inserts the registered lab afterwards.
 Default to three to five related tasks and 10–15 minutes of student work. Existing
 shorter exercises may retain two tasks when they cover one complete outcome.
 Count startup and reconciliation separately. Split independent faults or different
-investigations; do not add steps merely to reach a count. Keep integration work in
-capstones. Each lab must bootstrap independently, with only its assigned missing
-result or fault.
+investigations; do not add steps merely to reach a count. The course has no
+section capstones. Each lab must bootstrap independently, with only its assigned
+missing result or fault.
 
 When a lesson introduces a new assessable skill, map it to an observable result
 and grader. Add a lab if no existing task covers it. Supporting concepts can
@@ -80,8 +80,7 @@ To resume in a new session, say:
 ## Teaching and assessment coverage
 
 Maintain explicit preparation in [TEACHING-COVERAGE.yaml](TEACHING-COVERAGE.yaml).
-Every lab needs earlier preparation in its own module, or its section for a
-capstone. List technical readings without a module assessment in
+Every lab needs earlier preparation in its own module. List technical readings without a module assessment in
 `additional_readings`. Regenerate [LAB-COVERAGE.md](LAB-COVERAGE.md) and review
 both directions. A link does not prove that the whole lesson is assessed;
 record remaining practical gaps in [COVERAGE-REVIEW.md](COVERAGE-REVIEW.md).

@@ -27,16 +27,17 @@ def validate(course, coverage):
         prep = mapping.get('preparation', [])
         if not prep or len(prep) != len(set(prep)):
             raise ValueError(f'{path}: preparation must contain unique reading paths')
-        scope = path.split('/labs/')[0] if '/module-' in path else path.split('/capstone/')[0]
+        if '/module-' not in path:
+            raise ValueError(f'{path}: every lab must belong to a module')
+        scope = path.split('/labs/')[0]
         for reading in prep:
             if reading not in readings or not technical(reading):
                 raise ValueError(f'{path}: unknown technical reading {reading}')
             if positions[reading] >= positions[path]:
                 raise ValueError(f'{path}: preparation must precede the lab: {reading}')
             if not reading.startswith(scope + '/'):
-                raise ValueError(f'{path}: preparation must belong to the same module or capstone section')
-        if '/module-' in path:
-            used.update(prep)
+                raise ValueError(f'{path}: preparation must belong to the same module')
+        used.update(prep)
     additional = coverage.get('additional_readings', [])
     expected = {path for path in readings if technical(path)} - used
     if len(additional) != len(set(additional)) or set(additional) != expected:
@@ -69,12 +70,9 @@ def render(root=ROOT):
         runtime = config['runtime']['type']
         lifecycle = link(runtime + ' reference lifecycle', path + '/config.yaml')
         lines.append(f'| {prep} | {task} | {descriptions} | {lifecycle} |')
-        if '/module-' in path:
-            for reading in preparation:
-                reverse[reading].append(task)
+        for reading in preparation:
+            reverse[reading].append(task)
     lines += ['', '## Readings and their module labs', '',
-              'Section capstones integrate several modules and are listed above. '
-              'They do not make every preceding reading a separately graded skill.', '',
               '| Technical reading | Related module task |', '| --- | --- |']
     for path, tasks in reverse.items():
         result = '<br>'.join(tasks) if tasks else 'Supporting concepts or ungraded practice; no module-lab link'

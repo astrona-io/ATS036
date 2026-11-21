@@ -16,7 +16,6 @@ Read the module landing page, the deep-dive parts and the closing summary in ord
 1. Security Observability And Evidence Quality: signals by layer, workload logs and exit evidence, and evidence gaps.
 2. Detecting Risky Workloads From Events, Specifications And Logs: events, risky Pod settings and application log signals.
 3. Detecting Threats To Data And User Accounts: ServiceAccounts, Secret access review and Secret exposure paths.
-4. Capstone: triage four findings and revoke Secret access.
 
 ## Learning Outcomes
 
