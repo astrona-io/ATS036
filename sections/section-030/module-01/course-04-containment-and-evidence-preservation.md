@@ -1,5 +1,4 @@
 ---
-draft: true
 exam_objectives:
 - Investigate and identify phases of attack and bad actors within the environment
 ---

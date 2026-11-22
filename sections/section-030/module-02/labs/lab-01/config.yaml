@@ -24,11 +24,29 @@ teardown:
   keepCluster: false
 testing:
   init:
+  - name: verify-start
+    type: file
+    source: testing/verify-start.sh
   - name: reference-result
     type: file
     source: solution/apply.sh
-validation:
-  script:
-    name: verify-fields-and-live-evidence
+  - name: wait-solved
     type: file
-    source: validate.sh
+    source: testing/wait-solved.sh
+validation:
+  scripts:
+  - name: persistence-finding
+    description: The report preserves the persistence and authority relationships
+    type: file
+    source: validation/validate-persistence-finding.sh
+    points: 1
+  - name: stop-persistence
+    description: The Deployment remains as evidence with no running Pods
+    type: file
+    source: validation/validate-stop-persistence.sh
+    points: 1
+  - name: revoke-authority
+    description: The attacker RoleBinding is removed
+    type: file
+    source: validation/validate-revoke-authority.sh
+    points: 1

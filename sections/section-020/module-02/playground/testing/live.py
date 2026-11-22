@@ -1,3 +1,4 @@
+import os
 evidence=get('pod','suspect-pod')
 container=evidence['spec']['containers'][0]
 assert container['securityContext']['privileged'] is True, 'Preserve the evidence Pod'

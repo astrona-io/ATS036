@@ -9,7 +9,7 @@
         "kind": "Pod",
         "metadata": {
           "name": "restricted-reader",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-040-01-01"
         },
         "spec": {
           "restartPolicy": "Never",
@@ -53,10 +53,12 @@
               "name": "scratch",
               "emptyDir": {}
             }
-          ]
+          ],
+          "automountServiceAccountToken": false
         }
       },
-      "state": "pod"
+      "state": "pod",
+      "outcome": "restricted-reader"
     }
   ],
   "behavior": [
@@ -64,20 +66,21 @@
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-01-01",
         "exec",
         "restricted-reader",
         "--",
         "id",
         "-u"
       ],
-      "equals": "1000"
+      "equals": "1000",
+      "outcome": "restricted-reader"
     },
     {
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-01-01",
         "exec",
         "restricted-reader",
         "--",
@@ -85,13 +88,14 @@
         "-c",
         "printf allowed > /scratch/result; cat /scratch/result"
       ],
-      "equals": "allowed"
+      "equals": "allowed",
+      "outcome": "restricted-reader"
     },
     {
       "args": [
         "kubectl",
         "-n",
-        "starfleet",
+        "starfleet-036-040-01-01",
         "exec",
         "restricted-reader",
         "--",
@@ -102,7 +106,10 @@
       "denied": true,
       "failure_markers": [
         "read-only file system"
-      ]
+      ],
+      "outcome": "restricted-reader"
     }
-  ]
+  ],
+  "cluster": "astro-ats-036-lab-040-01-01",
+  "namespace": "starfleet-036-040-01-01"
 }

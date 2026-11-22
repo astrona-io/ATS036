@@ -4,7 +4,7 @@
     {
       "kind": "deployment",
       "name": "probe",
-      "namespace": "starfleet",
+      "namespace": "starfleet-036-010-02-01",
       "expected": {
         "metadata": {
           "name": "probe"
@@ -15,14 +15,17 @@
     {
       "kind": "configmap",
       "name": "shell-in-probe-rule",
-      "namespace": "starfleet",
+      "namespace": "starfleet-036-010-02-01",
       "expected": {
         "metadata": {
           "name": "shell-in-probe-rule",
-          "namespace": "starfleet"
+          "namespace": "starfleet-036-010-02-01"
         }
-      }
+      },
+      "outcome": "shell-rule"
     }
   ],
-  "behavior": []
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-010-02-01",
+  "namespace": "starfleet-036-010-02-01"
 }

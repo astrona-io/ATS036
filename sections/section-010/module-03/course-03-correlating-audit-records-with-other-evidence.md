@@ -1,5 +1,4 @@
 ---
-draft: true
 exam_objectives:
 - Perform behavioral analytics to detect malicious activities
 ---

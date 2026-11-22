@@ -24,11 +24,19 @@ teardown:
   keepCluster: false
 testing:
   init:
+  - name: verify-start
+    type: file
+    source: testing/verify-start.sh
   - name: reference-result
     type: file
     source: solution/apply.sh
-validation:
-  script:
-    name: verify-fields-and-live-evidence
+  - name: wait-solved
     type: file
-    source: validate.sh
+    source: testing/wait-solved.sh
+validation:
+  scripts:
+  - name: shell-rule
+    description: The stored rule scopes shell detection and names useful evidence
+    type: file
+    source: validation/validate-shell-rule.sh
+    points: 2

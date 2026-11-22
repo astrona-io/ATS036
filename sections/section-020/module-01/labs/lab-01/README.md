@@ -1,5 +1,4 @@
 ---
-draft: true
 exam_objectives:
 - Detect threats within physical infrastructure, apps, networks, data, users and workloads
 ---

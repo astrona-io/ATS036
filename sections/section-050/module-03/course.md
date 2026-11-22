@@ -1,13 +1,12 @@
 ---
-draft: true
 exam_objectives:
 - Use Kubernetes audit logs to monitor access
 ---
 # Retaining And Protecting Audit Logs
 
-An audit log helps an investigation only if it still exists, has not been changed and can be read by the right people only. The API server writes the log to a file with rotation limits, and a node administrator can read, copy or delete that file. This module covers how rotation decides how long evidence lives, how to protect the log file, and how to forward events off the node with the webhook backend.
+An audit log helps an investigation only if it still exists, has not been changed and can be read by the right people only. The API server writes the log to a file with rotation limits, and a node administrator can read, copy or delete that file. This module covers how rotation decides how long evidence lives, how to protect the log file, how to forward events off the node with the webhook backend, and how to check that the events really arrive.
 
-The three parts are: **Rotation Flags And Disk Use**, which explains `--audit-log-maxage`, `--audit-log-maxbackup` and `--audit-log-maxsize` and the amount of evidence they keep; **Protecting The Log File**, which covers the file mode, the owner and what an event reveals; and **Forwarding And Retention Policy**, which covers the webhook backend and the choice between losing events and losing availability.
+The four parts are: **Rotation Flags And Disk Use**, which explains `--audit-log-maxage`, `--audit-log-maxbackup` and `--audit-log-maxsize` and the amount of evidence they keep; **Protecting The Log File**, which covers the file mode, the owner and what an event reveals; **Forwarding And Retention Policy**, which covers the webhook backend and the choice between losing events and losing availability; and **Verify Delivery To An Audit Webhook**, which runs a receiver outside the control-plane container and checks on the receiving side that events arrive over authenticated TLS (Transport Layer Security). The last part uses its own Linux virtual machine (VM), not the kind playground.
 
 ## Learning objectives
 

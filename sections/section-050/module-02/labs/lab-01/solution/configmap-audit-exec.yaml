@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: audit-exec
-  namespace: starfleet
+  namespace: starfleet-036-050-02-01
 data:
   resource: pods
   subresource: exec

@@ -2,14 +2,14 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: shell-in-probe-rule
-  namespace: starfleet
+  namespace: starfleet-036-010-02-01
 data:
   rules.yaml: |
     - rule: Shell started in probe namespace
-      desc: A shell started inside a container of the starfleet namespace
+      desc: A shell started inside a container of the starfleet-036-010-02-01 namespace
       condition: >
         spawned_process and container
-        and k8s.ns.name = starfleet
+        and k8s.ns.name = starfleet-036-010-02-01
         and proc.name in (sh, bash, ash)
       output: >
         Shell started (pod=%k8s.pod.name namespace=%k8s.ns.name

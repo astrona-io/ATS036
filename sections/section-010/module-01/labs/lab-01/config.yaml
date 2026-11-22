@@ -24,11 +24,19 @@ teardown:
   keepCluster: false
 testing:
   init:
+  - name: verify-start
+    type: file
+    source: testing/verify-start.sh
   - name: reference-result
     type: file
     source: solution/apply.sh
-validation:
-  script:
-    name: verify-fields-and-live-evidence
+  - name: wait-solved
     type: file
-    source: validate.sh
+    source: testing/wait-solved.sh
+validation:
+  scripts:
+  - name: audit-finding
+    description: The finding matches a real denied Secret request
+    type: file
+    source: validation/validate-audit-finding.sh
+    points: 2

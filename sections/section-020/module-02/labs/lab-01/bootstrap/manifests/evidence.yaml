@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: suspect-pod
-  namespace: starfleet
+  namespace: starfleet-036-020-02-01
   labels:
     app: suspect
 spec:
@@ -29,7 +29,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: login-service
-  namespace: starfleet
+  namespace: starfleet-036-020-02-01
   labels:
     app: login-service
 spec:

@@ -1,5 +1,4 @@
 ---
-draft: true
 exam_objectives:
 - Ensure immutability of containers at runtime
 ---

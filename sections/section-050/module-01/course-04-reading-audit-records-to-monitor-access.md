@@ -1,5 +1,4 @@
 ---
-draft: true
 exam_objectives:
 - Use Kubernetes audit logs to monitor access
 ---
