@@ -49,6 +49,19 @@ expect() {
   [[ "$2" == *"$3"* ]] || { printf 'FAIL: %s\nwanted: %s\ngot: %s\n' "$1" "$3" "$2" >&2; exit 1; }
 }
 
+# While the kubelet restarts the container, kubectl can print "unable to
+# retrieve container logs" for a moment. Retry the page command for a bounded time.
+read_previous_log() {
+  local output attempt
+  for attempt in $(seq 1 20); do
+    if output="$(kubectl -n starfleet logs crash-report -c report --previous "$@" 2>&1)" && [[ "$output" != *'unable to retrieve container logs'* ]]; then
+      printf '%s\n' "$output"; return 0
+    fi
+    sleep 3
+  done
+  printf '%s\n' "$output"
+}
+
 expect_equal() {
   checks=$((checks + 1))
   printf 'check: %s\n' "$1"
@@ -73,12 +86,12 @@ last_exit="$(printf '%s' "$pod_json" | python3 -c 'import json, sys; print(json.
 restarts="$(printf '%s' "$pod_json" | python3 -c 'import json, sys; print(json.load(sys.stdin)["status"]["containerStatuses"][0]["restartCount"])')"
 expect_match 'guide: crash-report has restarted at least once' "$restarts" '^[1-9][0-9]*$'
 expect_equal 'guide: the last terminated instance exited with 12' "$last_exit" 12
-previous_log="$(kubectl -n starfleet logs crash-report -c report --previous --timestamps)"
+previous_log="$(read_previous_log --timestamps)"
 printf '%s\n' "$previous_log"
 expect_match 'guide: the previous log has the start marker with a timestamp' "$previous_log" "^$timestamp application-started\$"
 expect 'guide: apply creates crash-diagnosis' "$(save_from_page "$page" configmap-crash-diagnosis.yaml)" 'configmap/crash-diagnosis created'
 expect_equal 'guide: the diagnosis exitCode matches the last terminated instance' "$(kubectl -n starfleet get configmap crash-diagnosis -o jsonpath='{.data.exitCode}')" "$last_exit"
-expect_equal 'guide: the previous log contains the marker' "$(kubectl -n starfleet logs crash-report -c report --previous)" application-started
+expect_equal 'guide: the previous log contains the marker' "$(read_previous_log)" application-started
 
 # Security Signals By Layer
 page=course-01-security-signals-by-layer.md
@@ -107,7 +120,7 @@ crash_pod="$(kubectl -n starfleet get pod crash-report)"
 printf '%s\n' "$crash_pod"
 expect_match 'RESTARTS is at least 1 and STATUS is Error, CrashLoopBackOff or Running' "$crash_pod" '^crash-report +[01]/1 +(Error|CrashLoopBackOff|Running) +[1-9][0-9]* '
 expect_equal 'the last exit code and reason are 12 Error' "$(kubectl -n starfleet get pod crash-report -o jsonpath='{.status.containerStatuses[0].lastState.terminated.exitCode}{" "}{.status.containerStatuses[0].lastState.terminated.reason}{"\n"}')" '12 Error'
-previous_log="$(kubectl -n starfleet logs crash-report -c report --previous --timestamps)"
+previous_log="$(read_previous_log --timestamps)"
 printf '%s\n' "$previous_log"
 expect_match 'the previous log is application-started after a timestamp' "$previous_log" "^$timestamp application-started\$"
 probe_logs="$(kubectl -n starfleet logs -l app=probe --prefix --tail=3)"

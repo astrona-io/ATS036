@@ -89,9 +89,16 @@ expect 'Deployment has a creation time' "$template" 'creationTimestamp: '
 # The page also says to check metadata.managedFields in this output.
 # kubectl get -o yaml leaves managedFields out unless --show-managed-fields is
 # given, so the script does not check it.
-workloads="$(kubectl get deployments,daemonsets,statefulsets,cronjobs -A --sort-by=.metadata.creationTimestamp)"
+# The page says the combined command prints an error here, because the
+# playground has no StatefulSet or CronJob, and to run one kind at a time.
+if workloads="$(kubectl get deployments,daemonsets,statefulsets,cronjobs -A --sort-by=.metadata.creationTimestamp 2>&1)"; then
+  printf 'FAIL: the combined sorted list did not fail as the page says\n' >&2; exit 1
+fi
 printf '%s\n' "$workloads"
-expect 'newest Deployment, cache-sync, appears last' "$(printf '%s\n' "$workloads" | grep 'deployment.apps/' | tail -1)" 'deployment.apps/cache-sync'
+expect 'combined command prints the sort error' "$workloads" "couldn't find any field with path \"{.metadata.creationTimestamp}\" in the list of objects"
+workloads="$(kubectl get deployments -A --sort-by=.metadata.creationTimestamp)"
+printf '%s\n' "$workloads"
+expect 'newest Deployment, cache-sync, appears last' "$(printf '%s\n' "$workloads" | tail -1)" 'cache-sync'
 kubectl -n starfleet delete pod -l app=cache-sync
 second_pods="$(kubectl -n starfleet get pods -l app=cache-sync)"
 printf '%s\n' "$second_pods"

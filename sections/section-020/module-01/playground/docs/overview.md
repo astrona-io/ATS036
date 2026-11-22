@@ -26,7 +26,7 @@ kubectl -n starfleet get pod crash-report -o json
 kubectl -n starfleet logs crash-report -c report --previous --timestamps
 ```
 
-A restart creates a new container instance in the same Pod. Current logs and previous logs describe different instances. The last terminated status supplies the exit code for that previous process. Preserve the evidence Pod so the recorded diagnosis can be checked against the runtime.
+If kubectl prints `unable to retrieve container logs`, the kubelet is starting the container again at that moment, so wait a few seconds and run the command again. A restart creates a new container instance in the same Pod. Current logs and previous logs describe different instances. The last terminated status supplies the exit code for that previous process. Preserve the evidence Pod so the recorded diagnosis can be checked against the runtime.
 
 
 Save this as `configmap-crash-diagnosis.yaml`:

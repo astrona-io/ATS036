@@ -50,7 +50,7 @@ Replacing a container only restores the reviewed state if the image is the revie
 kubectl -n starfleet get pod "$new_pod" -o jsonpath='{.status.containerStatuses[0].imageID}{"\n"}'
 ```
 
-The value has the form `docker.io/library/python@sha256:` followed by 64 hexadecimal characters. In a Pod specification, write the image as `name@sha256:<digest>` to pin it. A pinned image gives the same content on every node and every restart.
+In this playground the value is `sha256:` followed by 64 hexadecimal characters. The image was loaded into the node directly and not pulled from a registry, so the container runtime reports only the local image ID. When a node pulls the image from a registry, the value has the form `docker.io/library/python@sha256:` followed by the 64-character digest of the image in that registry. In a Pod specification, write the image as `name@sha256:<digest>` to pin it. A pinned image gives the same content on every node and every restart.
 
 ```mermaid
 flowchart TB

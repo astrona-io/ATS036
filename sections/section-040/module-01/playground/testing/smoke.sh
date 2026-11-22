@@ -89,8 +89,8 @@ kubectl -n starfleet rollout status deployment/probe --timeout=180s
 image_id="$(kubectl -n starfleet get pod "$new_pod" -o jsonpath='{.status.containerStatuses[0].imageID}{"\n"}')"
 printf '%s\n' "$image_id"
 checks=$((checks + 1))
-printf 'check: %s\n' 'imageID is docker.io/library/python@sha256: and 64 hexadecimal characters'
-[[ "$image_id" =~ ^docker\.io/library/python@sha256:[0-9a-f]{64}$ ]] || { printf 'FAIL: imageID has another form: %s\n' "$image_id" >&2; exit 1; }
+printf 'check: %s\n' 'imageID is sha256: and 64 hexadecimal characters'
+[[ "$image_id" =~ ^sha256:[0-9a-f]{64}$ ]] || { printf 'FAIL: imageID has another form: %s\n' "$image_id" >&2; exit 1; }
 
 # Read-only root filesystem and security context
 page=course-02-read-only-root-filesystem-and-security-context.md
@@ -178,7 +178,7 @@ expect_equal 'outpost default may not exec in starfleet' "$(kubectl auth can-i c
 images="$(kubectl -n starfleet get pods -l app=probe -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.spec.containers[0].image}{" "}{.status.containerStatuses[0].imageID}{"\n"}{end}')"
 printf '%s\n' "$images"
 expect_equal 'each line has the tag from the specification' "$(printf '%s\n' "$images" | awk '{print $2}' | sort -u)" docker.io/library/python:3.13-alpine
-expect 'each line has the sha256 digest' "$(printf '%s\n' "$images" | awk '{print $3}' | sort -u)" '@sha256:'
+expect 'each line has the sha256 digest' "$(printf '%s\n' "$images" | awk '{print $3}' | sort -u)" 'sha256:'
 expect_equal 'all replicas show the same digest' "$(printf '%s\n' "$images" | awk '{print $3}' | sort -u | wc -l | tr -d ' ')" 1
 
 # Playground guide

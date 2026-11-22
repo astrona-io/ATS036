@@ -70,7 +70,7 @@ Search the whole cluster for objects of the same kind, sorted by age:
 kubectl get deployments,daemonsets,statefulsets,cronjobs -A --sort-by=.metadata.creationTimestamp
 ```
 
-The newest objects appear last. Compare them with what the team expects. An attacker with enough authority can also hide in `kube-system`, so search all namespaces and not only the one with the alert.
+When every listed kind has objects, the newest objects appear last. When one kind has no objects, kubectl prints `error: couldn't find any field with path "{.metadata.creationTimestamp}" in the list of objects` and no list. The playground has no StatefulSet or CronJob, so you see this error here. Run the same command for one kind at a time, starting with `deployments`, to get each sorted list. Compare them with what the team expects. An attacker with enough authority can also hide in `kube-system`, so search all namespaces and not only the one with the alert.
 
 ## Why the Pod is the wrong target
 
