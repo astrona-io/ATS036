@@ -11,9 +11,10 @@ Use a host shell with this lab's private kubeconfig. A kubeconfig is the file th
 ```sh
 export KUBECONFIG="$(astrona kubeconfig ats-036-lab-020-01-02)"
 test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-020-01-02" || exit 1
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 ```
 
-Keep this connection for the whole task. Every script of the lab refuses to run against another context. The commands below use `podman exec` to run a command inside a node container of this lab. If your lab runs on Docker, write `docker exec` instead.
+Keep this connection for the whole task. Every script of the lab refuses to run against another context. The commands below use `"$engine" exec` to run a command inside a node container of this lab. The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## Find the node and the Pod UID
 
@@ -47,7 +48,7 @@ astro-test-ats-036-lab-020-01-02-worker 6b30a61b-b372-405c-adfe-bcbd13ac5436
 The kubelet, the node agent that starts Pods, creates one directory for each Pod under `/var/log/pods`. The directory name has the form `<namespace>_<pod>_<uid>`. List the directories on the node:
 
 ```sh
-podman exec "$pod_node" ls /var/log/pods
+"$engine" exec "$pod_node" ls /var/log/pods
 ```
 
 ```text
@@ -67,7 +68,7 @@ Inside the Pod directory, the kubelet creates one directory for each container, 
 
 ```sh
 log_directory="/var/log/pods/starfleet-036-020-01-02_crash-report_${pod_uid}"
-podman exec "$pod_node" ls -l "$log_directory/report"
+"$engine" exec "$pod_node" ls -l "$log_directory/report"
 ```
 
 ```text
@@ -83,7 +84,7 @@ There are two files, `0.log` and `1.log`. `0.log` is larger, because the first i
 The crashed instance is the first one, so its file is `0.log`. Read it on the node:
 
 ```sh
-podman exec "$pod_node" cat "$log_directory/report/0.log"
+"$engine" exec "$pod_node" cat "$log_directory/report/0.log"
 ```
 
 ```text
@@ -96,7 +97,7 @@ Each line has the format that the container runtime uses for log files. It start
 The kubelet also keeps a second path to the same files. `/var/log/containers` holds one symbolic link for each container on the node, and many log collectors read from there:
 
 ```sh
-podman exec "$pod_node" ls -l /var/log/containers | grep crash-report
+"$engine" exec "$pod_node" ls -l /var/log/containers | grep crash-report
 ```
 
 ```text

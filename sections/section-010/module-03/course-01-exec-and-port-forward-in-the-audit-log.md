@@ -17,10 +17,13 @@ The audit policy is the list of rules that tells the API server what to record. 
 ```sh
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-010-03)"
 node_name="astro-ats-036-playground-010-03-control-plane"
-podman exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
+"$engine" exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
 ```
 
 The first rule uses the level `Metadata` for the namespace `starfleet` and for the resources `secrets`, `configmaps`, `pods`, `pods/exec` and `pods/portforward`. The last rule uses the level `None`, so every other request is not recorded. The API server uses the first rule that matches. The level `Metadata` records who, what, when and the result, and it does not record request or response bodies.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## Produce and find an exec request
 
@@ -61,7 +64,7 @@ for line in sys.stdin:
 Run it against the log from the node:
 
 ```sh
-podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 exec-report.py
+"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 exec-report.py
 ```
 
 Each line is one audit event for one `exec` request. The verb is `create` for POST or `get` for a WebSocket GET, and the resource name is the name of the Pod that received the request. The `requestURI` ends with the query parameters of the request, and the requested command appears as `command=` parameters. Look at the `stage` column: an `exec` request keeps a connection open, so check which stages your log contains and use the `auditID` to match the events of one request.

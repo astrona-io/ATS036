@@ -12,9 +12,10 @@ Use a host shell with this lab's private kubeconfig. A kubeconfig is the file th
 export KUBECONFIG="$(astrona kubeconfig ats-036-lab-010-03-02)"
 test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-010-03-02" || exit 1
 node_name="astro-ats-036-lab-010-03-02-control-plane"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 ```
 
-Keep this connection for the whole task. Every script of the lab refuses to run against another context. The commands below use `podman exec` to run a command inside a node container of this lab. If your lab runs on Docker, write `docker exec` instead.
+Keep this connection for the whole task. Every script of the lab refuses to run against another context. The commands below use `"$engine" exec` to run a command inside a node container of this lab. The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## Find the exec request in the audit log
 
@@ -59,7 +60,7 @@ for line in sys.stdin:
 Run it against the log on the control-plane node:
 
 ```sh
-podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 exec-report.py
+"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 exec-report.py
 ```
 
 ```text
@@ -111,7 +112,7 @@ pod_node="$(kubectl -n starfleet-036-010-03-02 get pod "$pod_name" -o jsonpath='
 You can confirm the ID on the node itself. In a kind cluster each node is a container with the same name as the node, and `crictl` is the command-line client of the container runtime inside it. `crictl` uses the ID without the `containerd://` prefix:
 
 ```sh
-podman exec "$pod_node" crictl ps --id "${container_id#containerd://}"
+"$engine" exec "$pod_node" crictl ps --id "${container_id#containerd://}"
 ```
 
 ```text

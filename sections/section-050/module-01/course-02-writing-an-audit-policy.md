@@ -62,10 +62,13 @@ Read the policy of the playground from the control plane node:
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-050-01)"
 kubectl config current-context
 node_name="astro-ats-036-playground-050-01-control-plane"
-podman exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
+"$engine" exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
 ```
 
 The file is one line of JSON. It omits the `RequestReceived` stage. Its first rule records `secrets`, `configmaps` and `pods` in the namespace `starfleet` at `Metadata`. Its second rule has level `None` without any filter, so every other request is not recorded. This is a narrow policy for training. A production policy usually ends with a broad `Metadata` rule and not with `None`.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## See what the policy skips
 
@@ -100,7 +103,7 @@ kubectl -n starfleet exec shuttle -- true
 Then check the result:
 
 ```sh
-podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-count.py
+"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-count.py
 ```
 
 The output lists lines of the form `resource subresource verb total`. You find `secrets - get`, `configmaps - get` and `pods - get`, which is the Pod read that `kubectl exec` does first. You find no line for `deployments`, because no rule matches Deployments and the last rule has level `None`. You find no line for the `outpost` namespace, for the same reason. You find no line for `pods exec`, because the resource name `pods` in a rule does not match the subresource `pods/exec`. The totals are higher than your own requests, because the controller manager and the kubelet also read these objects.

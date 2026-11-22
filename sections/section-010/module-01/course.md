@@ -31,7 +31,7 @@ Your playground is a `kind` cluster that runs Kubernetes 1.35 with one control p
 | `starfleet` | The `probe` Deployment with two replicas and a `probe` Service. The `shuttle` Pod, a BusyBox client. The `threat-client` Pod, which runs as the `threat-reader` ServiceAccount. The Secret `audit-token` |
 | `outpost` | The `drifter` Pod, a BusyBox client |
 
-The `probe` Pods run a small Python web server. The `threat-client` Pod has already sent one request that the API server denied. Commands run from your host shell, which has `kubectl` and `podman`. Host commands that touch a node name only this playground's node containers.
+The `probe` Pods run a small Python web server. The `threat-client` Pod has already sent one request that the API server denied. Commands run from your host shell, which has `kubectl` and a container engine, `podman` or `docker`. Host commands that touch a node name only this playground's node containers.
 
 Launch your playground now, and keep it running while you read the parts:
 

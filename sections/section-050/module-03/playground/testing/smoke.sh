@@ -4,8 +4,8 @@
 # scripts/ci/test-playground.sh runs it on the host with KUBECONFIG set to the
 # playground cluster. The bootstrap has already turned on auditing. The pages
 # show no command output, so each check tests the fact that the prose around
-# the command states. The pages run node commands with podman; this script
-# uses the container engine of the run (CI sets docker) and only the node
+# the command states. The pages run node commands with "$engine" exec; this
+# script uses the container engine of the run (CI sets docker) and only the node
 # containers of this playground.
 set -euo pipefail
 playground=ats-036-playground-050-03
@@ -70,7 +70,7 @@ expect_equal() {
 }
 
 # Run a command in the control plane node container, as the pages do with
-# podman exec "$node_name".
+# "$engine" exec "$node_name".
 on_node() {
   "$engine" exec "$node_name" "$@"
 }
@@ -132,10 +132,11 @@ expect_equal 'guide: the audit flags' "$(on_node grep -o -- '--audit-[a-z-]*=[^"
 guide_stat="$(on_node stat -c '%a %U %n' "$audit_log")"
 expect 'guide: the file stat names the owner and the file' "$guide_stat" " root $audit_log"
 save_file_from_page "$guide" record-retention.py python
-# The script of the page runs podman. Use the container engine of this run in
-# the work copy, the same way this script runs the podman exec commands.
-sed -i.orig "s/\['podman', 'exec'/['$engine', 'exec'/" record-retention.py
-expect 'guide: the work copy runs the container engine of this run' "$(cat record-retention.py)" "['$engine', 'exec', node_name"
+# The script of the page reads the container engine from
+# ASTRONA_CONTAINER_ENGINE with podman as the fallback. Run it with the engine
+# of this run, the same way this script runs the "$engine" exec commands.
+expect 'guide: the script reads the container engine from the environment' "$(cat record-retention.py)" '[(os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"), '"'exec', node_name"
+export ASTRONA_CONTAINER_ENGINE="$engine"
 python3 record-retention.py "$node_name" > configmap-audit-retention.json
 kubectl apply -f configmap-audit-retention.json
 kubectl -n starfleet get configmap audit-retention -o yaml

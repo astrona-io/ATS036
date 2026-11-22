@@ -11,9 +11,12 @@ export KUBECONFIG="$(astrona kubeconfig ats-036-lab-050-02-01)"
 test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-050-02-01" || exit 1
 node_name="astro-ats-036-lab-050-02-01-control-plane"
 worker_name="astro-ats-036-lab-050-02-01-worker"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 ```
 
 Keep this connection selected. Host-level commands name only this environment's node containers. They do not operate on the host operating system.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## Inspect And Explain
 
@@ -60,7 +63,7 @@ Check the report and look for the exec request in the log on the control plane n
 
 ```sh
 kubectl -n starfleet-036-050-02-01 get configmap audit-exec -o yaml
-podman exec "$node_name" grep -c 'pods/shuttle/exec' /var/log/training-audit/audit.jsonl
+"$engine" exec "$node_name" grep -c 'pods/shuttle/exec' /var/log/training-audit/audit.jsonl
 ```
 
 The count is the number of log lines that name the exec path of the `shuttle` Pod. It must be greater than `0`. The record holds the command in `requestURI`, not the output of the command. A matching ConfigMap alone does not prove that the request was audited.

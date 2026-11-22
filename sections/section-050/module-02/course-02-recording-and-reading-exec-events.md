@@ -16,10 +16,13 @@ The `kubectl exec` command sends a request to the API server. The API server aut
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-050-02)"
 kubectl config current-context
 node_name="astro-ats-036-playground-050-02-control-plane"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 kubectl -n starfleet exec shuttle -- id
 ```
 
 The command prints the user and group IDs of the process in the container. The audit record for this request exists now, even though the command output went only to your terminal.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## Read the record with a script
 
@@ -49,7 +52,7 @@ for line in sys.stdin:
 Run it on the log from the control plane node:
 
 ```sh
-podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-pod-access.py
+"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-pod-access.py
 ```
 
 Look for a line with the subresource `exec` and the Pod name `shuttle`. The user is the identity from your kubeconfig. The `requestURI` ends with a query string that contains `command=id`, and it can also name the container and the options `stdin`, `stdout` and `tty`. Lines for `log` can appear as well, because tools and controllers read Pod logs.

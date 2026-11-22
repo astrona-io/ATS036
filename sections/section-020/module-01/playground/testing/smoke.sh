@@ -4,8 +4,9 @@
 # give the result the page shows or describes.
 # scripts/ci/test-playground.sh runs it on the host with KUBECONFIG set to the
 # playground cluster, so the `export KUBECONFIG=...` lines of the pages are not
-# repeated here. The pages write `podman exec` for node commands; this script
-# uses "$engine" instead, because CI runs kind on docker.
+# repeated here. The pages write `"$engine" exec` for node commands, with
+# engine from ASTRONA_CONTAINER_ENGINE (CI sets docker); this script does the
+# same.
 set -euo pipefail
 playground=ats-036-playground-020-01
 context="${ASTRONA_KUBE_CONTEXT:-kind-astro-$playground}"

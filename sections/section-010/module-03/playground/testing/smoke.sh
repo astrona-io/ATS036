@@ -4,8 +4,9 @@
 # give the result the page shows or describes.
 # scripts/ci/test-playground.sh runs it on the host with KUBECONFIG set to the
 # playground cluster, so the `export KUBECONFIG=...` lines of the pages are not
-# repeated here. The pages write `podman exec` for node commands; this script
-# uses "$engine" instead, because CI runs kind on docker.
+# repeated here. The pages write `"$engine" exec` for node commands, with
+# engine from ASTRONA_CONTAINER_ENGINE (CI sets docker); this script does the
+# same.
 set -euo pipefail
 playground=ats-036-playground-010-03
 context="${ASTRONA_KUBE_CONTEXT:-kind-astro-$playground}"
@@ -38,8 +39,8 @@ open(target, 'w').write(match.group(1))
 PY
 }
 
-# The record-audit.py of the guide names podman, the default context and the
-# node of a default start. Point the work copy at this environment, and fail
+# The record-audit.py of the guide names the default context and the node of
+# a default start. It reads the container engine from ASTRONA_CONTAINER_ENGINE. Point the work copy at this environment, and fail
 # when the page no longer contains the names that are replaced.
 localize_script() {
   python3 - "$work_directory/$1" "$playground" "$engine" "$context" "$cluster" <<'PY'
@@ -47,7 +48,7 @@ import sys
 path, playground, engine, context, cluster = sys.argv[1:]
 text = open(path).read()
 for old, new in [
-    ("'podman'", repr(engine)),
+    ('(os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman")', '(os.environ.get("ASTRONA_CONTAINER_ENGINE") or ' + repr(engine) + ')'),
     ('"kind-astro-' + playground + '"', '"' + context + '"'),
     ('"astro-' + playground + '-control-plane"', '"' + cluster + '-control-plane"'),
     ("'astro-" + playground + "'", repr(cluster)),

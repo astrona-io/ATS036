@@ -10,9 +10,12 @@ Use a host shell with this lab's private kubeconfig. A kubeconfig is the file th
 export KUBECONFIG="$(astrona kubeconfig ats-036-lab-050-02-02)"
 test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-050-02-02" || exit 1
 node_name="astro-ats-036-lab-050-02-02-control-plane"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 ```
 
 Keep this connection for the whole task. The variable `node_name` holds the name of the control plane node container. The API server runs there as a static Pod, which is a Pod that the kubelet starts from a manifest file on the node, not from an object in the API.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## Find why exec leaves no record
 
@@ -20,7 +23,7 @@ An audit policy is a list of rules. The API server compares each request with th
 
 ```sh
 kubectl -n starfleet-036-050-02-02 exec shuttle -- id
-podman exec "$node_name" grep -c '"subresource":"exec"' /var/log/training-audit/audit.jsonl
+"$engine" exec "$node_name" grep -c '"subresource":"exec"' /var/log/training-audit/audit.jsonl
 ```
 
 ```text
@@ -31,7 +34,7 @@ uid=0(root) gid=0(root) groups=0(root),10(wheel)
 The first line is the output of `id`. The command ran in the container, but the count is `0`. The API server handled the exec request and wrote nothing about it. Read the policy to see why:
 
 ```sh
-podman exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
+"$engine" exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
 ```
 
 ```text
@@ -149,8 +152,8 @@ The fix is one rule for `pods/exec` and `pods/portforward` at the level `Metadat
 The rule that named only `pods` is gone, and the new rule has no `namespaces` filter, so it records exec and port-forward requests in every namespace. Copy the file to the path that the API server reads, then print it from the node to check that the copy arrived:
 
 ```sh
-podman cp training-audit-policy.json "$node_name":/etc/kubernetes/training-audit-policy.json
-podman exec "$node_name" head -n 20 /etc/kubernetes/training-audit-policy.json
+"$engine" cp training-audit-policy.json "$node_name":/etc/kubernetes/training-audit-policy.json
+"$engine" exec "$node_name" head -n 20 /etc/kubernetes/training-audit-policy.json
 ```
 
 ```text
@@ -181,8 +184,8 @@ podman exec "$node_name" head -n 20 /etc/kubernetes/training-audit-policy.json
 The API server reads the policy file only when it starts. A new file on the node changes nothing until the process restarts. The kubelet watches the directory `/etc/kubernetes/manifests` and runs one static Pod for each manifest in it. Move the API server manifest out of that directory, and the kubelet stops the API server. Check with `crictl`, the container runtime command-line tool on the node, that the container is gone:
 
 ```sh
-podman exec "$node_name" mv /etc/kubernetes/manifests/kube-apiserver.yaml /etc/kubernetes/kube-apiserver.yaml
-podman exec "$node_name" crictl ps --name kube-apiserver
+"$engine" exec "$node_name" mv /etc/kubernetes/manifests/kube-apiserver.yaml /etc/kubernetes/kube-apiserver.yaml
+"$engine" exec "$node_name" crictl ps --name kube-apiserver
 ```
 
 ```text
@@ -192,7 +195,7 @@ CONTAINER           IMAGE               CREATED             STATE               
 The output has only the column headers, so no `kube-apiserver` container runs. If it still lists one, run the `crictl` command again until it lists none. If you move the manifest back too early, the kubelet may never see that it was gone and keeps the old process. Then move the manifest back and wait, at most two minutes, until the new API server answers:
 
 ```sh
-podman exec "$node_name" mv /etc/kubernetes/kube-apiserver.yaml /etc/kubernetes/manifests/kube-apiserver.yaml
+"$engine" exec "$node_name" mv /etc/kubernetes/kube-apiserver.yaml /etc/kubernetes/manifests/kube-apiserver.yaml
 for attempt in $(seq 1 40); do kubectl --request-timeout=3s get --raw=/readyz && break; sleep 3; done
 ```
 
@@ -245,7 +248,7 @@ version=v1 host=probe-7db6ffd7d6-47wk2 greeting=hello
 The output is shortened to the `id` line and the answer of the `probe` application. `kubectl port-forward` also prints its own lines that start with `Forwarding from` once the API server has accepted the connection; they are left out here. The `probe` application answered the request through the tunnel. `kubectl` resolved the Service to one `probe` Pod, so the request went to the `portforward` subresource of that Pod. Now read the log:
 
 ```sh
-podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-pod-access.py
+"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-pod-access.py
 ```
 
 ```text

@@ -11,9 +11,12 @@ export KUBECONFIG="$(astrona kubeconfig ats-036-lab-050-03-01)"
 test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-050-03-01" || exit 1
 node_name="astro-ats-036-lab-050-03-01-control-plane"
 worker_name="astro-ats-036-lab-050-03-01-worker"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 ```
 
 Keep this connection selected. Host-level commands name only this environment's node containers. They do not operate on the host operating system.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## Inspect And Explain
 
@@ -29,14 +32,15 @@ Keep the provisioned audit configuration. Read the audit flags from the `kube-ap
 Read the audit flags and the file mode on the control plane node:
 
 ```sh
-podman exec "$node_name" grep -o -- '--audit-[a-z-]*=[^"]*' /etc/kubernetes/manifests/kube-apiserver.yaml
-podman exec "$node_name" stat -c '%a %U %n' /var/log/training-audit/audit.jsonl
+"$engine" exec "$node_name" grep -o -- '--audit-[a-z-]*=[^"]*' /etc/kubernetes/manifests/kube-apiserver.yaml
+"$engine" exec "$node_name" stat -c '%a %U %n' /var/log/training-audit/audit.jsonl
 ```
 
 Save this as `record-retention.py`. It reads both sources and writes the ConfigMap, so no value is typed by hand:
 
 ```python
 import json
+import os
 import subprocess
 import sys
 
@@ -44,7 +48,7 @@ node_name = sys.argv[1]
 
 
 def on_node(*args):
-    return subprocess.run(['podman', 'exec', node_name, *args], check=True, text=True, capture_output=True).stdout.strip()
+    return subprocess.run([(os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman"), 'exec', node_name, *args], check=True, text=True, capture_output=True).stdout.strip()
 
 
 manifest = json.loads(on_node('cat', '/etc/kubernetes/manifests/kube-apiserver.yaml'))
@@ -78,7 +82,7 @@ Compare the report with the node:
 
 ```sh
 kubectl -n starfleet-036-050-03-01 get configmap audit-retention -o yaml
-podman exec "$node_name" ls -l /var/log/training-audit
+"$engine" exec "$node_name" ls -l /var/log/training-audit
 ```
 
 The `logMode` in the ConfigMap must equal the mode in the `stat` output. A report copied from the reading instead of the node can differ from the live values.

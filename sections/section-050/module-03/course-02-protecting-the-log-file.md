@@ -20,15 +20,18 @@ The API server creates the file, so the owner and the mode come from the API ser
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-050-03)"
 kubectl config current-context
 node_name="astro-ats-036-playground-050-03-control-plane"
-podman exec "$node_name" stat -c '%a %U %n' /var/log/training-audit/audit.jsonl
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
+"$engine" exec "$node_name" stat -c '%a %U %n' /var/log/training-audit/audit.jsonl
 ```
 
 The first field is the permission mode in octal notation. The second is the owner. Read the mode as three digits for the owner, the group and everybody else. A digit of `6` allows reading and writing, `4` allows reading only and `0` allows nothing. Use the number you see, and do not assume it, because it depends on how the file was created.
 
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
+
 Then print the mode of the directory that holds the log:
 
 ```sh
-podman exec "$node_name" stat -c '%a %U %n' /var/log/training-audit
+"$engine" exec "$node_name" stat -c '%a %U %n' /var/log/training-audit
 ```
 
 The directory mode matters because a user who can write to the directory can delete or replace the file even if the file itself is read-only for that user.

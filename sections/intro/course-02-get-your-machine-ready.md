@@ -14,6 +14,8 @@ helm version --short
 openssl version
 ```
 
+Some commands in this course run a command inside a kind node container. They read the name of the container engine from the environment variable `ASTRONA_CONTAINER_ENGINE` and use `podman` when it is not set. If kind runs on Docker on your machine, run `export ASTRONA_CONTAINER_ENGINE=docker` in your shell before you start.
+
 From the local course checkout, start an ungraded environment through its configuration directory. The configuration directory must be in the checkout you use.
 
 ```sh

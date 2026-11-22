@@ -31,7 +31,7 @@ Your playground is a `kind` cluster that runs Kubernetes 1.35 with one control p
 | `starfleet` | The `probe` Deployment with two replicas and a `probe` Service. The `shuttle` Pod, a BusyBox client. The `threat-client` Pod. The Secret `audit-token` |
 | `outpost` | The `drifter` Pod, a BusyBox client |
 
-Setup has already run one `kubectl exec` into a `probe` Pod. Commands run from your host shell, which has `kubectl` and `podman`. Host commands that touch a node name only this playground's node containers.
+Setup has already run one `kubectl exec` into a `probe` Pod. Commands run from your host shell, which has `kubectl` and a container engine, `podman` or `docker`. Host commands that touch a node name only this playground's node containers.
 
 Launch your playground now, and keep it running while you read the parts:
 

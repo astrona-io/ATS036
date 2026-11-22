@@ -31,10 +31,13 @@ The audit policy tells the API server which requests to record and how much deta
 ```sh
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-010-01)"
 node_name="astro-ats-036-playground-010-01-control-plane"
-podman exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
+"$engine" exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
 ```
 
 The policy has `apiVersion` `audit.k8s.io/v1` and the global setting `omitStages` with the stage `RequestReceived`, so only later stages are written. It has two rules. The first rule uses the level `Metadata` for the resources `secrets`, `configmaps` and `pods` in the namespace `starfleet`. The last rule uses the level `None`, so every other request is not recorded. The API server checks the rules in order and uses the first rule that matches.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 The level `Metadata` records who, what, when and the result, but not the request body or the response body. That is why the audit log can be used as evidence of a Secret read without storing the Secret.
 
@@ -82,7 +85,7 @@ for line in sys.stdin:
 Run it against the log from the node:
 
 ```sh
-podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-report.py threat-reader
+"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-report.py threat-reader
 ```
 
 Each line is one audit event of the `threat-reader` ServiceAccount. You should see one or more lines with the verb `get`, the resource `secrets`, the namespace `starfleet`, the name `audit-token`, the stage `ResponseComplete` and the code `403`. There is one such line for each time the script ran. The `auditID` value is different for every request. You need the exact value when you write a finding that someone else must be able to look up.
@@ -90,7 +93,7 @@ Each line is one audit event of the `threat-reader` ServiceAccount. You should s
 To read the whole record for the last denial, print the last matching line of the file:
 
 ```sh
-podman exec "$node_name" grep '"code":403' /var/log/training-audit/audit.jsonl | tail -n 1
+"$engine" exec "$node_name" grep '"code":403' /var/log/training-audit/audit.jsonl | tail -n 1
 ```
 
 The JSON object has `requestURI` `/api/v1/namespaces/starfleet/secrets/audit-token`, `user.username` `system:serviceaccount:starfleet:threat-reader`, and an `annotations` object with `authorization.k8s.io/decision` set to `forbid`. There is no `requestObject` and no `responseObject`, because the level is `Metadata`.

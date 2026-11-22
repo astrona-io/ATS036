@@ -29,7 +29,10 @@ The audit log lists events in the order in which the API server wrote them, whic
 ```sh
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-030-01)"
 node_name="astro-ats-036-playground-030-01-control-plane"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 ```
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 Save this as `audit-timeline.py`:
 
@@ -61,7 +64,7 @@ for event in events:
 Run it:
 
 ```sh
-podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-timeline.py
+"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-timeline.py
 ```
 
 Each line is one event, oldest first. Read the user column. You see the identity that created the objects when the playground started, controllers that run as ServiceAccounts in the `kube-system` namespace and create or update Pods, and the `threat-reader` ServiceAccount with the code `403` at the end. The audit policy has the level `Metadata` for Secrets, ConfigMaps and Pods in `starfleet` and `None` for everything else, so the timeline holds only those. A gap in the list may be a policy choice, not an absence of activity.

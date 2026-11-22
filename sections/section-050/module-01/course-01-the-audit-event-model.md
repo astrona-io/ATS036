@@ -75,13 +75,16 @@ Select the playground cluster and trigger a read of the disposable Secret:
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-050-01)"
 kubectl config current-context
 node_name="astro-ats-036-playground-050-01-control-plane"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 kubectl -n starfleet get secret audit-token -o name
 ```
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 The command prints `secret/audit-token`. Wait a moment for the file write, then read the newest records of the audit log on the control plane node and format them:
 
 ```sh
-podman exec "$node_name" tail -n 40 /var/log/training-audit/audit.jsonl | grep audit-token | tail -n 1 | python3 -m json.tool
+"$engine" exec "$node_name" tail -n 40 /var/log/training-audit/audit.jsonl | grep audit-token | tail -n 1 | python3 -m json.tool
 ```
 
 The output is one event. Check these fields in it. `stage` is `ResponseComplete`, `verb` is `get`, `user.username` is the cluster administrator identity from your kubeconfig, `userAgent` starts with `kubectl`, `objectRef.resource` is `secrets`, `objectRef.name` is `audit-token`, and `responseStatus.code` is `200`. The event has no `requestObject` and no `responseObject`, because the policy level is `Metadata`.

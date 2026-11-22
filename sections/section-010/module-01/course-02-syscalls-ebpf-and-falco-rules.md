@@ -17,11 +17,14 @@ Check this in the playground. The first command asks a `probe` container for the
 ```sh
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-010-01)"
 worker_name="astro-ats-036-playground-010-01-worker"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 kubectl -n starfleet exec deploy/probe -- uname -r
-podman exec "$worker_name" uname -r
+"$engine" exec "$worker_name" uname -r
 ```
 
 Both commands print the same kernel release. The `probe` container has no kernel of its own. A sensor that watches syscalls on the node therefore sees the syscalls of every container on that node, and it can tell them apart by the container identifier that the kernel attaches to each process.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## How Falco gets events
 

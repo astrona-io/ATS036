@@ -28,13 +28,16 @@ The API server runs as a static Pod. The kubelet starts it from `/etc/kubernetes
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-050-03)"
 kubectl config current-context
 node_name="astro-ats-036-playground-050-03-control-plane"
-podman exec "$node_name" grep -o -- '--audit-[a-z-]*=[^"]*' /etc/kubernetes/manifests/kube-apiserver.yaml
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
+"$engine" exec "$node_name" grep -o -- '--audit-[a-z-]*=[^"]*' /etc/kubernetes/manifests/kube-apiserver.yaml
 ```
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 You see the policy file, the log path and the three rotation flags. In this playground the values are `1` for the maximum age in days, `1` for the number of backups and `10` for the maximum size in megabytes. Then list the log directory on the node:
 
 ```sh
-podman exec "$node_name" ls -l /var/log/training-audit
+"$engine" exec "$node_name" ls -l /var/log/training-audit
 ```
 
 The directory holds the active file `audit.jsonl` and any rotated files. A cluster that has only started has no rotated file yet.
