@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-credentials
+  namespace: starfleet-036-020-03-02
+type: Opaque
+stringData:
+  password: billing-db-6612
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ledger-token
+  namespace: starfleet-036-020-03-02
+type: Opaque
+stringData:
+  token: ledger-tok-3390
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billing
+  namespace: starfleet-036-020-03-02
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: billing
+  template:
+    metadata:
+      labels:
+        app: billing
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: billing
+        image: docker.io/library/busybox:1.37.0
+        command:
+        - sh
+        - -c
+        - exec sleep 86400
+        env:
+        - name: DB_HOST
+          value: db.starfleet-036-020-03-02.svc.cluster.local
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: password
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: reports
+  namespace: starfleet-036-020-03-02
+  labels:
+    app: reports
+spec:
+  terminationGracePeriodSeconds: 5
+  containers:
+  - name: reports
+    image: docker.io/library/busybox:1.37.0
+    command:
+    - sh
+    - -c
+    - exec sleep 86400
+    volumeMounts:
+    - name: db
+      mountPath: /etc/db
+      readOnly: true
+  volumes:
+  - name: db
+    secret:
+      secretName: db-credentials
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ledger
+  namespace: starfleet-036-020-03-02
+  labels:
+    app: ledger
+spec:
+  terminationGracePeriodSeconds: 5
+  containers:
+  - name: ledger
+    image: docker.io/library/busybox:1.37.0
+    command:
+    - sh
+    - -c
+    - exec sleep 86400
+    env:
+    - name: LEDGER_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: ledger-token
+          key: token

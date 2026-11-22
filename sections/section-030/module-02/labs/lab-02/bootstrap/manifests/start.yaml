@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: starfleet-036-030-02-02
+  labels:
+    project: starfleet-036-030-02-02
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: build-helper
+  namespace: starfleet-036-030-02-02
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: probe-reader
+  namespace: starfleet-036-030-02-02
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: probe-reader-view
+  namespace: starfleet-036-030-02-02
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+- kind: ServiceAccount
+  name: probe-reader
+  namespace: starfleet-036-030-02-02
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: node-report
+  namespace: starfleet-036-030-02-02
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      labels:
+        app: node-report
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: node-report
+        spec:
+          serviceAccountName: build-helper
+          hostPID: true
+          restartPolicy: Never
+          terminationGracePeriodSeconds: 5
+          containers:
+          - name: report
+            image: docker.io/library/busybox:1.37.0
+            command:
+            - sh
+            - -c
+            - ps -o pid,user,comm; sleep 600
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 64Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: probe-check
+  namespace: starfleet-036-030-02-02
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      labels:
+        app: probe-check
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: probe-check
+        spec:
+          serviceAccountName: probe-reader
+          restartPolicy: Never
+          containers:
+          - name: check
+            image: docker.io/library/busybox:1.37.0
+            command:
+            - sh
+            - -c
+            - echo probe-check ok
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 64Mi

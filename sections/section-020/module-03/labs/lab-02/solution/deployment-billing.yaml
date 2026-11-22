@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billing
+  namespace: starfleet-036-020-03-02
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: billing
+  template:
+    metadata:
+      labels:
+        app: billing
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: billing
+        image: docker.io/library/busybox:1.37.0
+        command:
+        - sh
+        - -c
+        - exec sleep 86400
+        env:
+        - name: DB_HOST
+          value: db.starfleet-036-020-03-02.svc.cluster.local
+        volumeMounts:
+        - name: db-credentials
+          mountPath: /etc/db
+          readOnly: true
+      volumes:
+      - name: db-credentials
+        secret:
+          secretName: db-credentials
+          defaultMode: 0400

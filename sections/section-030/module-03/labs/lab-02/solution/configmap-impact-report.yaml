@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: impact-report
+  namespace: starfleet-036-030-03-02
+data:
+  unlimitedWorkload: cruncher
+  oomKilledPod: memory-hog

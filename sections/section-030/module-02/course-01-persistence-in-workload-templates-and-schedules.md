@@ -83,6 +83,8 @@ kubectl -n starfleet get pods -l app=cache-sync
 
 The listing shows a Pod with a different name and a very young age. The ReplicaSet created it from the same template, with the same image and the same ServiceAccount. Deleting the Pod also removed its container log and its process state. You lost evidence and the attacker lost nothing.
 
+A CronJob works through two controllers. At each scheduled time, the CronJob controller creates a Job from the CronJob's `jobTemplate`, and the Job controller then creates the Pod, so the Pod's `ownerReferences` name a Job and the Job's `ownerReferences` name the CronJob. Setting `spec.suspend: true` tells the CronJob controller to create no new Jobs and keeps the CronJob and its template as evidence. It does not stop a Job that already runs: delete that Job, and the garbage collector in kube-controller-manager removes its Pods.
+
 You now know how to find the object that keeps code running. The next question is what authority that code holds, and who gave it.
 
 ## Common pitfalls

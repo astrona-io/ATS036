@@ -10,18 +10,18 @@ New QEMU labs collect real Falco events with Kubernetes namespace, Pod name and 
 
 ## Skills from the removed section capstones
 
-The five section capstones were removed so that every graded lab is a focused task that can join a lab exam. Each capstone combined skills from its section. The lists below name each graded skill and the module lab that still grades it. A skill marked "not graded" has teaching but no module lab yet; no new lab was added in the same change.
+The five section capstones were removed so that every graded lab is a focused task that can join a lab exam. Each capstone combined skills from its section. The lists below name each graded skill and the module lab that still grades it. A skill marked "not graded" has teaching but no module lab yet. Later changes added module labs for most of the skills that were not graded.
 
 Section 010, Report And Contain Suspicious Behavior From Audit Evidence:
 
 - Copy the actor and audit ID from the `ResponseComplete` record of a denied (403) Secret request: section 010 module 01 lab 01.
 - Copy the actor, audit ID, stage and Pod name from the audit record of an `exec` request: section 010 module 03 lab 01.
-- Quarantine a Pod by removing its `app` and `release` labels and adding `quarantine=true`, so that the Service stops sending it requests and the Deployment returns to two other replicas, without deleting the Pod: not graded.
+- Quarantine a Pod by removing its `app` and `release` labels and adding `quarantine=true`, so that the Service stops sending it requests and the Deployment returns to two other replicas, without deleting the Pod: section 010 module 01 lab 02.
 
 Section 020, Triage Four Findings And Revoke Secret Access:
 
 - Exit code of the previous container instance: section 020 module 01 lab 01.
-- Count the `login failed` lines in an application log: not graded. Section 020 module 01 lab 01 grades a marker in the previous log, but no lab grades counting log lines.
+- Count the `login failed` lines in an application log: section 020 module 02 lab 02.
 - Name the privileged Pod: section 020 module 02 lab 01.
 - Name the ServiceAccount that can read Secrets: section 020 module 03 lab 01.
 - Revoke access by deleting one RoleBinding and keeping a legitimate one: section 030 module 02 lab 01. No section 020 lab removes a binding.
@@ -32,7 +32,7 @@ Section 030, Investigate And Contain A Multi-Phase Incident:
 - Persistence Deployment and its RoleBinding; scale the Deployment to zero, delete the binding and keep `probe-reader-view`: section 030 module 02 lab 01.
 - Source Pod, namespace and IP address of unexpected requests to the `probe` Service: section 030 module 03 lab 01.
 - Combine the three findings into one report with the attack phases: not graded.
-- Label the intruding Pod `incident=quarantine` without deleting it: not graded.
+- Label the intruding Pod `incident=quarantine` without deleting it: section 030 module 01 lab 02.
 
 Section 040, Harden A Workload And Enforce A Read-Only Root Filesystem Policy:
 

@@ -1,0 +1,47 @@
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-036-lab-020-01-02
+  docs:
+    prerequisites: docs/prerequisites.md
+    examQuestion: question.md
+    caseStudy: docs/case-study.md
+    guide: solution.md
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.0@sha256:452d707d4862f52530247495d180205e029056831160e22870e37e3f6c1ac31f
+    preloadImages:
+    - docker.io/library/python:3.13-alpine
+    - docker.io/library/busybox:1.37.0
+    nodes:
+      workers: 1
+bootstrap:
+  init:
+  - name: seed-lab
+    type: file
+    source: bootstrap/setup.sh
+teardown:
+  keepCluster: false
+testing:
+  init:
+  - name: verify-start
+    type: file
+    source: testing/verify-start.sh
+  - name: reference-result
+    type: file
+    source: solution/apply.sh
+  - name: wait-solved
+    type: file
+    source: testing/wait-solved.sh
+validation:
+  scripts:
+  - name: pod-log-directory
+    description: The evidence names the node, the Pod UID and the Pod's log directory on that node
+    type: file
+    source: validation/validate-pod-log-directory.sh
+    points: 1
+  - name: instance-log-files
+    description: The evidence lists the log files of container report and the token from the previous instance's file
+    type: file
+    source: validation/validate-instance-log-files.sh
+    points: 1

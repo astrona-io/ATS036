@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: quarantine
+  namespace: starfleet-036-030-01-02
+spec:
+  podSelector:
+    matchLabels:
+      incident: quarantine
+  policyTypes:
+  - Ingress
+  - Egress

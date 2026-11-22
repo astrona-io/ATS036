@@ -26,19 +26,19 @@ AUTHORING.yaml records measurable goals and adaptation sources. Every objective 
 
 ## Hands-On Coverage
 
-This course has 15 ungraded module playgrounds (all on kind) and 18 graded labs (15 on kind, 3 on a qemu VM). Each lab sits right after the reading it practises, with its task before and its solution after. Each module also has a knowledge check of 10 questions. Every lab passed `astrona validate` and `astrona test` on its own runtime, and every playground started with `scripts/ci/test-playground.sh`. The three qemu labs need their own Linux kernel or host services: two run Falco with a live eBPF sensor (one on the host, one as a Helm release that adds Kubernetes metadata), and one sends audit events over TLS to a webhook collector outside the control plane container.
+This course has 15 ungraded module playgrounds (all on kind) and 26 graded labs (23 on kind, 3 on a qemu VM). Each lab sits right after the reading it practises, with its task before and its solution after. Each module also has a knowledge check of 10 questions. Every lab passed `astrona validate` and `astrona test` on its own runtime, and every playground started with `scripts/ci/test-playground.sh`. The three qemu labs need their own Linux kernel or host services: two run Falco with a live eBPF sensor (one on the host, one as a Helm release that adds Kubernetes metadata), and one sends audit events over TLS to a webhook collector outside the control plane container.
 
 | Module | Labs in teaching order |
 | --- | --- |
-| 010/01 | Detect A Denied API Access Attempt |
+| 010/01 | Detect A Denied API Access Attempt; Quarantine A Suspicious Pod Without Deleting It |
 | 010/02 | Write A Scoped Shell Detection Rule; Test A Falco Rule Against Live Processes; Scope Live Falco Events With Kubernetes Metadata |
-| 010/03 | Find The Audit Record Of A Pod Exec |
-| 020/01 | Diagnose A Previous Container Exit |
-| 020/02 | Report A Risky Pod Specification |
-| 020/03 | Find Which Account Can Read Secrets |
-| 030/01 | Attribute An API Attempt To A Workload Identity |
-| 030/02 | Contain A Persistent Workload And Its Binding |
-| 030/03 | Trace A Connection To Its Source Pod |
+| 010/03 | Find The Audit Record Of A Pod Exec; Link An Exec Audit Record To Its Node And Container |
+| 020/01 | Diagnose A Previous Container Exit; Find A Pod's Log Files On Its Node |
+| 020/02 | Report A Risky Pod Specification; Count Failed Logins In An Application Log |
+| 020/03 | Find Which Account Can Read Secrets; Move A Secret From An Environment Variable To A Read-Only Volume |
+| 030/01 | Attribute An API Attempt To A Workload Identity; Isolate A Compromised Pod And Revoke Its Token |
+| 030/02 | Stop A Persistent CronJob Without Deleting It; Contain A Persistent Workload And Its Binding |
+| 030/03 | Trace A Connection To Its Source Pod; Find And Limit A Workload That Can Exhaust Its Node |
 | 040/01 | Run With A Restricted Security Context |
 | 040/02 | Drop All Capabilities And Block Privilege Escalation |
 | 040/03 | Update A Workload By Replacement With A Read-Only Root |

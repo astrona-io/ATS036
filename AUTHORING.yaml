@@ -59,6 +59,13 @@ sections:
       objective: Classify a real denied Secret request and bind the finding to its actor and audit identifier.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-010/module-01/labs/lab-02
+      after_reading: sections/section-010/module-01/course-04-triage-tuning-and-response.md
+      objective: Keep a suspicious Pod for analysis with an ephemeral debug container, then relabel it
+        so its Service and Deployment let it go while a replacement starts.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-010/module-01/course-01-expected-behavior-of-a-workload.md
     - sections/section-010/module-01/course-02-syscalls-ebpf-and-falco-rules.md
@@ -148,6 +155,13 @@ sections:
       objective: Bind an exec finding to its actor, Pod, stage and audit identifier.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-010/module-03/labs/lab-02
+      after_reading: sections/section-010/module-03/course-03-correlating-audit-records-with-other-evidence.md
+      objective: Link a pods/exec audit record to the Pod and container named in the request, the node
+        that runs the Pod and the container ID from the Pod status.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-010/module-03/course-01-exec-and-port-forward-in-the-audit-log.md
     - sections/section-010/module-03/course-02-who-sent-the-request-identity-and-origin.md
@@ -186,6 +200,13 @@ sections:
       objective: Select the previous container log and record the corresponding exit evidence.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-020/module-01/labs/lab-02
+      after_reading: sections/section-020/module-01/course-03-network-traffic-application-logs-and-evidence-gaps.md
+      objective: Find a Pod's log directory and per-instance log files on the node that runs it, and read
+        the crashed instance's file there.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-020/module-01/course-01-security-signals-by-layer.md
     - sections/section-020/module-01/course-02-workload-logs-restarts-and-exit-evidence.md
@@ -217,6 +238,13 @@ sections:
       objective: Read a Pod specification and record its privileged setting and host directory mount.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-020/module-02/labs/lab-02
+      after_reading: sections/section-020/module-02/course-03-application-log-signals-of-abuse.md
+      objective: Count failed logins in an application log, find the user and source address behind them
+        and the successful login that followed.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-020/module-02/course-01-kubernetes-events-as-a-short-lived-signal.md
     - sections/section-020/module-02/course-02-reading-a-pod-specification-for-risky-settings.md
@@ -249,6 +277,13 @@ sections:
         it.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-020/module-03/labs/lab-02
+      after_reading: sections/section-020/module-03/course-03-secret-exposure-paths.md
+      objective: Find which workloads read a Secret through an environment variable or a volume, then
+        move a Deployment to a read-only secret volume.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-020/module-03/course-01-serviceaccounts-and-user-identity.md
     - sections/section-020/module-03/course-02-who-can-read-secrets.md
@@ -290,6 +325,13 @@ sections:
       objective: Classify a real denied Secret request and bind the finding to its actor and audit identifier.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-030/module-01/labs/lab-02
+      after_reading: sections/section-030/module-01/course-04-containment-and-evidence-preservation.md
+      objective: Quarantine a compromised Pod without deleting it, cut its traffic with a NetworkPolicy
+        and revoke its ServiceAccount token and Secret access.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-030/module-01/course-01-attack-phases-in-kubernetes.md
     - sections/section-030/module-01/course-02-actor-identity-in-audit-records.md
@@ -320,6 +362,13 @@ sections:
       objective: Find the controller and binding behind an unexpected Pod, record them and contain both.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-030/module-02/labs/lab-02
+      after_reading: sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
+      objective: Trace a recurring Pod to its CronJob, record it, suspend the CronJob without deleting
+        it and remove the Jobs it already started.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
     - sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
@@ -348,6 +397,13 @@ sections:
       objective: Identify the Pod that sends unexpected requests to the probe Service and record its address.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-030/module-03/labs/lab-02
+      after_reading: sections/section-030/module-03/course-02-impact-and-resource-abuse.md
+      objective: Find an OOMKilled container and a workload without limits, set requests and limits on
+        it and add LimitRange defaults to the namespace.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-030/module-03/course-01-lateral-movement-and-network-evidence.md
     - sections/section-030/module-03/course-02-impact-and-resource-abuse.md

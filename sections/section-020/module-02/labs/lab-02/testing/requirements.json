@@ -1,0 +1,66 @@
+{
+  "context": "kind-astro-ats-036-lab-020-02-02",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "login-findings",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "login-findings",
+          "namespace": "starfleet-036-020-02-02"
+        },
+        "data": {
+          "failedCount": "8"
+        }
+      },
+      "outcome": "failed-count"
+    },
+    {
+      "kind": "configmap",
+      "name": "login-findings",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "login-findings",
+          "namespace": "starfleet-036-020-02-02"
+        },
+        "data": {
+          "targetUser": "admin",
+          "sourceAddress": "10.0.0.23"
+        }
+      },
+      "outcome": "attacker-detail"
+    },
+    {
+      "kind": "configmap",
+      "name": "login-findings",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "login-findings",
+          "namespace": "starfleet-036-020-02-02"
+        },
+        "data": {
+          "successUser": "ops"
+        }
+      },
+      "outcome": "success-after-failures"
+    },
+    {
+      "kind": "pod",
+      "name": "login-service",
+      "expected": {
+        "metadata": {
+          "name": "login-service"
+        }
+      },
+      "state": "pod"
+    }
+  ],
+  "cluster": "astro-ats-036-lab-020-02-02",
+  "namespace": "starfleet-036-020-02-02"
+}

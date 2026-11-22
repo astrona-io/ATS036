@@ -1,0 +1,34 @@
+{
+  "context": "kind-astro-ats-036-lab-020-01-02",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "node-log-evidence",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "node-log-evidence",
+          "namespace": "starfleet-036-020-01-02"
+        }
+      },
+      "outcome": "pod-log-directory"
+    },
+    {
+      "kind": "configmap",
+      "name": "node-log-evidence",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "node-log-evidence",
+          "namespace": "starfleet-036-020-01-02"
+        }
+      },
+      "outcome": "instance-log-files"
+    }
+  ],
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-020-01-02",
+  "namespace": "starfleet-036-020-01-02"
+}
