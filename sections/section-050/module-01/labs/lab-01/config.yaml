@@ -35,8 +35,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
+  - name: secret-read-audited
+    description: A real read of Secret audit-token is audited at Metadata level without payloads
+    type: file
+    source: validation/validate-secret-read-audited.sh
+    points: 1
   - name: audit-review
-    description: Secret reads are audited without their payloads
+    description: The review records the audit level, resource and payload result
     type: file
     source: validation/validate-audit-review.sh
-    points: 2
+    points: 1

@@ -33,8 +33,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
-  - name: immutable-rollout
-    description: The rollout serves v2 with a read-only root and writable temporary storage
+  - name: v2-rollout
+    description: Both probe replicas run VERSION v2 and the Service returns version=v2
     type: file
-    source: validation/validate-immutable-rollout.sh
-    points: 2
+    source: validation/validate-v2-rollout.sh
+    points: 1
+  - name: read-only-root
+    description: The probe containers have a read-only root, a writable /tmp and no host paths
+    type: file
+    source: validation/validate-read-only-root.sh
+    points: 1

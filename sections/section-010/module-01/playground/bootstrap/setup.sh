@@ -23,4 +23,11 @@ done
 test "$api_ready" -eq 1
 
 kubectl -n starfleet wait --for=condition=Ready pod/threat-client --timeout=180s
-kubectl -n starfleet exec threat-client -- python /app/request.py
+# The API server can answer /readyz before the kubelet has replaced it with the
+# audited one, so the Pod may meet a refused connection once. Retry for a bounded time.
+request_sent=0
+for attempt in $(seq 1 20); do
+  if kubectl -n starfleet exec threat-client -- python /app/request.py; then request_sent=1; break; fi
+  sleep 3
+done
+test "$request_sent" -eq 1

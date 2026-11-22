@@ -33,8 +33,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
-  - name: access-finding
-    description: The report identifies the binding that grants Secret access
+  - name: access-subject
+    description: The report names the subject, verb and resource of the Secret access
     type: file
-    source: validation/validate-access-finding.sh
-    points: 2
+    source: validation/validate-access-subject.sh
+    points: 1
+  - name: access-binding
+    description: The report names the RoleBinding that grants the Secret access
+    type: file
+    source: validation/validate-access-binding.sh
+    points: 1

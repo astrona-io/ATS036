@@ -33,8 +33,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
+  - name: non-root-identity
+    description: Pod capability-free runs as UID 2000 under seccomp filter mode 2
+    type: file
+    source: validation/validate-non-root-identity.sh
+    points: 1
   - name: capability-free
-    description: The running process has no capabilities or privilege escalation
+    description: The running process has no capabilities and cannot gain privileges
     type: file
     source: validation/validate-capability-free.sh
-    points: 2
+    points: 1

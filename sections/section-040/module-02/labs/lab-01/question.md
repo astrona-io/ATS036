@@ -32,4 +32,4 @@ Work only in this lab’s namespaces `starfleet-036-040-02-01` and `outpost-036-
 
 ## How the answer is checked
 
-The running process has no capabilities or privilege escalation. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: pod capability-free runs as UID 2000 under seccomp filter mode 2; the running process has no capabilities and cannot gain privileges. The grader reads live resources and evidence; it does not award points for preserving the starting state.

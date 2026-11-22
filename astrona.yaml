@@ -59,6 +59,7 @@ modules:
   - type: lab
     title: Detect A Denied API Access Attempt
     path: sections/section-010/module-01/labs/lab-01
+    examScope: cluster
     difficulty: intermediate
     estimated_duration: 8m
     topic: audit-detection
@@ -97,6 +98,7 @@ modules:
   - type: lab
     title: Write A Scoped Shell Detection Rule
     path: sections/section-010/module-02/labs/lab-01
+    examScope: namespace
     difficulty: intermediate
     estimated_duration: 8m
     topic: rule-writing
@@ -174,6 +176,7 @@ modules:
   - type: lab
     title: Find The Audit Record Of A Pod Exec
     path: sections/section-010/module-03/labs/lab-01
+    examScope: cluster
     difficulty: intermediate
     estimated_duration: 8m
     topic: exec-audit
@@ -221,6 +224,7 @@ modules:
   - type: lab
     title: Diagnose A Previous Container Exit
     path: sections/section-020/module-01/labs/lab-01
+    examScope: namespace
     difficulty: intermediate
     estimated_duration: 8m
     topic: previous-logs
@@ -259,6 +263,7 @@ modules:
   - type: lab
     title: Report A Risky Pod Specification
     path: sections/section-020/module-02/labs/lab-01
+    examScope: namespace
     difficulty: intermediate
     estimated_duration: 6m
     topic: pod-spec-review
@@ -297,6 +302,7 @@ modules:
   - type: lab
     title: Find Which Account Can Read Secrets
     path: sections/section-020/module-03/labs/lab-01
+    examScope: namespace
     difficulty: intermediate
     estimated_duration: 8m
     topic: secret-access-review
@@ -344,6 +350,7 @@ modules:
   - type: lab
     title: Attribute An API Attempt To A Workload Identity
     path: sections/section-030/module-01/labs/lab-01
+    examScope: cluster
     difficulty: intermediate
     estimated_duration: 12m
     topic: audit-attribution
@@ -385,6 +392,7 @@ modules:
   - type: lab
     title: Contain A Persistent Workload And Its Binding
     path: sections/section-030/module-02/labs/lab-01
+    examScope: namespace
     difficulty: intermediate
     estimated_duration: 10m
     topic: persistence-containment
@@ -417,6 +425,7 @@ modules:
   - type: lab
     title: Trace A Connection To Its Source Pod
     path: sections/section-030/module-03/labs/lab-01
+    examScope: namespace
     difficulty: intermediate
     estimated_duration: 10m
     topic: lateral-movement-tracing
@@ -463,6 +472,7 @@ modules:
   - type: lab
     title: Run With A Restricted Security Context
     path: sections/section-040/module-01/labs/lab-01
+    examScope: namespace
     difficulty: intermediate
     estimated_duration: 10m
     topic: security-context
@@ -504,6 +514,7 @@ modules:
   - type: lab
     title: Drop All Capabilities And Block Privilege Escalation
     path: sections/section-040/module-02/labs/lab-01
+    examScope: namespace
     difficulty: intermediate
     estimated_duration: 10m
     topic: capability-drop
@@ -542,6 +553,7 @@ modules:
   - type: lab
     title: Update A Workload By Replacement With A Read-Only Root
     path: sections/section-040/module-03/labs/lab-01
+    examScope: namespace
     difficulty: intermediate
     estimated_duration: 10m
     topic: replacement-update
@@ -595,6 +607,7 @@ modules:
   - type: lab
     title: Verify Metadata Audit Records Exclude Secret Payloads
     path: sections/section-050/module-01/labs/lab-01
+    examScope: cluster
     difficulty: intermediate
     estimated_duration: 8m
     topic: audit-redaction
@@ -630,6 +643,7 @@ modules:
   - type: lab
     title: Record Interactive Pod Access In The Audit Log
     path: sections/section-050/module-02/labs/lab-01
+    examScope: cluster
     difficulty: intermediate
     estimated_duration: 8m
     topic: audit-exec
@@ -668,6 +682,7 @@ modules:
   - type: lab
     title: Record The Audit Retention Settings And Log File Protection
     path: sections/section-050/module-03/labs/lab-01
+    examScope: cluster
     difficulty: intermediate
     estimated_duration: 10m
     topic: audit-retention
@@ -711,4 +726,5 @@ modules:
   - type: quiz
     title: Final Domain Quiz
     path: sections/final-domain-quiz.yaml
+    question_count: 15
     pass_score: 70

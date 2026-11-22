@@ -36,7 +36,12 @@ testing:
 validation:
   scripts:
   - name: audit-retention
-    description: The report matches live audit paths, rotation flags and file mode
+    description: The report matches the live audit paths and rotation flags
     type: file
     source: validation/validate-audit-retention.sh
-    points: 2
+    points: 1
+  - name: log-protection
+    description: The report matches the live log file mode and the log holds records
+    type: file
+    source: validation/validate-log-protection.sh
+    points: 1

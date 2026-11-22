@@ -29,8 +29,8 @@ CODE = compile(Path(__file__).with_name('live.py').read_text(), 'live.py', 'exec
 def grade(report, record):
     def get(kind, name):
         return POD if kind == 'pod' else {'data': report}
-    exec(CODE, {'json': json, 'get': get, 'wants': lambda _: True,
-                'command': lambda _: SimpleNamespace(stdout=json.dumps(record))})
+    exec(CODE, {'json': json, 'get': get, 'wants': lambda _: True, 'NODE': 'node',
+                'node_exec': lambda *_: SimpleNamespace(stdout=json.dumps(record))})
 
 
 class AttributionTests(unittest.TestCase):

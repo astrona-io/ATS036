@@ -28,4 +28,4 @@ Work only in this lab’s namespaces `starfleet-036-010-02-01` and `outpost-036-
 
 ## How the answer is checked
 
-The grader checks the stored rule fields and probe availability. Falco is not installed, so passing does not prove that the rule loads or detects a real syscall.
+Each check gives one point: the stored rule matches shells started in containers of the lab namespace; the stored rule names the Pod and command line at priority WARNING. The probe Deployment must stay available. Falco is not installed, so passing does not prove that the rule loads or detects a real syscall.

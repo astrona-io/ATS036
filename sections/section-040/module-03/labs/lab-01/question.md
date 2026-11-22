@@ -32,4 +32,4 @@ Work only in this lab’s namespaces `starfleet-036-040-03-01` and `outpost-036-
 
 ## How the answer is checked
 
-The rollout serves v2 with a read-only root and writable temporary storage. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: both probe replicas run VERSION v2 and the Service returns version=v2; the probe containers have a read-only root, a writable /tmp and no host paths. The grader reads live resources and evidence; it does not award points for preserving the starting state.

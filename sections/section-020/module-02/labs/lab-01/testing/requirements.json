@@ -13,11 +13,26 @@
         },
         "data": {
           "pod": "suspect-pod",
-          "privileged": "true",
+          "privileged": "true"
+        }
+      },
+      "outcome": "privileged-finding"
+    },
+    {
+      "kind": "configmap",
+      "name": "pod-risk-report",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "pod-risk-report",
+          "namespace": "starfleet-036-020-02-01"
+        },
+        "data": {
           "hostPath": "/etc"
         }
       },
-      "outcome": "pod-risk-report"
+      "outcome": "host-path-finding"
     }
   ],
   "behavior": [
@@ -32,7 +47,8 @@
         "-o",
         "jsonpath={.spec.containers[0].securityContext.privileged}"
       ],
-      "equals": "true"
+      "equals": "true",
+      "outcome": "privileged-finding"
     }
   ],
   "cluster": "astro-ats-036-lab-020-02-01",

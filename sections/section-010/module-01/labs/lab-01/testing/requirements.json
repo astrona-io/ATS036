@@ -13,14 +13,30 @@
           "namespace": "starfleet-036-010-01-01"
         },
         "data": {
-          "actor": "system:serviceaccount:starfleet-036-010-01-01:threat-reader",
+          "actor": "system:serviceaccount:starfleet-036-010-01-01:threat-reader"
+        }
+      },
+      "outcome": "audit-event-identity"
+    },
+    {
+      "kind": "configmap",
+      "name": "audit-finding",
+      "namespace": "starfleet-036-010-01-01",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "audit-finding",
+          "namespace": "starfleet-036-010-01-01"
+        },
+        "data": {
           "resource": "secrets",
           "namespace": "starfleet-036-010-01-01",
           "code": "403",
           "finding": "unauthorized-secret-read"
         }
       },
-      "outcome": "audit-finding"
+      "outcome": "denied-secret-read"
     }
   ],
   "behavior": [],

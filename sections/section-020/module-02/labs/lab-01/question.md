@@ -32,4 +32,4 @@ Work only in this lab’s namespaces `starfleet-036-020-02-01` and `outpost-036-
 
 ## How the answer is checked
 
-The report matches the preserved risky Pod. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: the report records the privileged setting of the preserved Pod; the report records the host path the preserved Pod mounts. The grader reads live resources and evidence; it does not award points for preserving the starting state.

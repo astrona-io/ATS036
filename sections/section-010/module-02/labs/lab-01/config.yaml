@@ -35,8 +35,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
-  - name: shell-rule
-    description: The stored rule scopes shell detection and names useful evidence
+  - name: rule-condition
+    description: The stored rule matches shells started in containers of the lab namespace
     type: file
-    source: validation/validate-shell-rule.sh
-    points: 2
+    source: validation/validate-rule-condition.sh
+    points: 1
+  - name: rule-output
+    description: The stored rule names the Pod and command line at priority WARNING
+    type: file
+    source: validation/validate-rule-output.sh
+    points: 1

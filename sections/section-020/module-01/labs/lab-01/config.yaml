@@ -33,8 +33,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
-  - name: crash-diagnosis
-    description: The diagnosis matches the previous container instance
+  - name: previous-exit-code
+    description: The diagnosis records the exit code of the previous container instance
     type: file
-    source: validation/validate-crash-diagnosis.sh
-    points: 2
+    source: validation/validate-previous-exit-code.sh
+    points: 1
+  - name: previous-log-evidence
+    description: The diagnosis records the log line of the previous container instance
+    type: file
+    source: validation/validate-previous-log-evidence.sh
+    points: 1

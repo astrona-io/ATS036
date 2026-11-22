@@ -22,7 +22,19 @@
           "namespace": "starfleet-036-010-02-01"
         }
       },
-      "outcome": "shell-rule"
+      "outcome": "rule-condition"
+    },
+    {
+      "kind": "configmap",
+      "name": "shell-in-probe-rule",
+      "namespace": "starfleet-036-010-02-01",
+      "expected": {
+        "metadata": {
+          "name": "shell-in-probe-rule",
+          "namespace": "starfleet-036-010-02-01"
+        }
+      },
+      "outcome": "rule-output"
     }
   ],
   "behavior": [],

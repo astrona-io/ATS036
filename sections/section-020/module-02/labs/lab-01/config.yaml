@@ -33,8 +33,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
-  - name: pod-risk-report
-    description: The report matches the preserved risky Pod
+  - name: privileged-finding
+    description: The report records the privileged setting of the preserved Pod
     type: file
-    source: validation/validate-pod-risk-report.sh
-    points: 2
+    source: validation/validate-privileged-finding.sh
+    points: 1
+  - name: host-path-finding
+    description: The report records the host path the preserved Pod mounts
+    type: file
+    source: validation/validate-host-path-finding.sh
+    points: 1

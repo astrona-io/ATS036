@@ -35,8 +35,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
-  - name: audit-finding
-    description: The finding matches a real denied Secret request
+  - name: audit-event-identity
+    description: The finding names a real ResponseComplete audit event and its actor
     type: file
-    source: validation/validate-audit-finding.sh
-    points: 2
+    source: validation/validate-audit-event-identity.sh
+    points: 1
+  - name: denied-secret-read
+    description: The finding records the denied Secret read without Secret payloads
+    type: file
+    source: validation/validate-denied-secret-read.sh
+    points: 1

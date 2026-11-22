@@ -32,4 +32,4 @@ Work only in this lab’s namespaces `starfleet-036-020-03-01` and `outpost-036-
 
 ## How the answer is checked
 
-The report identifies the binding that grants Secret access. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: the report names the subject, verb and resource of the Secret access; the report names the RoleBinding that grants the Secret access. The grader reads live resources and evidence; it does not award points for preserving the starting state.
