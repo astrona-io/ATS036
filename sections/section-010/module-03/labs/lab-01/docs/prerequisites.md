@@ -4,7 +4,7 @@ exam_objectives:
 ---
 # Prerequisites
 
-Use astrona, kubectl, Python 3, Podman and a shell. Node inspection exercises use the containers in this environment, not the physical host.
+Use astrona, kubectl, Python 3, Podman or Docker and a shell. Node inspection exercises use the containers in this environment, not the physical host.
 
 Use a host shell with the private kubeconfig for this independent kind environment. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool.
 

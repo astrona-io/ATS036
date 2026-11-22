@@ -4,7 +4,7 @@ exam_objectives:
 ---
 # Prerequisites
 
-Use astrona, kubectl, Python 3, Podman and a shell. The audit log lives on the control plane node, which is a container of this lab. Commands that read it run in that container, not on your own operating system.
+Use astrona, kubectl, Python 3, Podman or Docker and a shell. The audit log lives on the control plane node, which is a container of this lab. Commands that read it run in that container, not on your own operating system.
 
 A kubeconfig is the file that tells kubectl, the Kubernetes command-line tool, which cluster to use and with which credentials. Select the lab's private kubeconfig and set the name of the control plane node container:
 
