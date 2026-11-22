@@ -38,7 +38,10 @@ The playground audit log is on the control plane node. Select the cluster and sa
 ```sh
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-030-01)"
 node_name="astro-ats-036-playground-030-01-control-plane"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 ```
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 Save this as `audit-actor.py`:
 
@@ -73,7 +76,7 @@ for line in sys.stdin:
 Run it on the audit log, filtered to the `threat-reader` ServiceAccount:
 
 ```sh
-podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-actor.py threat-reader
+"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-actor.py threat-reader
 ```
 
 Every block is one request. Check the fields of the last block against what you know. The `username` is `system:serviceaccount:starfleet:threat-reader`, the `groups` include `system:serviceaccounts:starfleet`, and the request is a `get` on `/api/v1/namespaces/starfleet/secrets/audit-token` with the code `403`. The `userAgent` names Python's `urllib` library, because the request program in the Pod uses it.

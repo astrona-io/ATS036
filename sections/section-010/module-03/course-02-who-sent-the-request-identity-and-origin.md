@@ -54,10 +54,13 @@ Run it against the audit log:
 ```sh
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-010-03)"
 node_name="astro-ats-036-playground-010-03-control-plane"
-podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 identity-report.py
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
+"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 identity-report.py
 ```
 
 Compare the user with the identity of your own kubeconfig. The request that setup ran uses the same cluster administrator credentials as your shell, so the `username` and the groups match yours. This is expected in the playground. In a real cluster, a cluster administrator who starts a shell in a production Pod is normal only when someone approved the maintenance.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## From the record to a finding
 

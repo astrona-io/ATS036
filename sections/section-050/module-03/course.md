@@ -28,7 +28,7 @@ Your playground is a `kind` cluster that runs Kubernetes 1.35 with one control p
 | `starfleet` | The `probe` Deployment with two replicas and a `probe` Service. The `shuttle` Pod, a BusyBox client. A Secret named `audit-token` with disposable data |
 | `outpost` | The `drifter` Pod, a BusyBox client |
 
-Audit logging is on. The log file is `/var/log/training-audit/audit.jsonl` inside the control plane node container, and the policy file is `/etc/kubernetes/training-audit-policy.json`. You read both from your host shell with `podman exec`.
+Audit logging is on. The log file is `/var/log/training-audit/audit.jsonl` inside the control plane node container, and the policy file is `/etc/kubernetes/training-audit-policy.json`. You read both from your host shell with `podman exec` or `docker exec`, depending on the container engine that runs the kind node containers.
 
 Launch your playground now, and keep it running while you read the parts:
 

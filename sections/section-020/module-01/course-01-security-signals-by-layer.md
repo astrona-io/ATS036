@@ -64,11 +64,14 @@ A container log is a file on the node. The kubelet, the node agent that starts P
 
 ```sh
 worker_name="astro-ats-036-playground-020-01-worker"
-podman exec "$worker_name" ls /var/log/pods
-podman exec "$worker_name" journalctl -u kubelet --no-pager -n 5
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
+"$engine" exec "$worker_name" ls /var/log/pods
+"$engine" exec "$worker_name" journalctl -u kubelet --no-pager -n 5
 ```
 
 The first command lists one directory for each Pod that runs on the worker, including `starfleet_crash-report_` followed by the Pod UID. The second prints the last five lines of the kubelet log, which records container starts, probe failures and volume mounts. Someone who has access to the node can read and delete these files. A node that an attacker controls cannot be trusted as the only source of its own evidence.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## Layers that need more than the playground
 

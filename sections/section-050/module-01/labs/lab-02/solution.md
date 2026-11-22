@@ -10,16 +10,19 @@ Use a host shell with this lab's private kubeconfig. A kubeconfig is the file th
 export KUBECONFIG="$(astrona kubeconfig ats-036-lab-050-01-02)"
 test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-050-01-02" || exit 1
 node_name="astro-ats-036-lab-050-01-02-control-plane"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 ```
 
 Keep this connection for the whole task. The variable `node_name` holds the name of the control plane node container, where the API server writes the audit log.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## Check what the policy records
 
 An audit policy is the file that tells the API server which requests to write to the audit log and at which level. A request that no rule selects leaves no record, so check the policy before you send the request:
 
 ```sh
-podman exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
+"$engine" exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
 ```
 
 ```text
@@ -70,7 +73,7 @@ for line in sys.stdin:
 The script keeps the `ResponseComplete` events for Secrets. That stage holds the final status code. For each event it prints the `auditID`, the caller, the impersonated user, the verb, the Secret name and the status code. Run it on the log:
 
 ```sh
-podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 find-denied-read.py
+"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 find-denied-read.py
 ```
 
 ```text
@@ -85,7 +88,7 @@ Copy the `auditID` of that line into a variable and print the whole record:
 
 ```sh
 audit_id="<AUDIT_ID>"
-podman exec "$node_name" grep -F "$audit_id" /var/log/training-audit/audit.jsonl | python3 -m json.tool
+"$engine" exec "$node_name" grep -F "$audit_id" /var/log/training-audit/audit.jsonl | python3 -m json.tool
 ```
 
 ```text

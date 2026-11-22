@@ -32,15 +32,18 @@ Select the playground cluster and read the audit flags from the manifest of the 
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-050-01)"
 kubectl config current-context
 node_name="astro-ats-036-playground-050-01-control-plane"
-podman exec "$node_name" grep -e '--audit' /etc/kubernetes/manifests/kube-apiserver.yaml
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
+"$engine" exec "$node_name" grep -e '--audit' /etc/kubernetes/manifests/kube-apiserver.yaml
 ```
 
 The training setup writes this manifest as JSON on a single line, so `grep` prints that one line. Inside it, five `--audit` flags set the policy file to `/etc/kubernetes/training-audit-policy.json`, the log path to `/var/log/training-audit/audit.jsonl`, the maximum age to `1`, the number of backups to `1` and the maximum size to `10`. These small rotation values suit a training cluster. A production cluster keeps more history and sends events to a central store.
 
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
+
 Check that the mounts exist for both paths:
 
 ```sh
-podman exec "$node_name" grep -n -A3 'training-audit' /etc/kubernetes/manifests/kube-apiserver.yaml
+"$engine" exec "$node_name" grep -n -A3 'training-audit' /etc/kubernetes/manifests/kube-apiserver.yaml
 ```
 
 Because the manifest is one line, `grep` prints that same line again. Look inside it for a volume for the policy file of type `File`, a volume for the log directory of type `DirectoryOrCreate`, and the matching `volumeMounts`. The policy mount is read-only. The log mount is writable.
@@ -48,7 +51,7 @@ Because the manifest is one line, `grep` prints that same line again. Look insid
 Then check the log file on the node:
 
 ```sh
-podman exec "$node_name" ls -l /var/log/training-audit
+"$engine" exec "$node_name" ls -l /var/log/training-audit
 ```
 
 The listing shows `audit.jsonl` and, after rotation, backup files with a timestamp in the name. Read the manifest only. Changing it makes the kubelet restart the API server, and a mistake can leave the cluster without an API.
@@ -77,7 +80,7 @@ The diagram shows one API server writing the same events to a file and to a remo
 Start with the symptom. If the API server does not start after a change, the likely cause is a path that does not exist in the container, a policy file that is not valid, or a missing volume mount. Because the API is down, `kubectl` cannot help. Use the container runtime on the node instead:
 
 ```sh
-podman exec "$node_name" crictl ps -a --name kube-apiserver
+"$engine" exec "$node_name" crictl ps -a --name kube-apiserver
 ```
 
 This lists the API server containers with their state, so you can see a container that exits again and again. The command `crictl logs` with the container ID prints the message, which names the file or flag at fault.

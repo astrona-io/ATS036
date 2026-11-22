@@ -33,10 +33,13 @@ Rules can name a subresource in three ways. Write the full name, such as `pods/e
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-050-02)"
 kubectl config current-context
 node_name="astro-ats-036-playground-050-02-control-plane"
-podman exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
+"$engine" exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
 ```
 
 The policy is one line of JSON. It has the field `omitStages` set to `RequestReceived`, a first rule at the level `Metadata` for `pods/exec`, `pods/portforward` and `pods/log` in the `starfleet` namespace, a second rule for Secrets and ConfigMaps, and a final rule at the level `None`. Because the first matching rule wins, an exec request is recorded by the first rule and never reaches the final rule.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## Where the subresource appears in the event
 

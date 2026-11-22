@@ -4,8 +4,8 @@
 # scripts/ci/test-playground.sh runs it on the host with KUBECONFIG set to the
 # playground cluster. The bootstrap has already turned on auditing. The pages
 # show no command output, so each check tests the fact that the prose around
-# the command states. The pages run node commands with podman; this script
-# uses the container engine of the run (CI sets docker) and only the node
+# the command states. The pages run node commands with "$engine" exec; this
+# script uses the container engine of the run (CI sets docker) and only the node
 # containers of this playground.
 set -euo pipefail
 context="${ASTRONA_KUBE_CONTEXT:-kind-astro-ats-036-playground-050-01}"
@@ -77,7 +77,7 @@ expect_failure() {
 }
 
 # Run a command in the control plane node container, as the pages do with
-# podman exec "$node_name".
+# "$engine" exec "$node_name".
 on_node() {
   "$engine" exec "$node_name" "$@"
 }

@@ -166,7 +166,8 @@ expect_equal 'guide: both nodes are Ready' "$(printf '%s\n' "$nodes" | awk 'NR >
 save_yaml_from_page "$guide" configmap-audit-finding.yaml
 expect 'guide: saved ConfigMap names the finding' "$(cat configmap-audit-finding.yaml)" 'finding: unauthorized-secret-read'
 save_yaml_from_page "$guide" record-audit.py
-# record-audit.py names the default context, the default cluster and podman.
+# record-audit.py names the default context and the default cluster, and
+# reads the engine from ASTRONA_CONTAINER_ENGINE with podman as the fallback.
 # Use the values of this run instead, so the script also works with docker.
 python3 - record-audit.py "$context" "$cluster" "$engine" <<'PY'
 import sys
@@ -174,7 +175,10 @@ path, context, cluster, engine = sys.argv[1:]
 text = open(path).read()
 text = text.replace('"kind-astro-ats-036-playground-030-01"', repr(context))
 text = text.replace('astro-ats-036-playground-030-01', cluster)
-text = text.replace("'podman'", repr(engine))
+engine_expression = '(os.environ.get("ASTRONA_CONTAINER_ENGINE") or "podman")'
+if engine_expression not in text:
+    sys.exit('expected ' + engine_expression + ' in ' + path)
+text = text.replace(engine_expression, '(os.environ.get("ASTRONA_CONTAINER_ENGINE") or ' + repr(engine) + ')')
 open(path, 'w').write(text)
 PY
 python3 record-audit.py

@@ -16,11 +16,14 @@ A successful read and a denied read leave different records. The first uses the 
 export KUBECONFIG="$(astrona kubeconfig ats-036-playground-050-01)"
 kubectl config current-context
 node_name="astro-ats-036-playground-050-01-control-plane"
+engine="${ASTRONA_CONTAINER_ENGINE:-podman}"
 kubectl -n starfleet get secret audit-token -o name
 kubectl -n starfleet get secret audit-token --as=system:serviceaccount:outpost:default
 ```
 
 The first command prints `secret/audit-token`. The second fails with a `Forbidden` message that names the ServiceAccount and the Secret. Both requests reached the API server and both were audited, because the policy matches on the resource and not on the outcome.
+
+The `engine` variable holds the name of the container engine that runs the kind node containers. It is `podman` unless `ASTRONA_CONTAINER_ENGINE` names another engine, such as `docker`.
 
 ## Report Secret access from the log
 
@@ -53,7 +56,7 @@ for line in sys.stdin:
 Then run it on the log from the control plane node:
 
 ```sh
-podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-secret-report.py
+"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-secret-report.py
 ```
 
 Look for two lines that name `audit-token`. The first line shows the administrator identity as the caller, `-` as the impersonated user, the verb `get`, the code `200`, the decision `allow` and `no-body`. The second shows the same caller, the impersonated user `system:serviceaccount:outpost:default`, the code `403`, the decision `forbid` and `no-body`. The caller field stays the real user. The impersonated field shows the identity used for authorization. Other lines can appear for components that read Secrets in the namespace.
@@ -63,7 +66,7 @@ Look for two lines that name `audit-token`. The first line shows the administrat
 The policy level for Secrets is `Metadata`. The report prints `no-body` for every line, which shows that no event contains `requestObject` or `responseObject`. The disposable value `audit-disposable` is stored in the Secret, so search the whole log for it:
 
 ```sh
-podman exec "$node_name" grep -c 'audit-disposable' /var/log/training-audit/audit.jsonl
+"$engine" exec "$node_name" grep -c 'audit-disposable' /var/log/training-audit/audit.jsonl
 ```
 
 The count is `0`. The log records that the Secret was read, but not its content. Changing the Secret rule to `RequestResponse` would put the Secret data, base64 encoded, into every read response event. Base64 is an encoding and not encryption, so anyone with the log can decode the value.
