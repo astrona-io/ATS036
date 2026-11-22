@@ -28,7 +28,7 @@ Your playground is a `kind` cluster that runs Kubernetes 1.35 with one control p
 
 | Namespace | What is in it |
 | --- | --- |
-| `starfleet` | The `probe` Deployment with two replicas and a `probe` Service. The `shuttle` Pod, a BusyBox client. The `crash-report` Pod, which prints a line and exits with an error, so it restarts again and again |
+| `starfleet` | The `probe` Deployment with two replicas and a `probe` Service. The `shuttle` Pod, a BusyBox client. The `crash-report` Pod, which prints a line, exits with an error once and keeps running after the restart |
 | `outpost` | The `drifter` Pod, a BusyBox client |
 
 Commands run from your host shell, which has `kubectl` and `podman`. Host commands that touch a node name only this playground's node containers.

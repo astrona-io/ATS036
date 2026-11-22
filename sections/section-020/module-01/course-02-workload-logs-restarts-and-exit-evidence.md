@@ -21,7 +21,7 @@ export KUBECONFIG="$(astrona kubeconfig ats-036-playground-020-01)"
 kubectl -n starfleet get pod crash-report
 ```
 
-The `RESTARTS` column shows a number of at least 1. The `STATUS` column shows `Error` or `CrashLoopBackOff`, or `Running` for a moment after a restart.
+The `RESTARTS` column shows `1` and the `STATUS` column shows `Running`. The first instance exited with an error, and the kubelet started a second instance that keeps running. A container that fails on every start shows `Error` or `CrashLoopBackOff` instead.
 
 ## Read the exit status
 
@@ -31,7 +31,7 @@ The Pod status is the structured record. This command prints the exit code of th
 kubectl -n starfleet get pod crash-report -o jsonpath='{.status.containerStatuses[0].lastState.terminated.exitCode}{" "}{.status.containerStatuses[0].lastState.terminated.reason}{"\n"}'
 ```
 
-The output is `12 Error`. The container command is `printf "application-started\n"; sleep 2; exit 12`, so it exits with status 12 two seconds after it starts. The reason `Error` is the general reason for a nonzero exit.
+The output is `12 Error`. The container command is `printf "application-started\n"; if [ ! -f /state/crashed ]; then touch /state/crashed; sleep 2; exit 12; fi; sleep 86400`. The first instance creates the file `/state/crashed` in an `emptyDir` volume and exits with status 12 two seconds after it starts. The volume survives the restart, so the second instance finds the file and keeps running. The reason `Error` is the general reason for a nonzero exit.
 
 Exit codes follow rules that you should know for the exam:
 
@@ -51,7 +51,7 @@ An unexpected `137` with `OOMKilled` can be a bug or a resource attack. An unexp
 kubectl -n starfleet logs crash-report -c report --previous --timestamps
 ```
 
-The output is the line `application-started` with a timestamp before it. The `-c report` option names the container, which is required when a Pod has more than one container. The previous log is the log of the instance whose exit code you just read. The current instance has just started, so its log is often empty or has only the first line. Reading the current log and then concluding that nothing was printed is a common mistake.
+The output is the line `application-started` with a timestamp before it. The `-c report` option names the container, which is required when a Pod has more than one container. The previous log is the log of the instance whose exit code you just read. The current instance prints the same start line, but it has not failed, so its log does not explain the exit. Reading the current log and then concluding that nothing was printed is a common mistake.
 
 Other options narrow the output: `--since=10m` limits it to recent lines, `--tail=20` to the last lines, and `-f` follows new lines. To read all Pods of a Deployment at once, select them by label and add the Pod name to each line:
 
@@ -73,7 +73,7 @@ flowchart TB
 
 The container runtime writes standard output and standard error to a file on the node, and `kubectl logs` reads that file through the kubelet. The kubelet rotates the file when it reaches `containerLogMaxSize`, which is 10Mi by default, and keeps `containerLogMaxFiles`, which is 5 by default. When the Pod is deleted or evicted, the kubelet removes the files. A log that was never shipped to a central store is then gone.
 
-Only the logs of the current and the last finished instance are available. If a container has restarted five times, the logs of the first instances are gone. That is a strong reason to send logs to storage outside the node, and a reason to read `--previous` early.
+Only the logs of the current and the last finished instance are available. If a container has restarted five times, the logs of the first instances are gone. A fast restart loop can lose even the last finished instance: while the Pod waits in `CrashLoopBackOff`, `kubectl logs --previous` can print `unable to retrieve container logs for containerd://...`, because the kubelet has already removed the instance that the Pod status points to. The command works again while the newest instance runs. The `crash-report` Pod fails only once, so its previous log stays available. That is a strong reason to send logs to storage outside the node, and a reason to read `--previous` early.
 
 ## What logs and exit codes prove
 

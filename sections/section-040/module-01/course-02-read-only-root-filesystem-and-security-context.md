@@ -4,7 +4,7 @@ exam_objectives:
 ---
 # Read-Only Root Filesystem And Security Context
 
-The previous part showed that a default container accepts a new program anywhere in its filesystem. This part builds a Pod that rejects such writes. The setting is `readOnlyRootFilesystem`, and it works together with a non-root user, dropped capabilities and a seccomp profile. Applications still need some writable paths, so you also add a small `emptyDir` volume.
+A default container accepts a new program anywhere in its filesystem. This part builds a Pod that rejects such writes. The setting is `readOnlyRootFilesystem`, and it works together with a non-root user, dropped capabilities and a seccomp profile. Applications still need some writable paths, so you also add a small `emptyDir` volume.
 
 ## What each setting does
 
@@ -94,9 +94,7 @@ Then wait for the Pod:
 kubectl -n starfleet wait --for=condition=Ready pod/sealed-reader --timeout=90s
 ```
 
-## Then check the result
-
-Try a write to the root filesystem and a write to the scratch volume:
+Then check the result. Try a write to the root filesystem and a write to the scratch volume:
 
 ```sh
 kubectl -n starfleet exec sealed-reader -- sh -c 'echo test > /root-file'
@@ -122,7 +120,7 @@ The JSON shows `readOnlyRootFilesystem` as `true`, `allowPrivilegeEscalation` as
 
 ## Fields are not changed on a running Pod
 
-Most security context fields cannot be edited on a running Pod. To change them, edit the Deployment or Pod template and let Kubernetes create a replacement. This is the same replace-not-patch rule from the previous part.
+Most security context fields cannot be edited on a running Pod. To change them, edit the Deployment or Pod template and let Kubernetes create a replacement. Kubernetes keeps most Pod fields fixed after creation, so you replace the Pod instead of patching it.
 
 ## Common pitfalls
 

@@ -17,7 +17,7 @@ Keep this connection selected throughout the task. Every script supplied by the 
 
 ## Inspect And Explain
 
-Pod `crash-report` prints a start marker, exits with a nonzero status and restarts. The healthy probe application is separate from that evidence Pod.
+Pod `crash-report` prints a start marker, exits with a nonzero status once and restarts. The second instance keeps running. The healthy probe application is separate from that evidence Pod.
 
 Inspect the relevant evidence:
 
@@ -57,7 +57,7 @@ Observe the actual result. A denied-request command returns a nonzero status whe
 kubectl -n starfleet logs crash-report -c report --previous
 ```
 
-Leave Pod `crash-report` running its original restart-loop command. Read the previous instance of container `report`. Create ConfigMap `crash-diagnosis` with `container: report`, `exitCode` matching the last terminated instance, and `logMarker: application-started`. The Pod must have restarted at least once and its previous log must contain the marker. Do not delete or repair the evidence Pod.
+Leave Pod `crash-report` running its original command. Read the previous instance of container `report`. Create ConfigMap `crash-diagnosis` with `container: report`, `exitCode` matching the last terminated instance, and `logMarker: application-started`. The Pod must have restarted at least once and its previous log must contain the marker. Do not delete or repair the evidence Pod.
 
 
 ## Common pitfalls

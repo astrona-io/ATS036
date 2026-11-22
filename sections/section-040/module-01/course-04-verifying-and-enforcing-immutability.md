@@ -69,7 +69,7 @@ kubectl apply -f binding-readonly-root.yaml
 
 The `validationActions` field decides the effect. `Deny` rejects the request, `Warn` returns a warning to the client and `Audit` adds an audit annotation. As with Pod Security Admission, you can start with `Warn` and `Audit` and switch to `Deny` when the existing workloads comply.
 
-## Then check the result
+## Test the policy with a writable Pod
 
 This check uses the `sealed` namespace. If it does not exist, create it with `kubectl create namespace sealed`. Save a Pod that passes the `restricted` standard but leaves the root filesystem writable as `writable-pod.yaml`:
 

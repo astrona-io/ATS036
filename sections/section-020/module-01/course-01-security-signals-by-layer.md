@@ -56,7 +56,7 @@ The second command lists the node of every Pod. This matters in an investigation
 kubectl get events -A --sort-by=.lastTimestamp
 ```
 
-The list contains events for the start of the `probe` Pods and for `crash-report`, which was started again after each exit. After several restarts you also see a `BackOff` event for it. Events are stored in the cluster for a short time. The API server option `--event-ttl` sets that time, and its default is one hour, so events cannot serve as long-term evidence.
+The list contains events for the start of the `probe` Pods and for `crash-report`, which was started again after its exit. A container that keeps failing also gets a `BackOff` event while the kubelet waits before the next restart. Events are stored in the cluster for a short time. The API server option `--event-ttl` sets that time, and its default is one hour, so events cannot serve as long-term evidence.
 
 ## Node evidence
 
