@@ -25,9 +25,15 @@ kubectl -n starfleet-036-010-01-02 get pods -L app,release
 
 The output shows the alert and the two `probe` Pods:
 
-<!-- CAPTURE: alert -->
+```text
+{"container":"probe","pod":"probe-7db6ffd7d6-9g79s","rule":"Shell started in probe container","uid":"495a8804-08c2-41d7-a4d4-11021a2eb03d"}
+NAME                     READY   STATUS    RESTARTS   AGE   APP       RELEASE
+probe-7db6ffd7d6-9g79s   1/1     Running   0          3s    probe     probe
+probe-7db6ffd7d6-wb9nz   1/1     Running   0          3s    probe     probe
+shuttle                  1/1     Running   0          3s    shuttle   
+```
 
-The Pod names and the UID are different in your cluster. Both `probe` Pods carry `app=probe` and `release=probe`, so the Deployment counts both and the Service sends requests to both.
+The Pod names and the UID are different in your cluster. The `shuttle` Pod is a client in the same namespace. Both `probe` Pods carry `app=probe` and `release=probe`, so the Deployment counts both and the Service sends requests to both.
 
 ## Capture evidence before you change anything
 
@@ -39,7 +45,9 @@ kubectl -n starfleet-036-010-01-02 debug "$suspect_pod" --image=docker.io/librar
 
 kubectl prints a short notice and returns:
 
-<!-- CAPTURE: debug -->
+```text
+Targeting container "probe". If you don't see processes from this container it may be because the container runtime doesn't support this feature.
+```
 
 The command does not wait for the container. Wait a few seconds, then read the log of the `evidence` container:
 
@@ -47,7 +55,14 @@ The command does not wait for the container. Wait a few seconds, then read the l
 kubectl -n starfleet-036-010-01-02 logs "$suspect_pod" -c evidence
 ```
 
-<!-- CAPTURE: evidence-log -->
+```text
+PID   USER     TIME  COMMAND
+    1 root      0:00 python /app/server.py
+   20 root      0:00 sh -c ps; ls -l /proc/1/root/tmp
+   33 root      0:00 ps
+total 4
+-rw-r--r--    1 root     root             7 Nov 22 20:41 dropped-tool
+```
 
 Process 1 is the Python web server of the `probe` container. The listing of `/proc/1/root/tmp` shows the file system of that container as the server sees it, including the file that the shell wrote. Save this output with the alert before you go on.
 
@@ -62,7 +77,11 @@ kubectl -n starfleet-036-010-01-02 rollout status deployment/probe --timeout=120
 
 A label name with a minus sign at the end removes that label. The output confirms the change and the rollout:
 
-<!-- CAPTURE: label -->
+```text
+pod/probe-7db6ffd7d6-9g79s modified
+Waiting for deployment "probe" rollout to finish: 1 of 2 updated replicas are available...
+deployment "probe" successfully rolled out
+```
 
 ## Check the result
 
@@ -73,9 +92,17 @@ kubectl -n starfleet-036-010-01-02 get pods -L app,release,quarantine -o wide
 kubectl -n starfleet-036-010-01-02 get endpointslices -l kubernetes.io/service-name=probe
 ```
 
-<!-- CAPTURE: check -->
+```text
+NAME                     READY   STATUS    RESTARTS   AGE   IP           NODE                                             NOMINATED NODE   READINESS GATES   APP       RELEASE   QUARANTINE
+probe-7db6ffd7d6-9g79s   1/1     Running   0          18s   10.244.0.5   astro-test-ats-036-lab-010-01-02-control-plane   <none>           <none>                                true
+probe-7db6ffd7d6-dk5jh   1/1     Running   0          7s    10.244.0.9   astro-test-ats-036-lab-010-01-02-control-plane   <none>           <none>            probe     probe     
+probe-7db6ffd7d6-wb9nz   1/1     Running   0          18s   10.244.0.6   astro-test-ats-036-lab-010-01-02-control-plane   <none>           <none>            probe     probe     
+shuttle                  1/1     Running   0          18s   10.244.0.7   astro-test-ats-036-lab-010-01-02-control-plane   <none>           <none>            shuttle             
+NAME          ADDRESSTYPE   PORTS   ENDPOINTS               AGE
+probe-4xks9   IPv4          8080    10.244.0.6,10.244.0.9   18s
+```
 
-Three Pods run. The suspect Pod has `quarantine=true` and no `app` or `release` label, and its IP address is not in the EndpointSlice. The Service now sends requests only to the two Pods that carry both labels. The quarantine stops traffic but does not remove the cause. The new Pod uses the same template and the same ServiceAccount, so a compromised image or token stays a risk until you fix them. When the analysis is done, delete the quarantined Pod.
+Three `probe` Pods run next to `shuttle`. The output comes from a test cluster, so the node name starts with `astro-test-ats-036-lab-...`; in your lab it starts with `astro-ats-036-lab-...`, and the Pod names and IP addresses differ. The suspect Pod has `quarantine=true` and no `app` or `release` label, and its IP address is not in the EndpointSlice. The Service now sends requests only to the two Pods that carry both labels. The quarantine stops traffic but does not remove the cause. The new Pod uses the same template and the same ServiceAccount, so a compromised image or token stays a risk until you fix them. When the analysis is done, delete the quarantined Pod.
 
 After recording the result, remove this independent lab with `astrona destroy ats-036-lab-010-01-02`.
 

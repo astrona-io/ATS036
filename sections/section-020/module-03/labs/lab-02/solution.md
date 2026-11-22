@@ -23,15 +23,29 @@ Start with the Pods. The `custom-columns` output prints one row per Pod, with th
 kubectl -n starfleet-036-020-03-02 get pods -o custom-columns='NAME:.metadata.name,SECRETENV:.spec.containers[*].env[*].valueFrom.secretKeyRef.name,SECRETVOL:.spec.volumes[*].secret.secretName'
 ```
 
-<!-- CAPTURE: l2-pod-columns -->
+```text
+NAME                       SECRETENV        SECRETVOL
+billing-6f696896cb-6xvh5   db-credentials   <none>
+ledger                     ledger-token     <none>
+probe-7db6ffd7d6-qbkfh     <none>           <none>
+probe-7db6ffd7d6-zxxpm     <none>           <none>
+reports                    <none>           db-credentials
+shuttle                    <none>           <none>
+```
 
-Three Pods use a Secret. The `billing-...` Pod reads `db-credentials` through an environment variable. Pod `reports` mounts `db-credentials` as a volume. Pod `ledger` reads a different Secret, `ledger-token`, so it does not belong in this report. The Pod name `billing-...` has a random suffix because a Deployment created it. Record the Deployment, because the Deployment holds the Pod template, and a new Pod from the same template would read the Secret in the same way. Check the Deployment with the same columns, this time under `.spec.template`:
+Three Pods use a Secret. The `billing` Pod reads `db-credentials` through an environment variable. Pod `reports` mounts `db-credentials` as a volume. Pod `ledger` reads a different Secret, `ledger-token`, so it does not belong in this report.
+
+The Pod name `billing-6f696896cb-6xvh5` has a random suffix because a Deployment created it, and the suffixes of the `billing` and `probe` Pods differ in your own lab. Record the Deployment, because the Deployment holds the Pod template, and a new Pod from the same template would read the Secret in the same way. Check the Deployment with the same columns, this time under `.spec.template`:
 
 ```sh
 kubectl -n starfleet-036-020-03-02 get deployments -o custom-columns='NAME:.metadata.name,SECRETENV:.spec.template.spec.containers[*].env[*].valueFrom.secretKeyRef.name,SECRETVOL:.spec.template.spec.volumes[*].secret.secretName'
 ```
 
-<!-- CAPTURE: l2-deployment-columns -->
+```text
+NAME      SECRETENV        SECRETVOL
+billing   db-credentials   <none>
+probe     <none>           <none>
+```
 
 The `billing` Deployment shows `db-credentials` in the `SECRETENV` column. These columns show only `env` entries with `secretKeyRef`. A container can also load every key of a Secret at once with `envFrom` and `secretRef`, so check `.spec.containers[*].envFrom` as well in a real review. No workload in this lab uses `envFrom`.
 
@@ -63,7 +77,9 @@ Then check the result:
 kubectl -n starfleet-036-020-03-02 get configmap secret-exposure -o jsonpath='{.data}{"\n"}'
 ```
 
-<!-- CAPTURE: l2-report -->
+```text
+{"envWorkload":"deployment/billing","secret":"db-credentials","volumeWorkload":"pod/reports"}
+```
 
 The report names the Secret and both paths, and it does not contain the Secret value. Before you change `billing`, see the problem for yourself. Ask the running container for the variable:
 
@@ -71,7 +87,9 @@ The report names the Secret and both paths, and it does not contain the Secret v
 kubectl -n starfleet-036-020-03-02 exec deploy/billing -- printenv DB_PASSWORD
 ```
 
-<!-- CAPTURE: l2-printenv-before -->
+```text
+billing-db-6612
+```
 
 The container prints the password in clear text. The kubelet decoded the base64 value when it started the container and placed the result in the environment. Every process in the container, and every crash report that dumps the environment, can see it.
 
@@ -131,7 +149,11 @@ Then check the result. `kubectl rollout status` waits until the new Pod is ready
 kubectl -n starfleet-036-020-03-02 rollout status deployment/billing --timeout=120s
 ```
 
-<!-- CAPTURE: l2-rollout -->
+```text
+deployment "billing" successfully rolled out
+```
+
+This output comes from a run after the rollout had already finished. If you run the command right after `kubectl apply`, it first prints lines such as `Waiting for deployment "billing" rollout to finish: 1 old replicas are pending termination...` while the old Pod stops.
 
 `kubectl apply` removed the `DB_PASSWORD` entry because the earlier version of the Deployment was also created with `kubectl apply`, so kubectl knows which fields it set before. If you edit the Deployment with `kubectl edit` instead, delete the entry by hand.
 
@@ -143,15 +165,20 @@ Check the three facts the task asks for: the file exists with the right mode, th
 kubectl -n starfleet-036-020-03-02 exec deploy/billing -- ls -lL /etc/db
 ```
 
-<!-- CAPTURE: l2-ls -->
+```text
+total 4
+-r--------    1 root     root            15 Nov 22 20:41 password
+```
 
-The file `password` has the mode `-r--------`, which is 0400. Now read the file, as the program would. The `echo` adds a line break, because the Secret value has none:
+The file `password` has the mode `-r--------`, which is 0400, and belongs to `root`. Its size is 15 bytes, the length of the password. The date in your own lab differs. Now read the file, as the program would. The `echo` adds a line break, because the Secret value has none:
 
 ```sh
 kubectl -n starfleet-036-020-03-02 exec deploy/billing -- cat /etc/db/password; echo
 ```
 
-<!-- CAPTURE: l2-cat -->
+```text
+billing-db-6612
+```
 
 The file holds the same password the variable held before. Finally, ask for the variable again:
 
@@ -159,9 +186,12 @@ The file holds the same password the variable held before. Finally, ask for the 
 kubectl -n starfleet-036-020-03-02 exec deploy/billing -- printenv DB_PASSWORD; echo "exit code $?"
 ```
 
-<!-- CAPTURE: l2-printenv-after -->
+```text
+command terminated with exit code 1
+exit code 1
+```
 
-`printenv` prints nothing and exits with a non-zero code, because the new container has no `DB_PASSWORD`. A crash report that dumps the environment no longer contains the password.
+`printenv` prints no value and exits with code 1, because the new container has no `DB_PASSWORD`. The line `command terminated with exit code 1` comes from kubectl, which reports the exit code of the command in the container. A crash report that dumps the environment no longer contains the password.
 
 You now know how to find the two ways a workload reads a Secret, and how to move a Deployment from an environment variable to a read-only file with restricted permissions. The open question is who can still reach the file. A user with the right to run `kubectl exec` in the Pod can still read `/etc/db/password`, as the check above shows, so the `pods/exec` permission in RBAC (role-based access control) is still part of the protection. After recording the result, remove this lab with `astrona destroy ats-036-lab-020-03-02`.
 

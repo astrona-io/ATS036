@@ -7,28 +7,18 @@ if [[ "$(kubectl config current-context)" != "$context" ]]; then
   printf 'Refusing to operate on another Kubernetes context\n' >&2
   exit 1
 fi
-solution_directory="$(cd "$(dirname "$0")" && pwd)"
-engine="${engine:-${ASTRONA_CONTAINER_ENGINE:-podman}}"
-cluster="${cluster:-${ASTRONA_KIND_CLUSTER:-}}"
-set +e
-exec 2>&1
-ns=starfleet-036-030-02-02
-echo "=== CAPTURE lab2-objects-before"
-kubectl -n $ns get cronjobs,jobs,pods
-echo "=== CAPTURE lab2-job-owners"
-kubectl -n $ns get jobs -o custom-columns=NAME:.metadata.name,OWNER-KIND:.metadata.ownerReferences[0].kind,OWNER:.metadata.ownerReferences[0].name
-echo "=== CAPTURE lab2-pod-owners"
-kubectl -n $ns get pods -l app=node-report -o custom-columns=NAME:.metadata.name,OWNER-KIND:.metadata.ownerReferences[0].kind,OWNER:.metadata.ownerReferences[0].name
-echo "=== CAPTURE lab2-template-before"
-kubectl -n $ns get cronjob node-report -o jsonpath='{.spec.suspend}{" "}{.spec.jobTemplate.spec.template.spec.serviceAccountName}{" "}{.spec.jobTemplate.spec.template.spec.hostPID}{"\n"}'
-echo "=== CAPTURE lab2-hostpid-ps"
-report_pod="$(kubectl -n $ns get pods -l app=node-report -o jsonpath='{.items[0].metadata.name}')"; kubectl -n $ns exec "$report_pod" -- ps -o pid,user,comm 2>&1
-bash "$solution_directory/apply.real.sh" 2>&1
-echo "=== CAPTURE lab2-objects-after"
-kubectl -n $ns get cronjobs,jobs,pods
-sleep 65
-echo "=== CAPTURE lab2-objects-next-minute"
-kubectl -n $ns get cronjobs,jobs,pods
+lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
+solution_directory="$lab_directory/solution"
+namespace="starfleet-036-030-02-02"
 
-echo "=== CAPTURE end"
-exit 1
+kubectl apply -f "$solution_directory/configmap-persistence-finding.yaml"
+# Suspend first, so the CronJob controller starts no new Job while the
+# running ones are removed.
+kubectl -n "$namespace" patch cronjob node-report --type=merge -p '{"spec":{"suspend":true}}'
+pods_gone=0
+for attempt in $(seq 1 45); do
+  kubectl -n "$namespace" delete jobs -l app=node-report --ignore-not-found --wait=false
+  if [[ -z "$(kubectl -n "$namespace" get pods -l app=node-report -o name)" ]]; then pods_gone=1; break; fi
+  sleep 2
+done
+test "$pods_gone" -eq 1
