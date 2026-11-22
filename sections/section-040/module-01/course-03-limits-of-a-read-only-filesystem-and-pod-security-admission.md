@@ -106,6 +106,12 @@ kubectl -n sealed wait --for=condition=Ready pod/compliant-pod --timeout=90s
 kubectl -n sealed exec compliant-pod -- sh -c 'echo test > /root-file && echo written'
 ```
 
+The write fails. The shell prints `sh: can't create /root-file: Permission denied` and kubectl prints `command terminated with exit code 1`. This error comes from file permissions, not from a read-only filesystem: the process runs as user 10001, and only `root` may write to the `/` directory. Write to `/tmp`, a directory that every user may write to:
+
+```sh
+kubectl -n sealed exec compliant-pod -- sh -c 'echo test > /tmp/root-file && echo written'
+```
+
 The write succeeds and the command prints `written`. The Pod passes `restricted`, yet its root filesystem is writable. Pod Security Admission does not replace `readOnlyRootFilesystem`.
 
 ## Scope of Pod Security Admission

@@ -132,7 +132,13 @@ expect 'message lists seccompProfile' "$rejected" 'seccompProfile'
 save_yaml_from_page "$page" compliant-pod.yaml
 expect 'compliant Pod is accepted' "$(kubectl apply -f compliant-pod.yaml)" 'pod/compliant-pod created'
 kubectl -n sealed wait --for=condition=Ready pod/compliant-pod --timeout=90s
-expect_equal 'root filesystem of the compliant Pod is writable' "$(kubectl -n sealed exec compliant-pod -- sh -c 'echo test > /root-file && echo written')" written
+if root_write="$(kubectl -n sealed exec compliant-pod -- sh -c 'echo test > /root-file && echo written' 2>&1)"; then
+  printf 'FAIL: user 10001 wrote to / although the page says it cannot\n' >&2; exit 1
+fi
+printf '%s\n' "$root_write"
+expect 'the write to / fails with Permission denied' "$root_write" "sh: can't create /root-file: Permission denied"
+expect 'kubectl reports exit code 1' "$root_write" 'command terminated with exit code 1'
+expect_equal 'root filesystem of the compliant Pod is writable in /tmp' "$(kubectl -n sealed exec compliant-pod -- sh -c 'echo test > /tmp/root-file && echo written')" written
 
 # Verifying and enforcing immutability
 page=course-04-verifying-and-enforcing-immutability.md
