@@ -23,7 +23,13 @@ Start with the Pods and their labels. The label list matters, because the quaran
 kubectl -n starfleet-036-030-01-02 get pods --show-labels
 ```
 
-<!-- CAPTURE: lab1-pods-before -->
+```text
+NAME                    READY   STATUS    RESTARTS   AGE   LABELS
+probe-89846ccb9-xr5jw   1/1     Running   0          5s    app=probe,pod-template-hash=89846ccb9
+threat-client           1/1     Running   0          5s    app=threat-client
+```
+
+The output on this page comes from a test run of the lab. In your lab, the random parts differ: the name suffix of the `probe` Pod, the UIDs and the times.
 
 The `threat-client` Pod is a bare Pod. A bare Pod is a Pod that no controller owns, so no ReplicaSet recreates it if it stops. The `probe` Pod belongs to the Deployment `probe` and runs as the ServiceAccount `probe-reader`. A ServiceAccount is the Kubernetes identity that a Pod uses when it sends requests to the API server.
 
@@ -36,7 +42,10 @@ kubectl -n starfleet-036-030-01-02 get configmap incident-ticket -o jsonpath='{.
 kubectl -n starfleet-036-030-01-02 get pod threat-client -o jsonpath='{.metadata.uid}{"\n"}'
 ```
 
-<!-- CAPTURE: lab1-ticket-uid -->
+```text
+70e39f38-591a-4a30-88a8-80860ad33d9b
+70e39f38-591a-4a30-88a8-80860ad33d9b
+```
 
 The two lines are the same, so the live Pod is the one under investigation. Your UID is different from the one shown here. Save the Pod object to a file on your host before you change anything, so the record holds the state from before containment:
 
@@ -54,9 +63,24 @@ The label by itself blocks nothing. It marks the Pod for the people who read the
 
 ## Cut the network traffic with a NetworkPolicy
 
-A NetworkPolicy is a Kubernetes object that says which traffic may reach or leave the Pods it selects. The network plugin of the cluster enforces it, not the API server. In kind, the default network plugin is kindnet, and it supports NetworkPolicy. When a policy selects a Pod and lists a direction in `policyTypes` without any rule for that direction, the network plugin drops all traffic in that direction.
+A NetworkPolicy is a Kubernetes object that says which traffic may reach or leave the Pods it selects. The network plugin of the cluster enforces it, not the API server. The network plugin of this kind cluster is kindnet, and kindnet enforces NetworkPolicy. When a policy selects a Pod and lists a direction in `policyTypes` without any rule for that direction, the network plugin drops all traffic in that direction.
 
-Save this as `networkpolicy-quarantine.yaml`:
+First test the traffic of the Pod, so you can compare it after the change. A DNS (Domain Name System) lookup of the API server Service is a small request that leaves the Pod and goes to the cluster DNS server:
+
+```sh
+kubectl -n starfleet-036-030-01-02 exec threat-client -- nslookup -timeout=3 kubernetes.default.svc.cluster.local
+```
+
+```text
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+Name:	kubernetes.default.svc.cluster.local
+Address: 10.96.0.1
+
+```
+
+The DNS server at `10.96.0.10` answers, so the Pod can still send traffic out. Save this as `networkpolicy-quarantine.yaml`:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -86,9 +110,51 @@ kubectl -n starfleet-036-030-01-02 get pod threat-client -o custom-columns=NAME:
 kubectl -n starfleet-036-030-01-02 get networkpolicy quarantine -o yaml
 ```
 
-<!-- CAPTURE: lab1-quarantine-after -->
+```text
+NAME            UID                                    PHASE     INCIDENT
+threat-client   70e39f38-591a-4a30-88a8-80860ad33d9b   Running   quarantine
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"quarantine","namespace":"starfleet-036-030-01-02"},"spec":{"podSelector":{"matchLabels":{"incident":"quarantine"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2026-11-22T20:41:37Z"
+  generation: 1
+  name: quarantine
+  namespace: starfleet-036-030-01-02
+  resourceVersion: "604"
+  uid: c4e86c81-f75b-42c2-81d2-ae7eefca4d14
+spec:
+  podSelector:
+    matchLabels:
+      incident: quarantine
+  policyTypes:
+  - Ingress
+  - Egress
+```
 
-The Pod keeps its UID and its `Running` phase, and it now carries `incident=quarantine`. The policy selects only that label, so the `probe` Pod keeps its traffic. The policy blocks network traffic only. It does not stop a process inside the Pod, and it does not change what the ServiceAccount token may do from somewhere else.
+The Pod keeps its UID and its `Running` phase, and it now carries `incident=quarantine`. The policy has a `podSelector` and both `policyTypes`, and no `ingress` or `egress` rules. Now run the same DNS lookup from both Pods. The `probe` Pod is the control: it carries no quarantine label, so its lookup must still work:
+
+```sh
+kubectl -n starfleet-036-030-01-02 exec threat-client -- nslookup -timeout=3 kubernetes.default.svc.cluster.local
+kubectl -n starfleet-036-030-01-02 exec deploy/probe -- nslookup -timeout=3 kubernetes.default.svc.cluster.local
+```
+
+```text
+;; connection timed out; no servers could be reached
+
+command terminated with exit code 1
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+
+Name:	kubernetes.default.svc.cluster.local
+Address: 10.96.0.1
+
+```
+
+The lookup from `threat-client` times out, and kubectl reports exit code 1. kindnet drops the request because the policy denies all egress traffic of the Pod. The lookup from `probe` still gets an answer, so the policy selects only the labelled Pod. The policy blocks network traffic only. It does not stop a process inside the Pod, and it does not change what the ServiceAccount token may do from somewhere else.
 
 ## Find and delete the long-lived token
 
@@ -98,7 +164,10 @@ A ServiceAccount can have tokens that live outside any Pod. A Secret of the type
 kubectl -n starfleet-036-030-01-02 get secrets --field-selector type=kubernetes.io/service-account-token -o custom-columns=NAME:.metadata.name,SERVICEACCOUNT:.metadata.annotations.kubernetes\\.io/service-account\\.name
 ```
 
-<!-- CAPTURE: lab1-token-secrets-before -->
+```text
+NAME                  SERVICEACCOUNT
+threat-reader-token   threat-reader
+```
 
 One Secret, `threat-reader-token`, belongs to `threat-reader`. Delete it:
 
@@ -117,9 +186,14 @@ kubectl -n starfleet-036-030-01-02 get rolebindings -o wide
 kubectl -n starfleet-036-030-01-02 auth can-i get secrets --as=system:serviceaccount:starfleet-036-030-01-02:threat-reader
 ```
 
-<!-- CAPTURE: lab1-rbac-before -->
+```text
+NAME                    ROLE                 AGE   USERS   GROUPS   SERVICEACCOUNTS
+probe-reader-secrets    Role/secret-reader   5s                     starfleet-036-030-01-02/probe-reader
+threat-reader-secrets   Role/secret-reader   5s                     starfleet-036-030-01-02/threat-reader
+yes
+```
 
-The binding `threat-reader-secrets` gives the Role `secret-reader` to `threat-reader`, and `probe-reader-secrets` gives the same Role to `probe-reader`. Deleting the Role would also remove the access of `probe-reader`, so delete only the binding of `threat-reader`:
+The API server answers `yes`, so `threat-reader` can still read Secrets. The binding `threat-reader-secrets` gives the Role `secret-reader` to `threat-reader`, and `probe-reader-secrets` gives the same Role to `probe-reader`. Deleting the Role would also remove the access of `probe-reader`, so delete only the binding of `threat-reader`:
 
 ```sh
 kubectl -n starfleet-036-030-01-02 delete rolebinding threat-reader-secrets
@@ -134,7 +208,12 @@ kubectl -n starfleet-036-030-01-02 auth can-i get secrets --as=system:serviceacc
 kubectl -n starfleet-036-030-01-02 get secrets --field-selector type=kubernetes.io/service-account-token
 ```
 
-<!-- CAPTURE: lab1-access-after -->
+```text
+no
+no
+yes
+No resources found in starfleet-036-030-01-02 namespace.
+```
 
 The API server answers `no` for `threat-reader` and `yes` for `probe-reader`, and no token Secret remains in the namespace. The `--as` flag asks the API server to evaluate the request as the named ServiceAccount. Your own identity needs the `impersonate` permission for that. The administrator user in the kind kubeconfig has it.
 

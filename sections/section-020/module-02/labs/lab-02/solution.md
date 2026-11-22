@@ -23,9 +23,11 @@ Start with the count, because it tells you whether there is anything to investig
 kubectl -n starfleet-036-020-02-02 logs login-service | grep -c "login failed"
 ```
 
-<!-- CAPTURE: l1-count -->
+```text
+8
+```
 
-The number counts every line that contains `login failed`, for every user and every address. Use the exact phrase `login failed` as the pattern. A shorter pattern such as `login` also matches the `login ok` lines and gives a wrong count. This number is the value for `failedCount`.
+The log has 8 failed logins. The number counts every line that contains `login failed`, for every user and every address. Use the exact phrase `login failed` as the pattern. A shorter pattern such as `login` also matches the `login ok` lines and gives a wrong count. This number is the value for `failedCount`.
 
 A count alone does not show an attack. A user who mistypes a password once also produces a `login failed` line. To judge the count, you need to see the lines in order.
 
@@ -37,7 +39,22 @@ Print the whole log. It is short, so you can read it from top to bottom:
 kubectl -n starfleet-036-020-02-02 logs login-service
 ```
 
-<!-- CAPTURE: l1-full-log -->
+```text
+service start port=8443
+login failed user=lena src=10.0.0.41
+login ok user=lena src=10.0.0.41
+health check ok
+login failed user=admin src=10.0.0.23
+login failed user=admin src=10.0.0.23
+login failed user=admin src=10.0.0.23
+login failed user=admin src=10.0.0.23
+login failed user=admin src=10.0.0.23
+login failed user=admin src=10.0.0.23
+login failed user=admin src=10.0.0.23
+login ok user=ops src=10.0.0.23
+health check ok
+service ready
+```
 
 Two kinds of failure appear. The user `lena` fails once from `10.0.0.41` and then logs in from the same address. That pattern is a normal mistyped password. The user `admin` fails many times in a row from `10.0.0.23`. Many failures for one account from one address in a short time is the pattern of automated password guessing, called a brute-force attack.
 
@@ -47,7 +64,10 @@ For a longer log, let the shell group the lines for you. The command below keeps
 kubectl -n starfleet-036-020-02-02 logs login-service | grep "login failed" | sort | uniq -c
 ```
 
-<!-- CAPTURE: l1-by-source -->
+```text
+      7 login failed user=admin src=10.0.0.23
+      1 login failed user=lena src=10.0.0.41
+```
 
 The line with the highest count names the target user and the source address. These are the values for `targetUser` and `sourceAddress`. The source address is in the log only because this application writes it. Without the address, you could not tell one client from many.
 
@@ -59,9 +79,20 @@ The most important question is whether the guessing worked. A successful login f
 kubectl -n starfleet-036-020-02-02 logs login-service --timestamps | grep "src=10.0.0.23"
 ```
 
-<!-- CAPTURE: l1-source-lines -->
+```text
+2026-11-22T20:41:29.459255285Z login failed user=admin src=10.0.0.23
+2026-11-22T20:41:29.459258070Z login failed user=admin src=10.0.0.23
+2026-11-22T20:41:29.459261176Z login failed user=admin src=10.0.0.23
+2026-11-22T20:41:29.459264221Z login failed user=admin src=10.0.0.23
+2026-11-22T20:41:29.459266716Z login failed user=admin src=10.0.0.23
+2026-11-22T20:41:29.459268690Z login failed user=admin src=10.0.0.23
+2026-11-22T20:41:29.459270333Z login failed user=admin src=10.0.0.23
+2026-11-22T20:41:29.459272076Z login ok user=ops src=10.0.0.23
+```
 
-The last line from `10.0.0.23` is a `login ok`, and it names a different user, `ops`, not `admin`. So the client that guessed at `admin` then logged in as `ops`. That is the value for `successUser`. The timestamps come from the container runtime, not from the application, so they show when each line reached the log, which is close to when it was written. They let you state the rate of the failures in the report you give to people.
+The last line from `10.0.0.23` is a `login ok`, and it names a different user, `ops`, not `admin`. So the client that guessed at `admin` then logged in as `ops`. That is the value for `successUser`.
+
+The timestamps come from the container runtime, not from the application, so they show when each line reached the log, which is close to when it was written. All eight lines from `10.0.0.23` arrived within the same second, a few microseconds apart. No person types that fast, so a program sent these attempts. The times in your own lab differ.
 
 ## Record the finding
 
@@ -92,7 +123,9 @@ Then check the result:
 kubectl -n starfleet-036-020-02-02 get configmap login-findings -o jsonpath='{.data}{"\n"}'
 ```
 
-<!-- CAPTURE: l1-report -->
+```text
+{"failedCount":"8","sourceAddress":"10.0.0.23","successUser":"ops","targetUser":"admin"}
+```
 
 The API server stored the four values as strings. The grader reads the live log of `login-service` again and compares each value with it, so the report must match the log, not only a fixed answer. Leave Pod `login-service` running. If its container restarts, the current log starts again and older lines are only in `kubectl logs --previous`.
 

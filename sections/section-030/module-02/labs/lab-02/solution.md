@@ -23,17 +23,45 @@ Start with a list of the scheduling objects and what they have created:
 kubectl -n starfleet-036-030-02-02 get cronjobs,jobs,pods
 ```
 
-<!-- CAPTURE: lab2-objects-before -->
+```text
+NAME                        SCHEDULE      TIMEZONE   SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+cronjob.batch/node-report   * * * * *     <none>     False     1        1s              29s
+cronjob.batch/probe-check   */5 * * * *   <none>     False     0        <none>          29s
+
+NAME                             STATUS    COMPLETIONS   DURATION   AGE
+job.batch/node-report-29923002   Running   0/1           1s         1s
+
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/node-report-29923002-gzqlv   1/1     Running   0          1s
+```
+
+The output on this page comes from a test run of the lab. In your lab, the Job name, the Pod name suffix and the times differ. The CronJob controller builds the Job name from the CronJob name and the scheduled time.
 
 A CronJob is an object that the CronJob controller in kube-controller-manager reads on a schedule. At each scheduled time, the controller creates a Job from the CronJob's `jobTemplate`. A Job is an object that runs Pods until a set number of them finish, and the Job controller creates those Pods. So the `node-report` Pod belongs to a Job, and the Job belongs to the CronJob `node-report`. The `SUSPEND` column shows `False` for both CronJobs: the API server sets `suspend: false` by default when the field is left out.
 
-You can confirm the chain from the Job side. Every Job that the CronJob controller creates carries an `ownerReferences` entry that names the CronJob:
+You can confirm the chain with the `ownerReferences` field. Each controller writes an `ownerReferences` entry into the objects it creates, and the entry names the owner. Start with the Pod:
+
+```sh
+kubectl -n starfleet-036-030-02-02 get pods -o custom-columns=NAME:.metadata.name,OWNER-KIND:.metadata.ownerReferences[0].kind,OWNER:.metadata.ownerReferences[0].name
+```
+
+```text
+NAME                         OWNER-KIND   OWNER
+node-report-29923002-gzqlv   Job          node-report-29923002
+```
+
+The Pod belongs to the Job `node-report-29923002`. Now ask the same question of the Job:
 
 ```sh
 kubectl -n starfleet-036-030-02-02 get jobs -o custom-columns=NAME:.metadata.name,OWNER-KIND:.metadata.ownerReferences[0].kind,OWNER:.metadata.ownerReferences[0].name
 ```
 
-<!-- CAPTURE: lab2-job-owners -->
+```text
+NAME                   OWNER-KIND   OWNER
+node-report-29923002   CronJob      node-report
+```
+
+The Job belongs to the CronJob `node-report`, so the CronJob is the object to stop.
 
 ## Read the Pod template
 
@@ -43,7 +71,11 @@ The Pod template inside the CronJob decides what every future Pod looks like. Re
 kubectl -n starfleet-036-030-02-02 get cronjob node-report -o jsonpath='{.spec.suspend}{" "}{.spec.jobTemplate.spec.template.spec.serviceAccountName}{" "}{.spec.jobTemplate.spec.template.spec.hostPID}{"\n"}'
 ```
 
-<!-- CAPTURE: lab2-template-before -->
+```text
+false build-helper true
+```
+
+The CronJob is not suspended, its Pods run as the ServiceAccount `build-helper`, and `hostPID` is `true`.
 
 `hostPID: true` tells the kubelet to start the container in the PID (process ID) namespace of the node instead of a namespace of its own. The container then sees every process on the node, including the kubelet and the container runtime, and it can read their command lines through `/proc`. A container that runs as root keeps the `CAP_KILL` capability by default, so it can also send signals to those processes and stop them. You can see the effect in the running Pod:
 
@@ -52,9 +84,25 @@ report_pod="$(kubectl -n starfleet-036-030-02-02 get pods -l app=node-report -o 
 kubectl -n starfleet-036-030-02-02 exec "$report_pod" -- ps -o pid,user,comm
 ```
 
-<!-- CAPTURE: lab2-hostpid-ps -->
+```text
+PID   USER     COMMAND
+    1 root     systemd
+   97 root     systemd-journal
+  112 root     containerd
+  216 root     kubelet
+  267 root     containerd-shim
+  287 root     containerd-shim
+  325 65535    pause
+  327 65535    pause
+  370 root     kube-proxy
+  579 root     kindnetd
+  719 root     containerd-shim
+  744 65535    pause
+  769 root     sleep
+  802 root     ps
+```
 
-The list holds node processes, not only the `sh` and `sleep` of the container. A normal container would show only its own processes. Save the CronJob to a file before you change it, so the record keeps the template as it was:
+The list holds the processes of the node: `systemd`, `containerd`, the `kubelet`, `kube-proxy` and `kindnetd`, next to the `sleep` of the container and the `ps` command itself. The process IDs on your node differ. A normal container would show only its own processes. Save the CronJob to a file before you change it, so the record keeps the template as it was:
 
 ```sh
 kubectl -n starfleet-036-030-02-02 get cronjob node-report -o yaml > node-report-cronjob.yaml
@@ -106,9 +154,25 @@ If kubectl reports that no matching resources were found, the Pods were already 
 kubectl -n starfleet-036-030-02-02 get cronjobs,jobs,pods
 ```
 
-<!-- CAPTURE: lab2-objects-after -->
+```text
+NAME                        SCHEDULE      TIMEZONE   SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+cronjob.batch/node-report   * * * * *     <none>     True      0        4s              32s
+cronjob.batch/probe-check   */5 * * * *   <none>     False     0        <none>          32s
+```
 
-`node-report` shows `True` in the `SUSPEND` column and no `node-report` Job or Pod remains. `probe-check` still shows `False`, so the normal schedule keeps running. Run the same command again after the next full minute. The CronJob controller skips a suspended CronJob, so no new `node-report` Job appears.
+`node-report` shows `True` in the `SUSPEND` column and `0` in the `ACTIVE` column. kubectl prints no Job and no Pod, so none is left in the namespace. `probe-check` still shows `False`, so the normal schedule keeps running. Run the same command again after the next full minute:
+
+```sh
+kubectl -n starfleet-036-030-02-02 get cronjobs,jobs,pods
+```
+
+```text
+NAME                        SCHEDULE      TIMEZONE   SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+cronjob.batch/node-report   * * * * *     <none>     True      0        69s             97s
+cronjob.batch/probe-check   */5 * * * *   <none>     False     0        <none>          97s
+```
+
+The `LAST SCHEDULE` of `node-report` is now 69 seconds ago, and still no Job appears. The CronJob controller skipped the scheduled time because the CronJob is suspended.
 
 You now have the CronJob preserved and suspended, and no code of it is left running. The open question is the authority of `build-helper`. A suspended CronJob starts no new Pods, but the ServiceAccount keeps every permission its RoleBindings give it, so an incident team checks those bindings next.
 

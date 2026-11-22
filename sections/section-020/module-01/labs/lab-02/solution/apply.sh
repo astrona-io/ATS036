@@ -7,30 +7,27 @@ if [[ "$(kubectl config current-context)" != "$context" ]]; then
   printf 'Refusing to operate on another Kubernetes context\n' >&2
   exit 1
 fi
-solution_directory="$(cd "$(dirname "$0")" && pwd)"
-engine="${engine:-${ASTRONA_CONTAINER_ENGINE:-podman}}"
-cluster="${cluster:-${ASTRONA_KIND_CLUSTER:-}}"
-set +e
-exec 2>&1
-ns=starfleet-036-020-01-02
-pod_node=$(kubectl -n $ns get pod crash-report -o jsonpath='{.spec.nodeName}')
-pod_uid=$(kubectl -n $ns get pod crash-report -o jsonpath='{.metadata.uid}')
-log_directory="/var/log/pods/${ns}_crash-report_${pod_uid}"
-echo "=== CAPTURE l2-pod-wide"
-kubectl -n $ns get pod crash-report -o wide
-echo "=== CAPTURE l2-node-uid"
-echo "$pod_node $pod_uid"
-echo "=== CAPTURE l2-pods-directory"
-"$engine" exec "$pod_node" ls /var/log/pods
-echo "=== CAPTURE l2-report-files"
-"$engine" exec "$pod_node" ls -l "$log_directory/report"
-echo "=== CAPTURE l2-previous-file"
-"$engine" exec "$pod_node" cat "$log_directory/report/0.log"
-echo "=== CAPTURE l2-container-links"
-"$engine" exec "$pod_node" ls -l /var/log/containers | grep crash-report
-bash "$solution_directory/apply.real.sh" 2>&1
-echo "=== CAPTURE l2-configmap"
-kubectl -n $ns get configmap node-log-evidence -o yaml
+namespace="starfleet-036-020-01-02"
 
-echo "=== CAPTURE end"
-exit 1
+# The node, Pod UID and token are created at run time, so a fixed YAML file
+# cannot hold them. Read them from the Pod and from the node, then apply
+# ConfigMap node-log-evidence.
+pod_node="$(kubectl -n "$namespace" get pod crash-report -o jsonpath='{.spec.nodeName}')"
+case "$pod_node" in
+  "$cluster-control-plane"|"$cluster-worker") ;;
+  *) printf 'Pod crash-report runs on a node outside this lab: %s\n' "$pod_node" >&2; exit 1 ;;
+esac
+pod_uid="$(kubectl -n "$namespace" get pod crash-report -o jsonpath='{.metadata.uid}')"
+restart_count="$(kubectl -n "$namespace" get pod crash-report -o jsonpath='{.status.containerStatuses[?(@.name=="report")].restartCount}')"
+log_directory="/var/log/pods/${namespace}_crash-report_${pod_uid}"
+log_files="$("$engine" exec "$pod_node" ls "$log_directory/report" | sort | paste -sd, -)"
+crash_token="$("$engine" exec "$pod_node" cat "$log_directory/report/$((restart_count - 1)).log" | sed -n 's/.*crash-token=//p' | head -n 1)"
+test -n "$crash_token"
+
+kubectl -n "$namespace" create configmap node-log-evidence \
+  --from-literal=nodeName="$pod_node" \
+  --from-literal=podUID="$pod_uid" \
+  --from-literal=logDirectory="$log_directory" \
+  --from-literal=logFiles="$log_files" \
+  --from-literal=crashToken="$crash_token" \
+  --dry-run=client -o yaml | kubectl apply -f -

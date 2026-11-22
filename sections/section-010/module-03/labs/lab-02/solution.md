@@ -24,9 +24,13 @@ Start with the Pods, so that you know what the audit record can point to. The `-
 kubectl -n starfleet-036-010-03-02 get pods -l app=probe -o wide
 ```
 
-<!-- CAPTURE: l1-probe-pods -->
+```text
+NAME                     READY   STATUS    RESTARTS   AGE   IP           NODE                                             NOMINATED NODE   READINESS GATES
+probe-5fb454f87b-2h4kg   2/2     Running   0          66s   10.244.1.2   astro-test-ats-036-lab-010-03-02-worker          <none>           <none>
+probe-5fb454f87b-s47n7   2/2     Running   0          66s   10.244.0.5   astro-test-ats-036-lab-010-03-02-control-plane   <none>           <none>
+```
 
-The two `probe` Pods run on different nodes: one on the control-plane node and one on the worker. The `READY` column shows `2/2`, because each Pod has two containers. So a Pod name alone does not say which node or which container an attacker used.
+The two `probe` Pods run on different nodes: one on the control-plane node and one on the worker. The `READY` column shows `2/2`, because each Pod has two containers. So a Pod name alone does not say which node or which container an attacker used. This output comes from a test run: in your own lab the node names start with `astro-ats-036-lab-010-03-02-`, and the Pod name suffixes, IP addresses, audit IDs and container IDs on this page are different.
 
 The API server (`kube-apiserver`) writes one JSON line for each audit event to `/var/log/training-audit/audit.jsonl` on the control-plane node. An `exec` request is a request on the resource `pods` with the subresource `exec`. A short program can filter the log for those requests and print the fields you need.
 
@@ -58,9 +62,12 @@ Run it against the log on the control-plane node:
 podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 exec-report.py
 ```
 
-<!-- CAPTURE: l1-exec-report -->
+```text
+05892f69-3c61-4639-9686-4c77dc9150a0 ResponseStarted probe-5fb454f87b-s47n7 /api/v1/namespaces/starfleet-036-010-03-02/pods/probe-5fb454f87b-s47n7/exec?command=sh&command=-c&command=ls+%2Fapp&container=probe&stderr=true&stdout=true
+05892f69-3c61-4639-9686-4c77dc9150a0 ResponseComplete probe-5fb454f87b-s47n7 /api/v1/namespaces/starfleet-036-010-03-02/pods/probe-5fb454f87b-s47n7/exec?command=sh&command=-c&command=ls+%2Fapp&container=probe&stderr=true&stdout=true
+```
 
-Each line is one audit event. An `exec` request keeps a connection open, so the API server can write more than one event for it, one for each stage. All events of one request share the same `auditID`. The third column is `objectRef.name`, the Pod that received the request. The `requestURI` lists the command as `command=` parameters and the container as the `container=` parameter. Here it is `container=probe`: kubectl always sends the container name, and it asked for the `probe` container, not `log-agent`.
+Each line is one audit event. An `exec` request keeps a connection open, so the API server wrote two events for it: `ResponseStarted` when the session opened and `ResponseComplete` when it closed. Both events share the same `auditID`. The third column is `objectRef.name`, the Pod that received the request. The `requestURI` lists the command as URL-encoded `command=` parameters (`sh`, `-c`, `ls /app`) and the container as the `container=` parameter. Here it is `container=probe`: kubectl sent the container name in the request, and it asked for the `probe` container, not `log-agent`.
 
 Put the values from your output into variables. Your audit ID and Pod name are different from any example:
 
@@ -77,7 +84,9 @@ The audit record does not hold the node. The scheduler wrote the node into the P
 kubectl -n starfleet-036-010-03-02 get pod "$pod_name" -o jsonpath='{.spec.nodeName}{"\n"}'
 ```
 
-<!-- CAPTURE: l1-node-name -->
+```text
+astro-test-ats-036-lab-010-03-02-control-plane
+```
 
 The Pod that received the `exec` request runs on the control-plane node. Compare this with the `get pods -o wide` output: it is one of the two nodes, and only the audit record tells you which Pod, and so which node, is the right one.
 
@@ -87,7 +96,10 @@ The kubelet, the node agent that starts the containers of a Pod, reports the ID 
 kubectl -n starfleet-036-010-03-02 get pod "$pod_name" -o jsonpath='{range .status.containerStatuses[*]}{.name}{" "}{.containerID}{"\n"}{end}'
 ```
 
-<!-- CAPTURE: l1-container-ids -->
+```text
+log-agent containerd://dc2856bf925908a256ad836136da5a28735880835404f0d19a1450860bf76de5
+probe containerd://0562a22c76f35ed42ce3a09136529978cd86103a25f2e7f1f1a565a2e2c63dac
+```
 
 The output has one line for `log-agent` and one for `probe`. The `exec` request named `probe`, so its line holds the container ID you need. The `log-agent` ID belongs to a different process and would send the runtime team to the wrong container. Put the `probe` value into a variable:
 
@@ -102,9 +114,12 @@ You can confirm the ID on the node itself. In a kind cluster each node is a cont
 podman exec "$pod_node" crictl ps --id "${container_id#containerd://}"
 ```
 
-<!-- CAPTURE: l1-crictl-ps -->
+```text
+CONTAINER           IMAGE               CREATED              STATE               NAME                ATTEMPT             POD ID              POD                      NAMESPACE
+0562a22c76f35       67fd5f7b4b120       About a minute ago   Running             probe               0                   5663fa1f3fb88       probe-5fb454f87b-s47n7   starfleet-036-010-03-02
+```
 
-Check the `STATE` and `NAME` columns: containerd on that node runs the container with this ID, and its name is `probe`. This is the view that a runtime sensor on the node has, and the container ID is the value that links it to the audit record.
+`crictl` shows the first 13 characters of the ID in the `CONTAINER` column. The `STATE` column shows `Running`, the `NAME` column shows `probe`, and the `POD` and `NAMESPACE` columns name the same Pod as the audit record. So containerd on that node runs this exact container. This is the view that a runtime sensor on the node has, and the container ID is the value that links it to the audit record.
 
 ## Record the correlation
 
@@ -138,7 +153,25 @@ Then check the result:
 kubectl -n starfleet-036-010-03-02 get configmap exec-correlation -o yaml
 ```
 
-<!-- CAPTURE: l1-configmap -->
+```text
+apiVersion: v1
+data:
+  auditID: 05892f69-3c61-4639-9686-4c77dc9150a0
+  container: probe
+  containerID: containerd://0562a22c76f35ed42ce3a09136529978cd86103a25f2e7f1f1a565a2e2c63dac
+  nodeName: astro-test-ats-036-lab-010-03-02-control-plane
+  podName: probe-5fb454f87b-s47n7
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"auditID":"05892f69-3c61-4639-9686-4c77dc9150a0","container":"probe","containerID":"containerd://0562a22c76f35ed42ce3a09136529978cd86103a25f2e7f1f1a565a2e2c63dac","nodeName":"astro-test-ats-036-lab-010-03-02-control-plane","podName":"probe-5fb454f87b-s47n7"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"exec-correlation","namespace":"starfleet-036-010-03-02"}}
+  creationTimestamp: "2026-11-22T20:42:36Z"
+  name: exec-correlation
+  namespace: starfleet-036-010-03-02
+  resourceVersion: "667"
+  uid: 5766283b-b8b1-40d2-86fe-8694886eb0ca
+```
 
 The ConfigMap now links three sources. The `auditID` points to the record that the API server wrote. The `podName` and `container` come from that record. The `nodeName` and `containerID` come from the Pod object, which the scheduler and the kubelet filled in. A runtime alert or a node log that holds the same container ID, at a time close to the audit record's `stageTimestamp`, belongs to the same session.
 
