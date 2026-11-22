@@ -8,7 +8,7 @@ Use a host shell with the private kubeconfig for this independent kind environme
 
 ```sh
 export KUBECONFIG="$(astrona kubeconfig ats-036-lab-050-03-01)"
-test "$(kubectl config current-context)" = "kind-ats-036-lab-050-03-01" || exit 1
+test "$(kubectl config current-context)" = "kind-astro-ats-036-lab-050-03-01" || exit 1
 node_name="astro-ats-036-lab-050-03-01-control-plane"
 worker_name="astro-ats-036-lab-050-03-01-worker"
 ```

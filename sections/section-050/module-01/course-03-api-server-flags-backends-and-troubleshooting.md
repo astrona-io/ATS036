@@ -35,7 +35,7 @@ node_name="astro-ats-036-playground-050-01-control-plane"
 podman exec "$node_name" grep -e '--audit' /etc/kubernetes/manifests/kube-apiserver.yaml
 ```
 
-The output has five lines. They set the policy file to `/etc/kubernetes/training-audit-policy.json`, the log path to `/var/log/training-audit/audit.jsonl`, the maximum age to `1`, the number of backups to `1` and the maximum size to `10`. These small rotation values suit a training cluster. A production cluster keeps more history and sends events to a central store.
+The training setup writes this manifest as JSON on a single line, so `grep` prints that one line. Inside it, five `--audit` flags set the policy file to `/etc/kubernetes/training-audit-policy.json`, the log path to `/var/log/training-audit/audit.jsonl`, the maximum age to `1`, the number of backups to `1` and the maximum size to `10`. These small rotation values suit a training cluster. A production cluster keeps more history and sends events to a central store.
 
 Check that the mounts exist for both paths:
 
@@ -43,7 +43,7 @@ Check that the mounts exist for both paths:
 podman exec "$node_name" grep -n -A3 'training-audit' /etc/kubernetes/manifests/kube-apiserver.yaml
 ```
 
-The matching lines show a volume for the policy file of type `File`, a volume for the log directory of type `DirectoryOrCreate`, and the matching `volumeMounts`. The policy mount is read-only. The log mount is writable.
+Because the manifest is one line, `grep` prints that same line again. Look inside it for a volume for the policy file of type `File`, a volume for the log directory of type `DirectoryOrCreate`, and the matching `volumeMounts`. The policy mount is read-only. The log mount is writable.
 
 Then check the log file on the node:
 

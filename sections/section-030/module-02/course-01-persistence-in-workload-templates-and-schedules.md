@@ -62,7 +62,7 @@ The Deployment is the object to preserve and to stop. Its template contains the 
 kubectl -n starfleet get deployment cache-sync -o yaml
 ```
 
-Check `spec.template.spec.serviceAccountName`, the `image`, the `command` and the `env` list. Then check `metadata.creationTimestamp` and `metadata.managedFields`, which record when the object appeared and which client wrote it. A Deployment that no one in the team can explain, created at an odd time, is a strong finding.
+Check `spec.template.spec.serviceAccountName`, the `image`, the `command` and the `env` list. Then check `metadata.creationTimestamp`, which records when the object appeared. The field `metadata.managedFields` records which client wrote each field, but `kubectl get -o yaml` hides it unless you add `--show-managed-fields`. A Deployment that no one in the team can explain, created at an odd time, is a strong finding.
 
 Search the whole cluster for objects of the same kind, sorted by age:
 
