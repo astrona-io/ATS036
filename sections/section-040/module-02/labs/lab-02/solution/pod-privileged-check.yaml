@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: privileged-check
+spec:
+  restartPolicy: Never
+  containers:
+  - name: main
+    image: docker.io/library/busybox:1.37.0
+    command: ["sleep", "3600"]
+    securityContext:
+      privileged: true

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collector
+  namespace: starfleet-036-040-03-02
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: collector
+  template:
+    metadata:
+      labels:
+        app: collector
+    spec:
+      terminationGracePeriodSeconds: 2
+      containers:
+      - name: collector
+        image: docker.io/library/busybox:1.37.0
+        command:
+        - sh
+        - -c
+        - while true; do cat /host-data/approved.txt 2>/dev/null; sleep 30; done
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+          limits:
+            memory: 64Mi
+        volumeMounts:
+        - name: node-data
+          mountPath: /host-data
+          readOnly: true
+      volumes:
+      - name: node-data
+        hostPath:
+          path: /var/lib/training-036-040-03-02
+          type: DirectoryOrCreate

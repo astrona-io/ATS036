@@ -8,7 +8,7 @@ Every request to the Kubernetes API server passes through authentication, author
 
 This module teaches how audit records are built, how an audit policy chooses what to record, how the API server writes the log, and how to read the log to find access to sensitive objects such as Secrets. The audit log is not enabled by default. A cluster administrator turns it on with flags on the API server and a policy file.
 
-The four parts are: **The Audit Event Model**, which covers the stages, the levels and the fields of one event; **Writing An Audit Policy**, which covers rule order, matching and the cases a policy silently skips; **API Server Flags, Backends And Troubleshooting**, which covers where the log goes and what breaks when a flag is wrong; and **Reading Audit Records To Monitor Access**, which finds Secret reads and denied requests and checks that the Metadata level keeps payloads out of the log.
+The five parts are: **The Audit Event Model**, which covers the stages, the levels and the fields of one event; **Writing An Audit Policy**, which covers rule order, matching and the cases a policy silently skips; **API Server Flags, Backends And Troubleshooting**, which covers where the log goes and what breaks when a flag is wrong; **Reading Audit Records To Monitor Access**, which finds Secret reads and denied requests and checks that the Metadata level keeps payloads out of the log; and **Impersonation And The Identity In An Audit Record**, which explains how `kubectl --as` works inside the API server and which field holds the real caller.
 
 ## Learning objectives
 
@@ -19,6 +19,7 @@ After this module you can:
 - Explain why the first matching policy rule wins and why `pods` does not match `pods/exec`.
 - Name the API server flags that enable the log, the rotation settings and the webhook backend.
 - Find Secret reads and denied requests in a log file, and confirm that Metadata records contain no request or response body.
+- Tell the real caller in `user` from the impersonated identity in `impersonatedUser`, and say which identity the authorizer checked.
 
 ## Before you start
 

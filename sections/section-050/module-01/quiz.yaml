@@ -13,7 +13,7 @@ scope:
   title: "Designing Useful And Protected Audit Records"
 placement:
   position: after
-  reading: sections/section-050/module-01/course-05-summary.md
+  reading: sections/section-050/module-01/course-06-summary.md
 questions:
   - id: ats036-050-01-q01
     type: single_choice

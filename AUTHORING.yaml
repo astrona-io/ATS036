@@ -445,6 +445,13 @@ sections:
         volume.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-040/module-01/labs/lab-02
+      after_reading: sections/section-040/module-01/course-04-verifying-and-enforcing-immutability.md
+      objective: Write a ValidatingAdmissionPolicy and binding that reject new Pods without readOnlyRootFilesystem
+        in labelled namespaces only, while running Pods keep running.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-040/module-01/course-01-the-writable-container-layer.md
     - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
@@ -478,6 +485,13 @@ sections:
       objective: Run a workload as a non-root user with no Linux capabilities and no way to gain privileges.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-040/module-02/labs/lab-02
+      after_reading: sections/section-040/module-02/course-03-privileged-containers-and-verifying-process-privileges.md
+      objective: Find the privileged workload and the hostPID Pod, enforce the baseline Pod Security Standard
+        on the namespace and roll out the workload without privileged mode.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
     - sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
@@ -510,6 +524,13 @@ sections:
         a read-only root filesystem and a writable temporary path.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-040/module-03/labs/lab-02
+      after_reading: sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
+      objective: Find the container with a writable hostPath mount, record it and make the mount read-only
+        through the Pod template.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
     - sections/section-040/module-03/course-02-updating-by-replacement.md
@@ -533,6 +554,7 @@ sections:
     - Writing An Audit Policy
     - API Server Flags, Backends And Troubleshooting
     - Reading Audit Records To Monitor Access
+    - Impersonation And The Identity In An Audit Record
     playground: true
     module_lab: true
     sources:
@@ -544,6 +566,8 @@ sections:
       adapted_from: null
     - reading: sections/section-050/module-01/course-04-reading-audit-records-to-monitor-access.md
       adapted_from: null
+    - reading: sections/section-050/module-01/course-05-impersonation-and-the-identity-in-an-audit-record.md
+      adapted_from: null
     labs:
     - id: lab-01
       path: sections/section-050/module-01/labs/lab-01
@@ -551,11 +575,19 @@ sections:
       objective: Generate a real Secret read record and verify useful metadata without credential bodies.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-050/module-01/labs/lab-02
+      after_reading: sections/section-050/module-01/course-05-impersonation-and-the-identity-in-an-audit-record.md
+      objective: Send a Secret read as a ServiceAccount with kubectl --as, find its audit record among
+        similar ones and report the real caller and the impersonated identity.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-050/module-01/course-01-the-audit-event-model.md
     - sections/section-050/module-01/course-02-writing-an-audit-policy.md
     - sections/section-050/module-01/course-03-api-server-flags-backends-and-troubleshooting.md
     - sections/section-050/module-01/course-04-reading-audit-records-to-monitor-access.md
+    - sections/section-050/module-01/course-05-impersonation-and-the-identity-in-an-audit-record.md
     quiz: sections/section-050/module-01/quiz.yaml
   - id: module-02
     title: Auditing Interactive Access To Pods
@@ -583,6 +615,13 @@ sections:
       objective: Run a command in a Pod and bind its exec audit record to a report.
       status: alpha
       runtime_verification: passed
+    - id: lab-02
+      path: sections/section-050/module-02/labs/lab-02
+      after_reading: sections/section-050/module-02/course-03-choosing-rules-and-levels-for-interactive-access.md
+      objective: Repair a first-match audit policy so pods/exec and pods/portforward are recorded at Metadata
+        while pods/log and pods/status stay dropped, and restart the API server to load it.
+      status: alpha
+      runtime_verification: pending
     practice_readings:
     - sections/section-050/module-02/course-01-subresources-in-audit-policy-rules.md
     - sections/section-050/module-02/course-02-recording-and-reading-exec-events.md

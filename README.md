@@ -36,7 +36,7 @@ See [curriculum coverage](CURRICULUM.md), [primary sources](SOURCES.md), [questi
 
 ## Hands-On Coverage
 
-This course has 15 ungraded module playgrounds (all on kind) and 26 graded labs (23 on kind, 3 on a qemu VM). Each lab sits right after the reading it practises, with its task before and its solution after. Each module also has a knowledge check of 10 questions. Every lab passed `astrona validate` and `astrona test` on its own runtime, and every playground started with `scripts/ci/test-playground.sh`. The three qemu labs need their own Linux kernel or host services: two run Falco with a live eBPF sensor (one on the host, one as a Helm release that adds Kubernetes metadata), and one sends audit events over TLS to a webhook collector outside the control plane container.
+This course has 15 ungraded module playgrounds (all on kind) and 31 graded labs (28 on kind, 3 on a qemu VM). Each lab sits right after the reading it practises, with its task before and its solution after. Each module also has a knowledge check of 10 questions. Every lab passed `astrona validate` and `astrona test` on its own runtime, and every playground started with `scripts/ci/test-playground.sh`. The three qemu labs need their own Linux kernel or host services: two run Falco with a live eBPF sensor (one on the host, one as a Helm release that adds Kubernetes metadata), and one sends audit events over TLS to a webhook collector outside the control plane container.
 
 | Module | Labs in teaching order |
 | --- | --- |
@@ -49,11 +49,11 @@ This course has 15 ungraded module playgrounds (all on kind) and 26 graded labs 
 | 030/01 | Attribute An API Attempt To A Workload Identity; Isolate A Compromised Pod And Revoke Its Token |
 | 030/02 | Stop A Persistent CronJob Without Deleting It; Contain A Persistent Workload And Its Binding |
 | 030/03 | Trace A Connection To Its Source Pod; Find And Limit A Workload That Can Exhaust Its Node |
-| 040/01 | Run With A Restricted Security Context |
-| 040/02 | Drop All Capabilities And Block Privilege Escalation |
-| 040/03 | Update A Workload By Replacement With A Read-Only Root |
-| 050/01 | Verify Metadata Audit Records Exclude Secret Payloads |
-| 050/02 | Record Interactive Pod Access In The Audit Log |
+| 040/01 | Run With A Restricted Security Context; Enforce A Read-Only Root Filesystem With A ValidatingAdmissionPolicy |
+| 040/02 | Drop All Capabilities And Block Privilege Escalation; Find A Privileged Pod And Block It With Pod Security Admission |
+| 040/03 | Mount A hostPath Volume Read-Only; Update A Workload By Replacement With A Read-Only Root |
+| 050/01 | Verify Metadata Audit Records Exclude Secret Payloads; Send A Denied Secret Read And Find Its Audit Record |
+| 050/02 | Record Interactive Pod Access In The Audit Log; Fix An Audit Policy That Misses Pod Exec Requests |
 | 050/03 | Record The Audit Retention Settings And Log File Protection; Deliver Audit Metadata Outside The Control Plane |
 
 ## Authoring and verification

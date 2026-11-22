@@ -78,23 +78,12 @@ flowchart TB
 
 The diagram shows that the caller receives the Secret data, while the log receives only the metadata of the request.
 
-## Questions the log can answer
-
-Once a record is found, use its fields to answer the usual access questions:
-
-- Who read the Secret: `user.username`, with `impersonatedUser` when set.
-- From where: `sourceIPs` and `userAgent`. A ServiceAccount request from a Pod comes from the Pod address, and `user.extra` can name the Pod for projected tokens.
-- Was it allowed: `responseStatus.code` and the annotation `authorization.k8s.io/decision`.
-- When: the field `requestReceivedTimestamp` and `stageTimestamp`.
-- Which object: `objectRef`.
-
-A burst of `403` results from one identity against many resources suggests discovery by someone with a stolen token. A `get` of a Secret by a ServiceAccount that never read it before is also worth review. Without a baseline of normal access, such events are only a lead, not proof.
+You can now generate a read and a denied read, find both `ResponseComplete` events with a short script, and show that the `Metadata` level keeps the Secret data out of the log. The denied line also showed two identities in one event: the caller in `user` and the identity that the API server checked in `impersonatedUser`. How the API server builds that second identity, and what each field proves about a request, is the next question.
 
 ## Common pitfalls
 
 > [!WARNING]
 > - **Reading only successful requests.** Denied requests show attempts and are often the first sign of misuse.
-> - **Confusing caller and impersonated user.** Report both fields.
 > - **Assuming the log is empty because a name is not found.** Check the namespace, the stage and the rotation state of the file.
 > - **Raising the level to see more.** `Request` and `RequestResponse` can write Secret data into the log. Keep `Metadata`.
 > - **Treating a clean log as proof of no access.** A request the policy skips leaves no record.
