@@ -7,25 +7,30 @@ if [[ "$(kubectl config current-context)" != "$context" ]]; then
   printf 'Refusing to operate on another Kubernetes context\n' >&2
   exit 1
 fi
-solution_directory="$(cd "$(dirname "$0")" && pwd)"
-engine="${engine:-${ASTRONA_CONTAINER_ENGINE:-podman}}"
-cluster="${cluster:-${ASTRONA_KIND_CLUSTER:-}}"
-set +e
-exec 2>&1
+lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
+solution_directory="$lab_directory/solution"
 node_name="${cluster}-control-plane"
-echo "=== CAPTURE l1-policy"
-"$engine" exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
-echo "=== CAPTURE l1-denied-read"
-kubectl -n starfleet-036-050-01-02 get secret navigation-key --as=system:serviceaccount:outpost-036-050-01-02:drifter 2>&1; echo "exit: $?"
-sleep 4
-echo "=== CAPTURE l1-find-record"
-"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 "$solution_directory/find-denied-read.py"
-bash "$solution_directory/apply.real.sh" 2>&1
-audit_id=$(kubectl -n starfleet-036-050-01-02 get configmap denied-read-report -o jsonpath='{.data.auditID}')
-echo "=== CAPTURE l1-full-record"
-"$engine" exec "$node_name" grep -F "$audit_id" /var/log/training-audit/audit.jsonl | python3 -m json.tool
-echo "=== CAPTURE l1-report"
-kubectl -n starfleet-036-050-01-02 get configmap denied-read-report -o jsonpath='{.data}{"\n"}'
+service_account="system:serviceaccount:outpost-036-050-01-02:drifter"
 
-echo "=== CAPTURE end"
-exit 1
+# Task 1: send the read as the ServiceAccount. The API server must deny it.
+error_output="$(mktemp)"
+trap 'rm -f "$error_output"' EXIT
+if kubectl -n starfleet-036-050-01-02 get secret navigation-key --as="$service_account" >/dev/null 2>"$error_output"; then
+  printf 'The impersonated read was allowed; it must be denied\n' >&2
+  exit 1
+fi
+grep -q 'Forbidden' "$error_output"
+
+# Task 2: find the ResponseComplete record of that request (bounded wait).
+record=""
+for attempt in $(seq 1 20); do
+  record="$("$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 "$solution_directory/find-denied-read.py" | awk -v account="$service_account" '$3 == account && $5 == "navigation-key" && $6 == "403" {line=$0} END {print line}')"
+  if [[ -n "$record" ]]; then break; fi
+  sleep 2
+done
+test -n "$record"
+audit_id="$(printf '%s\n' "$record" | awk '{print $1}')"
+caller="$(printf '%s\n' "$record" | awk '{print $2}')"
+
+# Task 3: record the evidence in the ConfigMap.
+sed -e "s/<AUDIT_ID>/$audit_id/" -e "s/<USER>/$caller/" "$solution_directory/configmap-denied-read-report.yaml" | kubectl apply -f -

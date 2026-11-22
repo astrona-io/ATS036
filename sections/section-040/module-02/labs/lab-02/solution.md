@@ -23,7 +23,15 @@ The stored Pod objects hold the answer, so start with the API server, not with t
 kubectl -n starfleet-036-040-02-02 get pods -o custom-columns='POD:.metadata.name,PRIVILEGED:.spec.containers[*].securityContext.privileged,HOSTPID:.spec.hostPID,ADDED:.spec.containers[*].securityContext.capabilities.add'
 ```
 
-<!-- CAPTURE: l2-find-pods -->
+```text
+POD                                PRIVILEGED   HOSTPID   ADDED
+beacon                             <none>       <none>    [NET_BIND_SERVICE]
+node-inspector                     <none>       true      <none>
+probe-7db6ffd7d6-fkjrv             <none>       <none>    <none>
+probe-7db6ffd7d6-sfxdj             <none>       <none>    <none>
+shuttle                            <none>       <none>    <none>
+telemetry-agent-77f9c6bb8d-5m8jp   true         <none>    <none>
+```
 
 One Pod of `telemetry-agent` shows `true` in the `PRIVILEGED` column, and `node-inspector` shows `true` in the `HOSTPID` column. The `beacon` Pod adds the capability `NET_BIND_SERVICE`. That capability only lets a process bind to a port below 1024, and the `baseline` Pod Security Standard allows it, so `beacon` is not a finding.
 
@@ -33,7 +41,11 @@ The Pod name of `telemetry-agent` ends in a random suffix, because the Deploymen
 kubectl -n starfleet-036-040-02-02 get deployments -o custom-columns='DEPLOYMENT:.metadata.name,CONTAINER:.spec.template.spec.containers[*].name,PRIVILEGED:.spec.template.spec.containers[*].securityContext.privileged'
 ```
 
-<!-- CAPTURE: l2-find-deployments -->
+```text
+DEPLOYMENT        CONTAINER   PRIVILEGED
+probe             probe       <none>
+telemetry-agent   agent       true
+```
 
 The Deployment `telemetry-agent` has one container, `agent`, with `privileged: true`. The object is one half of the evidence. The other half is the running process. Read the effective capabilities of process 1 in that container:
 
@@ -41,7 +53,9 @@ The Deployment `telemetry-agent` has one container, `agent`, with `privileged: t
 kubectl -n starfleet-036-040-02-02 exec deploy/telemetry-agent -- grep CapEff /proc/1/status
 ```
 
-<!-- CAPTURE: l2-capeff-before -->
+```text
+CapEff:	000001ffffffffff
+```
 
 `CapEff` is a hexadecimal bit mask of the capabilities that the kernel lets the process use. In a privileged container every bit of a known capability is set, so the value is much larger than the default set of a normal container.
 
@@ -67,7 +81,9 @@ Apply it:
 kubectl apply -f configmap-privilege-finding.yaml
 ```
 
-<!-- CAPTURE: l2-apply-finding -->
+```text
+configmap/privilege-finding created
+```
 
 The finding names the Deployment, not the Pod, because the Pod name changes each time the ReplicaSet controller creates a new Pod.
 
@@ -79,7 +95,12 @@ Pod Security Admission is the admission controller built into the API server. A 
 kubectl label namespace starfleet-036-040-02-02 pod-security.kubernetes.io/enforce=baseline pod-security.kubernetes.io/enforce-version=latest
 ```
 
-<!-- CAPTURE: l2-label -->
+```text
+Warning: existing pods in namespace "starfleet-036-040-02-02" violate the new PodSecurity enforce level "baseline:latest"
+Warning: node-inspector: host namespaces
+Warning: telemetry-agent-77f9c6bb8d-5m8jp: privileged
+namespace/starfleet-036-040-02-02 labeled
+```
 
 kubectl prints warnings before the confirmation. When the enforce label changes, the API server checks the Pods that already run in the namespace against the new standard and returns a warning for each Pod that would now be rejected. The warnings name the `telemetry-agent` Pod with `privileged` and `node-inspector` with host namespaces. `beacon` is not named, because `NET_BIND_SERVICE` is allowed. The label does not stop these Pods. List them:
 
@@ -87,7 +108,15 @@ kubectl prints warnings before the confirmation. When the enforce label changes,
 kubectl -n starfleet-036-040-02-02 get pods
 ```
 
-<!-- CAPTURE: l2-pods-after-label -->
+```text
+NAME                               READY   STATUS    RESTARTS   AGE
+beacon                             1/1     Running   0          5s
+node-inspector                     1/1     Running   0          5s
+probe-7db6ffd7d6-fkjrv             1/1     Running   0          5s
+probe-7db6ffd7d6-sfxdj             1/1     Running   0          5s
+shuttle                            1/1     Running   0          5s
+telemetry-agent-77f9c6bb8d-5m8jp   1/1     Running   0          5s
+```
 
 Every Pod still runs. Pod Security Admission acts only on new requests, so the existing Pods stay until you replace them.
 
@@ -118,7 +147,9 @@ Send it with a server-side dry run:
 kubectl -n starfleet-036-040-02-02 create --dry-run=server -f pod-privileged-check.yaml
 ```
 
-<!-- CAPTURE: l2-dry-run-privileged -->
+```text
+Error from server (Forbidden): error when creating "pod-privileged-check.yaml": pods "privileged-check" is forbidden: violates PodSecurity "baseline:latest": privileged (container "main" must not set securityContext.privileged=true)
+```
 
 The API server rejects the Pod with `forbidden`. The message names the standard and version, `baseline:latest`, and the field of the container that breaks it. Pod Security Admission did this check, so no container process ever started.
 
@@ -161,7 +192,9 @@ Apply it:
 kubectl apply -f deployment-telemetry-agent.yaml
 ```
 
-<!-- CAPTURE: l2-apply-deployment -->
+```text
+deployment.apps/telemetry-agent configured
+```
 
 Then wait for the new Pod:
 
@@ -169,7 +202,11 @@ Then wait for the new Pod:
 kubectl -n starfleet-036-040-02-02 rollout status deployment/telemetry-agent --timeout=180s
 ```
 
-<!-- CAPTURE: l2-rollout -->
+```text
+Waiting for deployment "telemetry-agent" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "telemetry-agent" rollout to finish: 1 old replicas are pending termination...
+deployment "telemetry-agent" successfully rolled out
+```
 
 The Deployment controller created a new ReplicaSet, and Pod Security Admission accepted its Pod because the template now meets `baseline`. Check the process of the new Pod:
 
@@ -177,7 +214,9 @@ The Deployment controller created a new ReplicaSet, and Pod Security Admission a
 kubectl -n starfleet-036-040-02-02 exec deploy/telemetry-agent -- grep CapEff /proc/1/status
 ```
 
-<!-- CAPTURE: l2-capeff-after -->
+```text
+CapEff:	00000000a80425fb
+```
 
 `CapEff` is now the smaller default set that the container runtime gives a normal container. The process lost the rights that privileged mode added.
 
@@ -187,7 +226,9 @@ The `node-inspector` Pod is a bare Pod with no controller, and the task says it 
 kubectl -n starfleet-036-040-02-02 delete pod node-inspector
 ```
 
-<!-- CAPTURE: l2-delete-inspector -->
+```text
+pod "node-inspector" deleted from starfleet-036-040-02-02 namespace
+```
 
 Run the first check again to see the namespace after the change:
 
@@ -195,9 +236,17 @@ Run the first check again to see the namespace after the change:
 kubectl -n starfleet-036-040-02-02 get pods -o custom-columns='POD:.metadata.name,PRIVILEGED:.spec.containers[*].securityContext.privileged,HOSTPID:.spec.hostPID,ADDED:.spec.containers[*].securityContext.capabilities.add'
 ```
 
-<!-- CAPTURE: l2-find-pods-after -->
+```text
+POD                                PRIVILEGED   HOSTPID   ADDED
+beacon                             <none>       <none>    [NET_BIND_SERVICE]
+probe-7db6ffd7d6-fkjrv             <none>       <none>    <none>
+probe-7db6ffd7d6-sfxdj             <none>       <none>    <none>
+shuttle                            <none>       <none>    <none>
+telemetry-agent-66b8fdcbb5-bdzg9   false        <none>    <none>
+telemetry-agent-77f9c6bb8d-5m8jp   true         <none>    <none>
+```
 
-No Pod shows `true` in the `PRIVILEGED` or `HOSTPID` columns, and the API server rejects any new Pod that would. Only `beacon` still adds a capability, and that capability is allowed by `baseline`. The `baseline` standard does not require a non-root user, dropped capabilities or a seccomp profile; the `restricted` standard does, and it is the next step for this namespace once its workloads meet it.
+This output comes from a test run, and the Pod name suffixes differ in your lab. The new `telemetry-agent` Pod shows `false`. The old Pod, `telemetry-agent-77f9c6bb8d-5m8jp` here, is still listed with `true`. The rollout is complete, but the kubelet is still stopping that Pod, and the API server keeps the Pod object until the kubelet reports that its containers have stopped. Run the command again after a few seconds. When the old Pod is gone, no Pod shows `true` in the `PRIVILEGED` or `HOSTPID` columns, and the API server rejects any new Pod that would. Only `beacon` still adds a capability, and that capability is allowed by `baseline`. The `baseline` standard does not require a non-root user, dropped capabilities or a seccomp profile; the `restricted` standard does, and it is the next step for this namespace once its workloads meet it.
 
 When you are done, remove the lab with `astrona destroy ats-036-lab-040-02-02`.
 
@@ -207,5 +256,6 @@ When you are done, remove the lab with `astrona destroy ats-036-lab-040-02-02`.
 > - **Expecting the label to stop running Pods.** Pod Security Admission only prints warnings for existing Pods. Replace or delete them yourself.
 > - **Fixing the Pod instead of the Deployment.** A deleted Pod comes back from the same Pod template. Change the template.
 > - **Using `warn` or `audit` instead of `enforce`.** Both modes still create the privileged Pod.
+> - **Reading the list while the old Pod stops.** Right after the rollout, the old privileged Pod can still be listed. Wait until it is gone before you call the namespace clean.
 > - **Treating every added capability as a finding.** `baseline` allows a short list, such as `NET_BIND_SERVICE`. Judge each one.
 > - **Enforcing `restricted` before the workloads are ready.** New Pods that run as root or keep their capabilities are then rejected, and rollouts stall.

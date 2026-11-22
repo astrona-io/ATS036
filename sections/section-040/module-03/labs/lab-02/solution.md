@@ -23,7 +23,11 @@ Start with the volumes. This command prints each Deployment of the namespace wit
 kubectl -n starfleet-036-040-03-02 get deployments -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.template.spec.volumes[*].hostPath.path}{"\n"}{end}'
 ```
 
-<!-- CAPTURE: find-hostpath -->
+```text
+beacon	
+collector	/var/lib/training-036-040-03-02
+relay	/var/lib/training-036-040-03-02
+```
 
 The `collector` and `relay` Deployments both mount `/var/lib/training-036-040-03-02`. The `beacon` Deployment has no `hostPath` volume. A volume alone does not say whether the container can write, so print the volume mounts of the two candidates:
 
@@ -31,7 +35,10 @@ The `collector` and `relay` Deployments both mount `/var/lib/training-036-040-03
 kubectl -n starfleet-036-040-03-02 get deployment collector relay -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.template.spec.containers[0].volumeMounts}{"\n"}{end}'
 ```
 
-<!-- CAPTURE: candidate-mounts -->
+```text
+collector	[{"mountPath":"/host-data","name":"node-data"}]
+relay	[{"mountPath":"/host-data","name":"node-data","readOnly":true}]
+```
 
 The `relay` mount has `"readOnly":true`. The `collector` mount has no `readOnly` field, and the default is `false`, so the `collector` container can write. The volume of the `collector` is named `node-data`. You can prove the write before you fix it. Use a separate test file, so that `approved.txt` stays unchanged:
 
@@ -40,7 +47,9 @@ kubectl -n starfleet-036-040-03-02 exec deploy/collector -- sh -c 'echo written-
 kubectl -n starfleet-036-040-03-02 exec deploy/collector -- rm /host-data/write-test
 ```
 
-<!-- CAPTURE: write-before-fix -->
+```text
+written-by-pod
+```
 
 The first command prints `written-by-pod`. The file was in `/var/lib/training-036-040-03-02` on the node until the second command removed it. Any process in the `collector` container could change the settings file that `relay` reads in the same way.
 
@@ -66,13 +75,19 @@ Apply it:
 kubectl apply -f configmap-hostpath-finding.yaml
 ```
 
+```text
+configmap/hostpath-finding created
+```
+
 Then check the result:
 
 ```sh
 kubectl -n starfleet-036-040-03-02 get configmap hostpath-finding -o jsonpath='{.data}{"\n"}'
 ```
 
-<!-- CAPTURE: finding -->
+```text
+{"path":"/var/lib/training-036-040-03-02","volume":"node-data","workload":"collector"}
+```
 
 ## Make the mount read-only
 
@@ -125,13 +140,21 @@ Apply it:
 kubectl apply -f deployment-collector.yaml
 ```
 
+```text
+deployment.apps/collector configured
+```
+
 Then wait for the rollout:
 
 ```sh
 kubectl -n starfleet-036-040-03-02 rollout status deployment/collector --timeout=180s
 ```
 
-<!-- CAPTURE: rollout -->
+```text
+Waiting for deployment "collector" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "collector" rollout to finish: 1 old replicas are pending termination...
+deployment "collector" successfully rolled out
+```
 
 The `rollout status` command returns when the new Pod is available and the old ReplicaSet has no Pods left. From now on, the kubelet mounts the node directory read-only into the `collector` container.
 
@@ -143,7 +166,9 @@ The fix must keep the read and remove the write. Read the settings file through 
 kubectl -n starfleet-036-040-03-02 exec deploy/collector -- cat /host-data/approved.txt
 ```
 
-<!-- CAPTURE: read-after-fix -->
+```text
+approved-settings-v1
+```
 
 The new Pod still prints `approved-settings-v1`. Now try the write again. This command is meant to fail, so run it on its own and not in a script that stops on the first error:
 
@@ -151,9 +176,12 @@ The new Pod still prints `approved-settings-v1`. Now try the write again. This c
 kubectl -n starfleet-036-040-03-02 exec deploy/collector -- sh -c 'echo changed > /host-data/write-test'
 ```
 
-<!-- CAPTURE: write-after-fix -->
+```text
+sh: can't create /host-data/write-test: Read-only file system
+command terminated with exit code 1
+```
 
-The shell in the container cannot create the file, and the error ends in `Read-only file system`. The Linux kernel refused the write, because the kubelet mounted the volume read-only. If the write still works, the command reached the old Pod before it was gone; wait a few seconds and run it again. The grader runs the same read and write in every `collector` Pod and then checks on the node that its test file is not in `/var/lib/training-036-040-03-02`.
+The shell in the container cannot create the file, and the error ends in `Read-only file system`. The last line comes from kubectl: the shell exited with code 1. The Linux kernel refused the write, because the kubelet mounted the volume read-only. If the write still works, the command reached the old Pod before it was gone; wait a few seconds and run it again. The grader runs the same read and write in every `collector` Pod and then checks on the node that its test file is not in `/var/lib/training-036-040-03-02`.
 
 You now know how to find a writable `hostPath` mount from the Pod template, and that `readOnly: true` on the `volumeMount` removes the write but keeps the read. The `hostPath` volume still ties the Pod to one node and still exposes the node directory for reading, so the narrowest path and a read-only mount are the least you need when a workload cannot do without one.
 

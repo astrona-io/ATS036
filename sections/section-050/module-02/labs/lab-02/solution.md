@@ -23,15 +23,70 @@ kubectl -n starfleet-036-050-02-02 exec shuttle -- id
 podman exec "$node_name" grep -c '"subresource":"exec"' /var/log/training-audit/audit.jsonl
 ```
 
-<!-- CAPTURE: l2-exec-before -->
+```text
+uid=0(root) gid=0(root) groups=0(root),10(wheel)
+0
+```
 
-The command ran in the container, but the count is `0`. The API server handled the exec request and wrote nothing about it. Read the policy to see why:
+The first line is the output of `id`. The command ran in the container, but the count is `0`. The API server handled the exec request and wrote nothing about it. Read the policy to see why:
 
 ```sh
 podman exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
 ```
 
-<!-- CAPTURE: l2-policy-before -->
+```text
+{
+  "apiVersion": "audit.k8s.io/v1",
+  "kind": "Policy",
+  "omitStages": [
+    "RequestReceived"
+  ],
+  "rules": [
+    {
+      "level": "None",
+      "resources": [
+        {
+          "group": "",
+          "resources": [
+            "pods/*"
+          ]
+        }
+      ]
+    },
+    {
+      "level": "Metadata",
+      "namespaces": [
+        "starfleet-036-050-02-02"
+      ],
+      "resources": [
+        {
+          "group": "",
+          "resources": [
+            "pods"
+          ]
+        }
+      ]
+    },
+    {
+      "level": "Metadata",
+      "namespaces": [
+        "starfleet-036-050-02-02"
+      ],
+      "resources": [
+        {
+          "group": "",
+          "resources": [
+            "secrets"
+          ]
+        }
+      ]
+    },
+    {
+      "level": "None"
+    }
+  ]
+}
+```
 
 The policy has two faults. The first rule sets `level: None` for `pods/*`. That name matches every subresource of a Pod, so it also matches `pods/exec` and `pods/portforward`, and those requests stop there. The second rule was meant to record interactive access, but it names only `pods`. The audit system compares the full name, resource and subresource together, so `pods` never matches an exec request. Moving the second rule up would not help on its own, and fixing its name would not help either while the `None` rule stays above it.
 
@@ -98,7 +153,28 @@ podman cp training-audit-policy.json "$node_name":/etc/kubernetes/training-audit
 podman exec "$node_name" head -n 20 /etc/kubernetes/training-audit-policy.json
 ```
 
-<!-- CAPTURE: l2-policy-after -->
+```text
+{
+  "apiVersion": "audit.k8s.io/v1",
+  "kind": "Policy",
+  "omitStages": [
+    "RequestReceived"
+  ],
+  "rules": [
+    {
+      "level": "Metadata",
+      "resources": [
+        {
+          "group": "",
+          "resources": [
+            "pods/exec",
+            "pods/portforward"
+          ]
+        }
+      ]
+    },
+    {
+```
 
 ## Restart the API server
 
@@ -109,18 +185,23 @@ podman exec "$node_name" mv /etc/kubernetes/manifests/kube-apiserver.yaml /etc/k
 podman exec "$node_name" crictl ps --name kube-apiserver
 ```
 
-<!-- CAPTURE: l2-apiserver-stopped -->
+```text
+CONTAINER           IMAGE               CREATED             STATE               NAME                ATTEMPT             POD ID              POD                 NAMESPACE
+```
 
-Run the `crictl` command again until it lists no `kube-apiserver` container. If you move the manifest back too early, the kubelet may never see that it was gone and keeps the old process. Then move the manifest back and wait, at most two minutes, until the new API server answers:
+The output has only the column headers, so no `kube-apiserver` container runs. If it still lists one, run the `crictl` command again until it lists none. If you move the manifest back too early, the kubelet may never see that it was gone and keeps the old process. Then move the manifest back and wait, at most two minutes, until the new API server answers:
 
 ```sh
 podman exec "$node_name" mv /etc/kubernetes/kube-apiserver.yaml /etc/kubernetes/manifests/kube-apiserver.yaml
 for attempt in $(seq 1 40); do kubectl --request-timeout=3s get --raw=/readyz && break; sleep 3; done
 ```
 
-<!-- CAPTURE: l2-apiserver-ready -->
+```text
+Unable to connect to the server: EOF
+ok
+```
 
-The loop prints errors while the API server starts and stops after the first `ok`. The kubelet started a new `kube-apiserver` container, and that process read the corrected policy file. If the loop never prints `ok`, the policy file has an error: the API server stops at start when it cannot read the policy. Fix the file and copy it again; the kubelet restarts the container by itself.
+The loop prints errors while the API server starts, here `Unable to connect to the server: EOF`, and stops after the first `ok`. The kubelet started a new `kube-apiserver` container, and that process read the corrected policy file. If the loop never prints `ok`, the policy file has an error: the API server stops at start when it cannot read the policy. Fix the file and copy it again; the kubelet restarts the container by itself.
 
 ## Prove that both requests are recorded
 
@@ -156,17 +237,25 @@ curl -s http://127.0.0.1:18080/
 kill %1
 ```
 
-<!-- CAPTURE: l2-requests-after -->
+```text
+uid=0(root) gid=0(root) groups=0(root),10(wheel)
+version=v1 host=probe-7db6ffd7d6-47wk2 greeting=hello
+```
 
-`kubectl port-forward` printed `Forwarding from 127.0.0.1:18080 -> 8080` after the API server accepted the connection, and the `probe` application answered the `curl` request through the tunnel. `kubectl` resolved the Service to one `probe` Pod, so the request went to the `portforward` subresource of that Pod. Now read the log:
+The output is shortened to the `id` line and the answer of the `probe` application. `kubectl port-forward` also prints its own lines that start with `Forwarding from` once the API server has accepted the connection; they are left out here. The `probe` application answered the request through the tunnel. `kubectl` resolved the Service to one `probe` Pod, so the request went to the `portforward` subresource of that Pod. Now read the log:
 
 ```sh
 podman exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 audit-pod-access.py
 ```
 
-<!-- CAPTURE: l2-report-after -->
+```text
+ResponseStarted Metadata kubernetes-admin get exec shuttle /api/v1/namespaces/starfleet-036-050-02-02/pods/shuttle/exec?command=id&container=client&stderr=true&stdout=true
+ResponseComplete Metadata kubernetes-admin get exec shuttle /api/v1/namespaces/starfleet-036-050-02-02/pods/shuttle/exec?command=id&container=client&stderr=true&stdout=true
+ResponseStarted Metadata kubernetes-admin get portforward probe-7db6ffd7d6-47wk2 /api/v1/namespaces/starfleet-036-050-02-02/pods/probe-7db6ffd7d6-47wk2/portforward
+ResponseComplete Metadata kubernetes-admin get portforward probe-7db6ffd7d6-47wk2 /api/v1/namespaces/starfleet-036-050-02-02/pods/probe-7db6ffd7d6-47wk2/portforward
+```
 
-The output has lines for the subresource `exec` with the Pod name `shuttle` and a `requestURI` that contains `command=id`, and lines for the subresource `portforward` with the name of the `probe` Pod. Every line has the level `Metadata`. A streaming request can leave two lines with the same request: `ResponseStarted` when the API server accepted the connection and `ResponseComplete` when it ended. No line names `log` or `status`, because the `None` rule still drops those subresources.
+This output comes from a test run, so the `probe` Pod name suffix differs in your lab. The output has lines for the subresource `exec` with the Pod name `shuttle` and a `requestURI` that contains `command=id`, and lines for the subresource `portforward` with the name of the `probe` Pod. Every line has the level `Metadata`. A streaming request can leave two lines with the same request: `ResponseStarted` when the API server accepted the connection and `ResponseComplete` when it ended. No line names `log` or `status`, because the `None` rule still drops those subresources.
 
 You now know how to read a policy as a first-match list, repair both the order and the names of its rules, and make the API server load the new file. The question still open is what happened inside the shell. The audit log records that `kubectl exec` started a command, not what the user typed in it; a runtime sensor on the node answers that.
 

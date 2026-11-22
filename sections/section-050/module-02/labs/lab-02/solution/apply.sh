@@ -7,35 +7,42 @@ if [[ "$(kubectl config current-context)" != "$context" ]]; then
   printf 'Refusing to operate on another Kubernetes context\n' >&2
   exit 1
 fi
-solution_directory="$(cd "$(dirname "$0")" && pwd)"
-engine="${engine:-${ASTRONA_CONTAINER_ENGINE:-podman}}"
-cluster="${cluster:-${ASTRONA_KIND_CLUSTER:-}}"
-set +e
-exec 2>&1
+lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
+solution_directory="$lab_directory/solution"
 node_name="${cluster}-control-plane"
-ns=starfleet-036-050-02-02
-echo "=== CAPTURE l2-exec-before"
-kubectl -n $ns exec shuttle -- id; sleep 3; "$engine" exec "$node_name" grep -c '"subresource":"exec"' /var/log/training-audit/audit.jsonl
-echo "=== CAPTURE l2-policy-before"
-"$engine" exec "$node_name" cat /etc/kubernetes/training-audit-policy.json
-echo "=== CAPTURE l2-policy-after"
-"$engine" cp "$solution_directory/training-audit-policy.json" "$node_name":/etc/kubernetes/training-audit-policy.json; "$engine" exec "$node_name" head -n 20 /etc/kubernetes/training-audit-policy.json
-echo "=== CAPTURE l2-apiserver-stopped"
+
+# Task 2: copy the corrected policy to the control plane node.
+"$engine" cp "$solution_directory/training-audit-policy.json" "$node_name:/etc/kubernetes/training-audit-policy.json"
+
+# Task 3: restart the API server. The kubelet stops the static Pod when its
+# manifest leaves the manifests directory and starts it again when it returns.
 "$engine" exec "$node_name" mv /etc/kubernetes/manifests/kube-apiserver.yaml /etc/kubernetes/kube-apiserver.yaml
+stopped=0
 for attempt in $(seq 1 30); do
-  if [[ -z "$("$engine" exec "$node_name" crictl ps --name kube-apiserver -q)" ]]; then break; fi
+  if [[ -z "$("$engine" exec "$node_name" crictl ps --name kube-apiserver -q)" ]]; then stopped=1; break; fi
   sleep 2
 done
-"$engine" exec "$node_name" crictl ps --name kube-apiserver
-echo "=== CAPTURE l2-apiserver-ready"
 "$engine" exec "$node_name" mv /etc/kubernetes/kube-apiserver.yaml /etc/kubernetes/manifests/kube-apiserver.yaml
-for attempt in $(seq 1 40); do kubectl --request-timeout=3s get --raw=/readyz 2>&1 && break; sleep 3; done
-echo
-echo "=== CAPTURE l2-requests-after"
-bash "$solution_directory/apply.real.sh" 2>&1
-sleep 3
-echo "=== CAPTURE l2-report-after"
-"$engine" exec "$node_name" cat /var/log/training-audit/audit.jsonl | python3 "$solution_directory/audit-pod-access.py"
+test "$stopped" -eq 1
+api_ready=0
+for attempt in $(seq 1 40); do
+  if kubectl --request-timeout=3s get --raw=/readyz >/dev/null 2>&1; then api_ready=1; break; fi
+  sleep 3
+done
+test "$api_ready" -eq 1
 
-echo "=== CAPTURE end"
-exit 1
+# Task 4: send one exec request and one port-forward session.
+kubectl -n starfleet-036-050-02-02 exec shuttle -- id
+forward_output="$(mktemp)"
+kubectl -n starfleet-036-050-02-02 port-forward service/probe 18080:80 >"$forward_output" 2>&1 &
+forward_pid=$!
+trap 'kill "$forward_pid" 2>/dev/null || true; rm -f "$forward_output"' EXIT
+forwarding=0
+for attempt in $(seq 1 20); do
+  if grep -q 'Forwarding from' "$forward_output"; then forwarding=1; break; fi
+  sleep 1
+done
+test "$forwarding" -eq 1
+python3 -c 'import urllib.request; print(urllib.request.urlopen("http://127.0.0.1:18080/", timeout=5).read().decode().strip())'
+kill "$forward_pid"
+wait "$forward_pid" 2>/dev/null || true

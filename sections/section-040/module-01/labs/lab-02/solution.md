@@ -21,9 +21,14 @@ Start with the current state. List the Pods of `starfleet-036-040-01-02` with th
 kubectl -n starfleet-036-040-01-02 get pods -o custom-columns='NAME:.metadata.name,READONLY:.spec.containers[*].securityContext.readOnlyRootFilesystem'
 ```
 
-<!-- CAPTURE: l1-mutable-pods -->
+```text
+NAME                     READONLY
+probe-7db6ffd7d6-clmrg   <none>
+probe-7db6ffd7d6-rntp4   <none>
+shuttle                  <none>
+```
 
-No Pod sets the field, so every root filesystem is writable. These Pods were admitted before any policy existed. Admission runs only when a request arrives, so the policy you create below does not stop them.
+The random suffixes of the `probe` Pod names differ in your lab. No Pod sets the field, so every root filesystem is writable. These Pods were admitted before any policy existed. Admission runs only when a request arrives, so the policy you create below does not stop them.
 
 ## Select the namespace with a label
 
@@ -33,7 +38,9 @@ A ValidatingAdmissionPolicyBinding decides where a policy applies. A `namespaceS
 kubectl label namespace starfleet-036-040-01-02 immutability=enforced
 ```
 
-<!-- CAPTURE: l1-label -->
+```text
+namespace/starfleet-036-040-01-02 labeled
+```
 
 Then check which namespaces carry the label:
 
@@ -41,7 +48,10 @@ Then check which namespaces carry the label:
 kubectl get namespaces -l immutability=enforced
 ```
 
-<!-- CAPTURE: l1-label-check -->
+```text
+NAME                      STATUS   AGE
+starfleet-036-040-01-02   Active   3s
+```
 
 Only `starfleet-036-040-01-02` is listed. The namespace `outpost-036-040-01-02` has no such label, so a binding that selects the label never reaches it.
 
@@ -75,7 +85,9 @@ Apply it:
 kubectl apply -f validatingadmissionpolicy-require-read-only-root.yaml
 ```
 
-<!-- CAPTURE: l1-apply-policy -->
+```text
+validatingadmissionpolicy.admissionregistration.k8s.io/require-read-only-root-036-040-01-02 created
+```
 
 A policy on its own does nothing. The API server evaluates it only for requests that a binding selects.
 
@@ -105,7 +117,9 @@ Apply it:
 kubectl apply -f validatingadmissionpolicybinding-require-read-only-root.yaml
 ```
 
-<!-- CAPTURE: l1-apply-binding -->
+```text
+validatingadmissionpolicybinding.admissionregistration.k8s.io/require-read-only-root-starfleet-036-040-01-02 created
+```
 
 The API server needs a few seconds to load a new binding. If the first test below is accepted, wait a few seconds and run it again.
 
@@ -134,7 +148,9 @@ Send it to the labelled namespace:
 kubectl -n starfleet-036-040-01-02 create --dry-run=server -f pod-writable-check.yaml
 ```
 
-<!-- CAPTURE: l1-dry-run-starfleet-writable -->
+```text
+The pods "writable-check" is invalid: : ValidatingAdmissionPolicy 'require-read-only-root-036-040-01-02' with binding 'require-read-only-root-starfleet-036-040-01-02' denied request: Every container must set readOnlyRootFilesystem to true.
+```
 
 The API server rejects the Pod. The error names the policy and the binding, and it shows the message from the policy. The ValidatingAdmissionPolicy admission plugin in the API server did this work, before the Pod reached storage or the scheduler.
 
@@ -166,7 +182,9 @@ Send it to the same namespace:
 kubectl -n starfleet-036-040-01-02 create --dry-run=server -f pod-read-only-check.yaml
 ```
 
-<!-- CAPTURE: l1-dry-run-starfleet-read-only -->
+```text
+pod/read-only-check created (server dry run)
+```
 
 The API server accepts the Pod, because the expression is true for both containers. If you remove `readOnlyRootFilesystem: true` from the `sidecar` container only, the Pod is rejected again, because `all()` checks every container.
 
@@ -176,7 +194,9 @@ Last, send the writable Pod to the namespace without the label:
 kubectl -n outpost-036-040-01-02 create --dry-run=server -f pod-writable-check.yaml
 ```
 
-<!-- CAPTURE: l1-dry-run-outpost-writable -->
+```text
+pod/writable-check created (server dry run)
+```
 
 The API server accepts it. The binding does not select `outpost-036-040-01-02`, so the API server never evaluates the policy for this request.
 
@@ -188,7 +208,12 @@ The running Pods must keep running. List them again:
 kubectl -n starfleet-036-040-01-02 get pods
 ```
 
-<!-- CAPTURE: l1-running-pods -->
+```text
+NAME                     READY   STATUS    RESTARTS   AGE
+probe-7db6ffd7d6-clmrg   1/1     Running   0          14s
+probe-7db6ffd7d6-rntp4   1/1     Running   0          14s
+shuttle                  1/1     Running   0          14s
+```
 
 The `probe` and `shuttle` Pods are still `Running`. The policy acts only on new `CREATE` and `UPDATE` requests. It has one limit you must know: if a `probe` Pod is deleted, the ReplicaSet controller sends a `CREATE` request for a new Pod, and the API server rejects that request too. The Deployment then has fewer ready replicas until its Pod template sets `readOnlyRootFilesystem: true`. Fix the templates of existing workloads before you switch a busy namespace to `Deny`.
 
