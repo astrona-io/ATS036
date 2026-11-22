@@ -604,6 +604,20 @@ modules:
     title: Verifying And Enforcing Immutability
     path: sections/section-040/module-01/course-04-verifying-and-enforcing-immutability.md
   - type: reading
+    title: "Enforce A Read-Only Root Filesystem With A ValidatingAdmissionPolicy \u2014 Task"
+    path: sections/section-040/module-01/labs/lab-02/question.md
+  - type: lab
+    title: Enforce A Read-Only Root Filesystem With A ValidatingAdmissionPolicy
+    path: sections/section-040/module-01/labs/lab-02
+    examScope: cluster
+    difficulty: intermediate
+    estimated_duration: 10m
+    learning_goals:
+    - Write a ValidatingAdmissionPolicy and binding that reject new Pods without readOnlyRootFilesystem in labelled namespaces only, while running Pods keep running.
+  - type: reading
+    title: "Enforce A Read-Only Root Filesystem With A ValidatingAdmissionPolicy \u2014 Solution"
+    path: sections/section-040/module-01/labs/lab-02/solution.md
+  - type: reading
     title: Summary
     path: sections/section-040/module-01/course-05-summary.md
   - type: quiz
@@ -643,6 +657,20 @@ modules:
     title: Privileged Containers And Verifying Process Privileges
     path: sections/section-040/module-02/course-03-privileged-containers-and-verifying-process-privileges.md
   - type: reading
+    title: "Find A Privileged Pod And Block It With Pod Security Admission \u2014 Task"
+    path: sections/section-040/module-02/labs/lab-02/question.md
+  - type: lab
+    title: Find A Privileged Pod And Block It With Pod Security Admission
+    path: sections/section-040/module-02/labs/lab-02
+    examScope: namespace
+    difficulty: intermediate
+    estimated_duration: 12m
+    learning_goals:
+    - Find the privileged workload and the hostPID Pod, enforce the baseline Pod Security Standard on the namespace and roll out the workload without privileged mode.
+  - type: reading
+    title: "Find A Privileged Pod And Block It With Pod Security Admission \u2014 Solution"
+    path: sections/section-040/module-02/labs/lab-02/solution.md
+  - type: reading
     title: Summary
     path: sections/section-040/module-02/course-04-summary.md
   - type: quiz
@@ -656,6 +684,20 @@ modules:
   - type: reading
     title: Volumes That Reach The Host
     path: sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
+  - type: reading
+    title: "Mount A hostPath Volume Read-Only \u2014 Task"
+    path: sections/section-040/module-03/labs/lab-02/question.md
+  - type: lab
+    title: Mount A hostPath Volume Read-Only
+    path: sections/section-040/module-03/labs/lab-02
+    examScope: namespace
+    difficulty: intermediate
+    estimated_duration: 8m
+    learning_goals:
+    - Find the container with a writable hostPath mount, record it and make the mount read-only through the Pod template.
+  - type: reading
+    title: "Mount A hostPath Volume Read-Only \u2014 Solution"
+    path: sections/section-040/module-03/labs/lab-02/solution.md
   - type: reading
     title: Updating By Replacement
     path: sections/section-040/module-03/course-02-updating-by-replacement.md
@@ -733,8 +775,25 @@ modules:
     title: "Verify Metadata Audit Records Exclude Secret Payloads \u2014 Solution"
     path: sections/section-050/module-01/labs/lab-01/solution.md
   - type: reading
+    title: Impersonation And The Identity In An Audit Record
+    path: sections/section-050/module-01/course-05-impersonation-and-the-identity-in-an-audit-record.md
+  - type: reading
+    title: "Send A Denied Secret Read And Find Its Audit Record \u2014 Task"
+    path: sections/section-050/module-01/labs/lab-02/question.md
+  - type: lab
+    title: Send A Denied Secret Read And Find Its Audit Record
+    path: sections/section-050/module-01/labs/lab-02
+    examScope: cluster
+    difficulty: intermediate
+    estimated_duration: 8m
+    learning_goals:
+    - Send a Secret read as a ServiceAccount with kubectl --as, find its audit record among similar ones and report the real caller and the impersonated identity.
+  - type: reading
+    title: "Send A Denied Secret Read And Find Its Audit Record \u2014 Solution"
+    path: sections/section-050/module-01/labs/lab-02/solution.md
+  - type: reading
     title: Summary
-    path: sections/section-050/module-01/course-05-summary.md
+    path: sections/section-050/module-01/course-06-summary.md
   - type: quiz
     title: 'Knowledge Check: Using Kubernetes Audit Logs To Monitor Access'
     path: sections/section-050/module-01/quiz.yaml
@@ -771,6 +830,20 @@ modules:
   - type: reading
     title: Choosing Rules And Levels For Interactive Access
     path: sections/section-050/module-02/course-03-choosing-rules-and-levels-for-interactive-access.md
+  - type: reading
+    title: "Fix An Audit Policy That Misses Pod Exec Requests \u2014 Task"
+    path: sections/section-050/module-02/labs/lab-02/question.md
+  - type: lab
+    title: Fix An Audit Policy That Misses Pod Exec Requests
+    path: sections/section-050/module-02/labs/lab-02
+    examScope: cluster
+    difficulty: intermediate
+    estimated_duration: 15m
+    learning_goals:
+    - Repair a first-match audit policy so pods/exec and pods/portforward are recorded at Metadata while pods/log and pods/status stay dropped, and restart the API server to load it.
+  - type: reading
+    title: "Fix An Audit Policy That Misses Pod Exec Requests \u2014 Solution"
+    path: sections/section-050/module-02/labs/lab-02/solution.md
   - type: reading
     title: Summary
     path: sections/section-050/module-02/course-04-summary.md

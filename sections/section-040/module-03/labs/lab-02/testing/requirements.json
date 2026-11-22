@@ -1,0 +1,68 @@
+{
+  "context": "kind-astro-ats-036-lab-040-03-02",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "hostpath-finding",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "hostpath-finding",
+          "namespace": "starfleet-036-040-03-02"
+        },
+        "data": {
+          "workload": "collector",
+          "volume": "node-data",
+          "path": "/var/lib/training-036-040-03-02"
+        }
+      },
+      "outcome": "hostpath-finding"
+    },
+    {
+      "kind": "deployment",
+      "name": "collector",
+      "expected": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "collector",
+          "namespace": "starfleet-036-040-03-02"
+        },
+        "spec": {
+          "replicas": 1,
+          "template": {
+            "spec": {
+              "containers": [
+                {
+                  "name": "collector",
+                  "image": "docker.io/library/busybox:1.37.0",
+                  "volumeMounts": [
+                    {
+                      "name": "node-data",
+                      "mountPath": "/host-data",
+                      "readOnly": true
+                    }
+                  ]
+                }
+              ],
+              "volumes": [
+                {
+                  "name": "node-data",
+                  "hostPath": {
+                    "path": "/var/lib/training-036-040-03-02"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "state": "deployment",
+      "outcome": "read-only-mount"
+    }
+  ],
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-040-03-02",
+  "namespace": "starfleet-036-040-03-02"
+}

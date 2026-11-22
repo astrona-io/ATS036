@@ -1,0 +1,50 @@
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-036-lab-040-03-02
+  docs:
+    prerequisites: docs/prerequisites.md
+    examQuestion: question.md
+    caseStudy: docs/case-study.md
+    guide: solution.md
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.0@sha256:452d707d4862f52530247495d180205e029056831160e22870e37e3f6c1ac31f
+    preloadImages:
+    - docker.io/library/python:3.13-alpine
+    - docker.io/library/busybox:1.37.0
+bootstrap:
+  init:
+  - name: seed-lab
+    type: file
+    source: bootstrap/setup.sh
+teardown:
+  keepCluster: false
+testing:
+  init:
+  - name: verify-start
+    type: file
+    source: testing/verify-start.sh
+  - name: reference-result
+    type: file
+    source: solution/apply.sh
+  - name: wait-solved
+    type: file
+    source: testing/wait-solved.sh
+validation:
+  scripts:
+  - name: hostpath-finding
+    description: ConfigMap hostpath-finding names the Deployment, volume and node path of the writable hostPath mount
+    type: file
+    source: validation/validate-hostpath-finding.sh
+    points: 1
+  - name: read-only-mount
+    description: The collector Deployment keeps its hostPath volume and mounts it read-only, with the rollout complete
+    type: file
+    source: validation/validate-read-only-mount.sh
+    points: 1
+  - name: host-write-blocked
+    description: Every collector Pod still reads approved.txt, a write to /host-data fails and no file reaches the node
+    type: file
+    source: validation/validate-host-write-blocked.sh
+    points: 1

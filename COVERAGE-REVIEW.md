@@ -38,12 +38,12 @@ Section 040, Harden A Workload And Enforce A Read-Only Root Filesystem Policy:
 
 - Non-root user and group, `runAsNonRoot`, RuntimeDefault seccomp, no privilege escalation and no capabilities: section 040 module 01 lab 01 and section 040 module 02 lab 01.
 - Read-only root filesystem through a Deployment Pod template, with the read-only `app` mount and an `emptyDir` at `/tmp`: section 040 module 03 lab 01.
-- A ValidatingAdmissionPolicy and ValidatingAdmissionPolicyBinding that reject new Pods without `readOnlyRootFilesystem: true` in one namespace and accept them in another: not graded.
+- A ValidatingAdmissionPolicy and ValidatingAdmissionPolicyBinding that reject new Pods without `readOnlyRootFilesystem: true` in one namespace and accept them in another: section 040 module 01 lab 02.
 
 Section 050, Investigate Secret, Denied And Exec Access From The Audit Log:
 
 - Audit ID of a successful Secret read with no request or response body: section 050 module 01 lab 01.
-- Audit ID of a denied Secret read: section 010 module 01 lab 01 and section 030 module 01 lab 01. There the setup sends the denied request; no lab asks the learner to send it with `kubectl --as`.
+- Audit ID of a denied Secret read: section 010 module 01 lab 01 and section 030 module 01 lab 01. There the setup sends the denied request. Section 050 module 01 lab 02 asks the learner to send it with `kubectl --as` and find its record.
 - Audit ID of an `exec` request that runs `id` in `shuttle`: section 050 module 02 lab 01.
 
 ## Remaining practical gaps and boundaries

@@ -1,0 +1,11 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: require-read-only-root-starfleet-036-040-01-02
+spec:
+  policyName: require-read-only-root-036-040-01-02
+  validationActions: ["Deny"]
+  matchResources:
+    namespaceSelector:
+      matchLabels:
+        immutability: enforced

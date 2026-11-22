@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: denied-read-report
+  namespace: starfleet-036-050-01-02
+data:
+  auditID: <AUDIT_ID>
+  user: <USER>
+  impersonatedUser: system:serviceaccount:outpost-036-050-01-02:drifter
+  code: "403"

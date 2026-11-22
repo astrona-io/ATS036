@@ -1,0 +1,94 @@
+{
+  "context": "kind-astro-ats-036-lab-040-02-02",
+  "cluster": "astro-ats-036-lab-040-02-02",
+  "namespace": "starfleet-036-040-02-02",
+  "resources": [
+    {
+      "kind": "deployment",
+      "name": "probe",
+      "namespace": "starfleet-036-040-02-02",
+      "expected": {
+        "metadata": {
+          "name": "probe",
+          "namespace": "starfleet-036-040-02-02"
+        },
+        "spec": {
+          "replicas": 2
+        }
+      },
+      "state": "deployment"
+    },
+    {
+      "kind": "pod",
+      "name": "shuttle",
+      "namespace": "starfleet-036-040-02-02",
+      "expected": {
+        "metadata": {
+          "name": "shuttle",
+          "namespace": "starfleet-036-040-02-02"
+        }
+      },
+      "state": "pod"
+    },
+    {
+      "kind": "pod",
+      "name": "beacon",
+      "namespace": "starfleet-036-040-02-02",
+      "expected": {
+        "metadata": {
+          "name": "beacon",
+          "namespace": "starfleet-036-040-02-02"
+        }
+      },
+      "state": "pod"
+    },
+    {
+      "kind": "pod",
+      "name": "drifter",
+      "namespace": "outpost-036-040-02-02",
+      "expected": {
+        "metadata": {
+          "name": "drifter",
+          "namespace": "outpost-036-040-02-02"
+        }
+      },
+      "state": "pod"
+    },
+    {
+      "kind": "configmap",
+      "name": "privilege-finding",
+      "namespace": "starfleet-036-040-02-02",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "privilege-finding",
+          "namespace": "starfleet-036-040-02-02"
+        },
+        "data": {
+          "privilegedWorkload": "telemetry-agent",
+          "privilegedContainer": "agent",
+          "hostPIDPod": "node-inspector"
+        }
+      },
+      "outcome": "privileged-finding"
+    },
+    {
+      "kind": "deployment",
+      "name": "telemetry-agent",
+      "namespace": "starfleet-036-040-02-02",
+      "expected": {
+        "metadata": {
+          "name": "telemetry-agent",
+          "namespace": "starfleet-036-040-02-02"
+        },
+        "spec": {
+          "replicas": 1
+        }
+      },
+      "state": "deployment",
+      "outcome": "workload-replaced"
+    }
+  ],
+  "behavior": []
+}

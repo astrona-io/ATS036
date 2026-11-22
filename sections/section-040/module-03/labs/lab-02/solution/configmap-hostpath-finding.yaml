@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hostpath-finding
+  namespace: starfleet-036-040-03-02
+data:
+  workload: collector
+  volume: node-data
+  path: /var/lib/training-036-040-03-02

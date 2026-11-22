@@ -1,0 +1,50 @@
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-036-lab-040-01-02
+  docs:
+    prerequisites: docs/prerequisites.md
+    examQuestion: question.md
+    caseStudy: docs/case-study.md
+    guide: solution.md
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.0@sha256:452d707d4862f52530247495d180205e029056831160e22870e37e3f6c1ac31f
+    preloadImages:
+    - docker.io/library/python:3.13-alpine
+    - docker.io/library/busybox:1.37.0
+bootstrap:
+  init:
+  - name: seed-lab
+    type: file
+    source: bootstrap/setup.sh
+teardown:
+  keepCluster: false
+testing:
+  init:
+  - name: verify-start
+    type: file
+    source: testing/verify-start.sh
+  - name: reference-result
+    type: file
+    source: solution/apply.sh
+  - name: wait-solved
+    type: file
+    source: testing/wait-solved.sh
+validation:
+  scripts:
+  - name: policy-denies
+    description: The bound policy denies a new Pod in starfleet-036-040-01-02 when any container leaves the root filesystem writable
+    type: file
+    source: validation/validate-policy-denies.sh
+    points: 1
+  - name: compliant-allowed
+    description: The bound policy accepts a new Pod in starfleet-036-040-01-02 whose containers all set readOnlyRootFilesystem to true
+    type: file
+    source: validation/validate-compliant-allowed.sh
+    points: 1
+  - name: scope-limited
+    description: The binding selects namespaces by label, outpost-036-040-01-02 still accepts a writable Pod and the running Pods keep running
+    type: file
+    source: validation/validate-scope-limited.sh
+    points: 1

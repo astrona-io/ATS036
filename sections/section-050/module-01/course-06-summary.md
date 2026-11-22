@@ -10,7 +10,7 @@ An audit policy selects the requests to record. The API server checks the rules 
 
 Auditing is enabled with flags on the API server. `--audit-policy-file` loads the policy and `--audit-log-path` sets the log file. The rotation flags `--audit-log-maxage`, `--audit-log-maxbackup` and `--audit-log-maxsize` limit disk use. The webhook backend sends events to a remote collector in `batch`, `blocking` or `blocking-strict` mode. In a static Pod, the policy file and the log directory need `hostPath` volumes and mounts. A missing mount or a wrong path leads to a failed start or an empty log.
 
-For access monitoring, the useful fields are the user, the impersonated user, the verb, the object reference, the source address and the status code. A denied request is as valuable as an allowed one. Secrets belong at the `Metadata` level, because a higher level writes encoded credentials into a file that many people can read.
+For access monitoring, the useful fields are the user, the impersonated user, the verb, the object reference, the source address and the status code. A denied request is as valuable as an allowed one. With impersonation through `kubectl --as`, the authorizer first checks that the real caller may use the `impersonate` verb, then checks the request itself as the impersonated identity, so the decision in the record belongs to that identity. Secrets belong at the `Metadata` level, because a higher level writes encoded credentials into a file that many people can read.
 
 Key facts:
 

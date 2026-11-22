@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: starfleet-036-050-01-02
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: outpost-036-050-01-02
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: drifter
+  namespace: outpost-036-050-01-02
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: navigation-key
+  namespace: starfleet-036-050-01-02
+type: Opaque
+stringData:
+  key: navigation-disposable

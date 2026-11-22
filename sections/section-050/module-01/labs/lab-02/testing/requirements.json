@@ -1,0 +1,26 @@
+{
+  "context": "kind-astro-ats-036-lab-050-01-02",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "denied-read-report",
+      "namespace": "starfleet-036-050-01-02",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "denied-read-report",
+          "namespace": "starfleet-036-050-01-02"
+        },
+        "data": {
+          "impersonatedUser": "system:serviceaccount:outpost-036-050-01-02:drifter",
+          "code": "403"
+        }
+      },
+      "outcome": "audit-report"
+    }
+  ],
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-050-01-02",
+  "namespace": "starfleet-036-050-01-02"
+}
