@@ -451,7 +451,7 @@ sections:
       objective: Write a ValidatingAdmissionPolicy and binding that reject new Pods without readOnlyRootFilesystem
         in labelled namespaces only, while running Pods keep running.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     practice_readings:
     - sections/section-040/module-01/course-01-the-writable-container-layer.md
     - sections/section-040/module-01/course-02-read-only-root-filesystem-and-security-context.md
@@ -491,7 +491,7 @@ sections:
       objective: Find the privileged workload and the hostPID Pod, enforce the baseline Pod Security Standard
         on the namespace and roll out the workload without privileged mode.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     practice_readings:
     - sections/section-040/module-02/course-01-linux-capabilities-and-what-a-container-starts-with.md
     - sections/section-040/module-02/course-02-non-root-identity-and-privilege-escalation.md
@@ -530,7 +530,7 @@ sections:
       objective: Find the container with a writable hostPath mount, record it and make the mount read-only
         through the Pod template.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     practice_readings:
     - sections/section-040/module-03/course-01-volumes-that-reach-the-host.md
     - sections/section-040/module-03/course-02-updating-by-replacement.md
@@ -581,7 +581,7 @@ sections:
       objective: Send a Secret read as a ServiceAccount with kubectl --as, find its audit record among
         similar ones and report the real caller and the impersonated identity.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     practice_readings:
     - sections/section-050/module-01/course-01-the-audit-event-model.md
     - sections/section-050/module-01/course-02-writing-an-audit-policy.md
@@ -621,7 +621,7 @@ sections:
       objective: Repair a first-match audit policy so pods/exec and pods/portforward are recorded at Metadata
         while pods/log and pods/status stay dropped, and restart the API server to load it.
       status: alpha
-      runtime_verification: pending
+      runtime_verification: passed
     practice_readings:
     - sections/section-050/module-02/course-01-subresources-in-audit-policy-rules.md
     - sections/section-050/module-02/course-02-recording-and-reading-exec-events.md
