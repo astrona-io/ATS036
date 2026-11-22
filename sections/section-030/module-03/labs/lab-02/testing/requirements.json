@@ -1,0 +1,30 @@
+{
+  "context": "kind-astro-ats-036-lab-030-03-02",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "impact-report",
+      "expected": {
+        "data": {
+          "unlimitedWorkload": "cruncher",
+          "oomKilledPod": "memory-hog"
+        }
+      },
+      "outcome": "impact-report"
+    },
+    {
+      "kind": "deployment",
+      "name": "cruncher",
+      "expected": {
+        "spec": {
+          "replicas": 1
+        }
+      },
+      "state": "deployment",
+      "outcome": "workload-limited"
+    }
+  ],
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-030-03-02",
+  "namespace": "starfleet-036-030-03-02"
+}

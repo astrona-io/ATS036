@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: persistence-finding
+  namespace: starfleet-036-030-02-02
+data:
+  cronJob: node-report
+  serviceAccount: build-helper
+  hostSetting: hostPID

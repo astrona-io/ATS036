@@ -1,0 +1,23 @@
+# The first instance writes a random token to standard output and exits with
+# status 12. The emptyDir marker survives the restart, so the second instance
+# keeps running. The token exists only in the first instance's log file.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: crash-report
+  namespace: starfleet-036-020-01-02
+spec:
+  restartPolicy: Always
+  containers:
+  - name: report
+    image: docker.io/library/busybox:1.37.0
+    command:
+    - sh
+    - -c
+    - printf "application-started\n"; if [ ! -f /state/crashed ]; then read token < /proc/sys/kernel/random/uuid; printf "crash-token=%s\n" "$token"; touch /state/crashed; sleep 2; exit 12; fi; sleep 86400
+    volumeMounts:
+    - name: state
+      mountPath: /state
+  volumes:
+  - name: state
+    emptyDir: {}

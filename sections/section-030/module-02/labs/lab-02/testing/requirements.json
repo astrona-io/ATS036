@@ -1,0 +1,62 @@
+{
+  "context": "kind-astro-ats-036-lab-030-02-02",
+  "resources": [
+    {
+      "kind": "cronjob",
+      "name": "probe-check",
+      "namespace": "starfleet-036-030-02-02",
+      "expected": {
+        "spec": {
+          "suspend": false,
+          "jobTemplate": {
+            "spec": {
+              "template": {
+                "spec": {
+                  "serviceAccountName": "probe-reader"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "kind": "rolebinding",
+      "name": "probe-reader-view",
+      "namespace": "starfleet-036-030-02-02",
+      "expected": {
+        "roleRef": {
+          "kind": "ClusterRole",
+          "name": "view"
+        }
+      }
+    },
+    {
+      "kind": "configmap",
+      "name": "persistence-finding",
+      "namespace": "starfleet-036-030-02-02",
+      "expected": {
+        "data": {
+          "cronJob": "node-report",
+          "serviceAccount": "build-helper",
+          "hostSetting": "hostPID"
+        }
+      },
+      "outcome": "cronjob-finding"
+    },
+    {
+      "kind": "cronjob",
+      "name": "node-report",
+      "namespace": "starfleet-036-030-02-02",
+      "expected": {
+        "spec": {
+          "suspend": true
+        }
+      },
+      "outcome": "cronjob-suspended"
+    }
+  ],
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-030-02-02",
+  "namespace": "starfleet-036-030-02-02"
+}

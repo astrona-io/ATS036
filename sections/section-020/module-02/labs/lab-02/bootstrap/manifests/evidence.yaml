@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: login-service
+  namespace: starfleet-036-020-02-02
+  labels:
+    app: login-service
+spec:
+  containers:
+  - name: login
+    image: docker.io/library/busybox:1.37.0
+    command:
+    - sh
+    - -c
+    args:
+    - |
+      echo "service start port=8443"
+      echo "login failed user=lena src=10.0.0.41"
+      echo "login ok user=lena src=10.0.0.41"
+      echo "health check ok"
+      attempt=1
+      while [ "$attempt" -le 7 ]; do
+        echo "login failed user=admin src=10.0.0.23"
+        attempt=$((attempt + 1))
+      done
+      echo "login ok user=ops src=10.0.0.23"
+      echo "health check ok"
+      echo "service ready"
+      touch /tmp/ready
+      exec sleep 86400
+    readinessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/ready
+      periodSeconds: 2

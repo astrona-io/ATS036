@@ -76,6 +76,20 @@ modules:
     title: Triage, Tuning And Response To An Alert
     path: sections/section-010/module-01/course-04-triage-tuning-and-response.md
   - type: reading
+    title: "Quarantine A Suspicious Pod Without Deleting It \u2014 Task"
+    path: sections/section-010/module-01/labs/lab-02/question.md
+  - type: lab
+    title: Quarantine A Suspicious Pod Without Deleting It
+    path: sections/section-010/module-01/labs/lab-02
+    examScope: namespace
+    difficulty: intermediate
+    estimated_duration: 8m
+    learning_goals:
+    - Keep a suspicious Pod for analysis with an ephemeral debug container, then relabel it so its Service and Deployment let it go while a replacement starts.
+  - type: reading
+    title: "Quarantine A Suspicious Pod Without Deleting It \u2014 Solution"
+    path: sections/section-010/module-01/labs/lab-02/solution.md
+  - type: reading
     title: Summary
     path: sections/section-010/module-01/course-05-summary.md
   - type: quiz
@@ -193,6 +207,20 @@ modules:
     title: Correlating Audit Records With Other Evidence
     path: sections/section-010/module-03/course-03-correlating-audit-records-with-other-evidence.md
   - type: reading
+    title: "Link An Exec Audit Record To Its Node And Container \u2014 Task"
+    path: sections/section-010/module-03/labs/lab-02/question.md
+  - type: lab
+    title: Link An Exec Audit Record To Its Node And Container
+    path: sections/section-010/module-03/labs/lab-02
+    examScope: cluster
+    difficulty: intermediate
+    estimated_duration: 10m
+    learning_goals:
+    - Link a pods/exec audit record to the Pod and container named in the request, the node that runs the Pod and the container ID from the Pod status.
+  - type: reading
+    title: "Link An Exec Audit Record To Its Node And Container \u2014 Solution"
+    path: sections/section-010/module-03/labs/lab-02/solution.md
+  - type: reading
     title: Summary
     path: sections/section-010/module-03/course-04-summary.md
   - type: quiz
@@ -241,6 +269,20 @@ modules:
     title: Network Traffic, Application Logs And Evidence Gaps
     path: sections/section-020/module-01/course-03-network-traffic-application-logs-and-evidence-gaps.md
   - type: reading
+    title: "Find A Pod's Log Files On Its Node \u2014 Task"
+    path: sections/section-020/module-01/labs/lab-02/question.md
+  - type: lab
+    title: Find A Pod's Log Files On Its Node
+    path: sections/section-020/module-01/labs/lab-02
+    examScope: cluster
+    difficulty: intermediate
+    estimated_duration: 8m
+    learning_goals:
+    - Find a Pod's log directory and per-instance log files on the node that runs it, and read the crashed instance's file there.
+  - type: reading
+    title: "Find A Pod's Log Files On Its Node \u2014 Solution"
+    path: sections/section-020/module-01/labs/lab-02/solution.md
+  - type: reading
     title: Summary
     path: sections/section-020/module-01/course-04-summary.md
   - type: quiz
@@ -280,6 +322,20 @@ modules:
     title: Application Log Signals Of Abuse
     path: sections/section-020/module-02/course-03-application-log-signals-of-abuse.md
   - type: reading
+    title: "Count Failed Logins In An Application Log \u2014 Task"
+    path: sections/section-020/module-02/labs/lab-02/question.md
+  - type: lab
+    title: Count Failed Logins In An Application Log
+    path: sections/section-020/module-02/labs/lab-02
+    examScope: namespace
+    difficulty: intermediate
+    estimated_duration: 8m
+    learning_goals:
+    - Count failed logins in an application log, find the user and source address behind them and the successful login that followed.
+  - type: reading
+    title: "Count Failed Logins In An Application Log \u2014 Solution"
+    path: sections/section-020/module-02/labs/lab-02/solution.md
+  - type: reading
     title: Summary
     path: sections/section-020/module-02/course-04-summary.md
   - type: quiz
@@ -318,6 +374,20 @@ modules:
   - type: reading
     title: Secret Exposure Paths
     path: sections/section-020/module-03/course-03-secret-exposure-paths.md
+  - type: reading
+    title: "Move A Secret From An Environment Variable To A Read-Only Volume \u2014 Task"
+    path: sections/section-020/module-03/labs/lab-02/question.md
+  - type: lab
+    title: Move A Secret From An Environment Variable To A Read-Only Volume
+    path: sections/section-020/module-03/labs/lab-02
+    examScope: namespace
+    difficulty: intermediate
+    estimated_duration: 10m
+    learning_goals:
+    - Find which workloads read a Secret through an environment variable or a volume, then move a Deployment to a read-only secret volume.
+  - type: reading
+    title: "Move A Secret From An Environment Variable To A Read-Only Volume \u2014 Solution"
+    path: sections/section-020/module-03/labs/lab-02/solution.md
   - type: reading
     title: Summary
     path: sections/section-020/module-03/course-04-summary.md
@@ -370,6 +440,20 @@ modules:
     title: Containment And Evidence Preservation
     path: sections/section-030/module-01/course-04-containment-and-evidence-preservation.md
   - type: reading
+    title: "Isolate A Compromised Pod And Revoke Its Token \u2014 Task"
+    path: sections/section-030/module-01/labs/lab-02/question.md
+  - type: lab
+    title: Isolate A Compromised Pod And Revoke Its Token
+    path: sections/section-030/module-01/labs/lab-02
+    examScope: namespace
+    difficulty: intermediate
+    estimated_duration: 10m
+    learning_goals:
+    - Quarantine a compromised Pod without deleting it, cut its traffic with a NetworkPolicy and revoke its ServiceAccount token and Secret access.
+  - type: reading
+    title: "Isolate A Compromised Pod And Revoke Its Token \u2014 Solution"
+    path: sections/section-030/module-01/labs/lab-02/solution.md
+  - type: reading
     title: Summary
     path: sections/section-030/module-01/course-05-summary.md
   - type: quiz
@@ -383,6 +467,20 @@ modules:
   - type: reading
     title: Persistence In Workload Templates And Schedules
     path: sections/section-030/module-02/course-01-persistence-in-workload-templates-and-schedules.md
+  - type: reading
+    title: "Stop A Persistent CronJob Without Deleting It \u2014 Task"
+    path: sections/section-030/module-02/labs/lab-02/question.md
+  - type: lab
+    title: Stop A Persistent CronJob Without Deleting It
+    path: sections/section-030/module-02/labs/lab-02
+    examScope: namespace
+    difficulty: intermediate
+    estimated_duration: 8m
+    learning_goals:
+    - Trace a recurring Pod to its CronJob, record it, suspend the CronJob without deleting it and remove the Jobs it already started.
+  - type: reading
+    title: "Stop A Persistent CronJob Without Deleting It \u2014 Solution"
+    path: sections/section-030/module-02/labs/lab-02/solution.md
   - type: reading
     title: Privilege Escalation Through Bindings And Pod Settings
     path: sections/section-030/module-02/course-02-privilege-escalation-through-bindings-and-pod-settings.md
@@ -441,6 +539,20 @@ modules:
   - type: reading
     title: Impact And Resource Abuse
     path: sections/section-030/module-03/course-02-impact-and-resource-abuse.md
+  - type: reading
+    title: "Find And Limit A Workload That Can Exhaust Its Node \u2014 Task"
+    path: sections/section-030/module-03/labs/lab-02/question.md
+  - type: lab
+    title: Find And Limit A Workload That Can Exhaust Its Node
+    path: sections/section-030/module-03/labs/lab-02
+    examScope: namespace
+    difficulty: intermediate
+    estimated_duration: 10m
+    learning_goals:
+    - Find an OOMKilled container and a workload without limits, set requests and limits on it and add LimitRange defaults to the namespace.
+  - type: reading
+    title: "Find And Limit A Workload That Can Exhaust Its Node \u2014 Solution"
+    path: sections/section-030/module-03/labs/lab-02/solution.md
   - type: reading
     title: Summary
     path: sections/section-030/module-03/course-03-summary.md

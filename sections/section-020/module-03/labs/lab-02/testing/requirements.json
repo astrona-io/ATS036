@@ -1,0 +1,46 @@
+{
+  "context": "kind-astro-ats-036-lab-020-03-02",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "secret-exposure",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "secret-exposure",
+          "namespace": "starfleet-036-020-03-02"
+        },
+        "data": {
+          "secret": "db-credentials",
+          "envWorkload": "deployment/billing",
+          "volumeWorkload": "pod/reports"
+        }
+      },
+      "outcome": "exposure-report"
+    },
+    {
+      "kind": "deployment",
+      "name": "billing",
+      "expected": {
+        "metadata": {
+          "name": "billing"
+        }
+      },
+      "state": "deployment",
+      "outcome": "secret-volume"
+    },
+    {
+      "kind": "secret",
+      "name": "db-credentials",
+      "expected": {
+        "metadata": {
+          "name": "db-credentials"
+        },
+        "type": "Opaque"
+      }
+    }
+  ],
+  "cluster": "astro-ats-036-lab-020-03-02",
+  "namespace": "starfleet-036-020-03-02"
+}

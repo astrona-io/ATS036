@@ -1,0 +1,36 @@
+{
+  "context": "kind-astro-ats-036-lab-010-03-02",
+  "resources": [
+    {
+      "kind": "configmap",
+      "name": "exec-correlation",
+      "namespace": "starfleet-036-010-03-02",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "exec-correlation",
+          "namespace": "starfleet-036-010-03-02"
+        }
+      },
+      "outcome": "exec-record"
+    },
+    {
+      "kind": "configmap",
+      "name": "exec-correlation",
+      "namespace": "starfleet-036-010-03-02",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "exec-correlation",
+          "namespace": "starfleet-036-010-03-02"
+        }
+      },
+      "outcome": "runtime-location"
+    }
+  ],
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-010-03-02",
+  "namespace": "starfleet-036-010-03-02"
+}

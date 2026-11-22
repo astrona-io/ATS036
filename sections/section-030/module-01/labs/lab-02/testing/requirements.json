@@ -1,0 +1,50 @@
+{
+  "context": "kind-astro-ats-036-lab-030-01-02",
+  "resources": [
+    {
+      "kind": "deployment",
+      "name": "probe",
+      "namespace": "starfleet-036-030-01-02",
+      "expected": {
+        "spec": {
+          "template": {
+            "spec": {
+              "serviceAccountName": "probe-reader"
+            }
+          }
+        }
+      },
+      "state": "deployment"
+    },
+    {
+      "kind": "configmap",
+      "name": "incident-ticket",
+      "namespace": "starfleet-036-030-01-02",
+      "expected": {
+        "data": {
+          "pod": "threat-client",
+          "serviceAccount": "threat-reader"
+        }
+      },
+      "outcome": "pod-quarantined"
+    },
+    {
+      "kind": "networkpolicy",
+      "name": "quarantine",
+      "namespace": "starfleet-036-030-01-02",
+      "expected": {
+        "spec": {
+          "podSelector": {
+            "matchLabels": {
+              "incident": "quarantine"
+            }
+          }
+        }
+      },
+      "outcome": "quarantine-policy"
+    }
+  ],
+  "behavior": [],
+  "cluster": "astro-ats-036-lab-030-01-02",
+  "namespace": "starfleet-036-030-01-02"
+}
