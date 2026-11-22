@@ -14,7 +14,7 @@ A process rule sees only process creation. It does not see file reads, network c
 
 A rule in a running sensor is tested with a positive case first. A quiet sensor can mean a narrow rule, an approved exception, a stopped service or a failed driver, so silence alone proves nothing. In a Linux virtual machine (VM), Falco's modern eBPF sensor sees real process events. A rule scoped to a Linux account proves detection on the host, but not that Kubernetes metadata is present.
 
-The `k8smeta` plugin joins a process event to the workload that owns it. It receives metadata from a collector and adds fields such as the namespace, the Pod name and the Pod UID. A Pod name can come back after the Pod is replaced, so the UID identifies the exact Pod object. An exception that names a namespace and a command keeps the rule active for every other shell.
+Falco's container plugin joins a process event to the workload that owns it. It reads the container from the container runtime and adds fields such as the namespace, the Pod name and the Pod UID. A Pod name can come back after the Pod is replaced, so the UID identifies the exact Pod object. An exception that names a namespace and a command keeps the rule active for every other shell.
 
 The key facts to remember are these:
 

@@ -121,7 +121,9 @@ for config in sorted((ROOT / "sections").rglob("config.yaml")):
             # starting state is verified before the reference solution.
             require(bool(validation.get("scripts")), f"{relative}: one grader per outcome in validation.scripts")
             steps = data.get("testing", {}).get("init", [])
-            require(bool(steps) and steps[0].get("source") == "testing/verify-start.sh",
+            # A qemu lab runs the same script through its generated vm/ wrapper.
+            first = "vm/verify-start.sh" if data.get("runtime", {}).get("type") == "qemu" else "testing/verify-start.sh"
+            require(bool(steps) and steps[0].get("source") == first,
                     f"{relative}: verify the starting state before the solution")
     for value in data.get("metadata", {}).get("docs", {}).values():
         require((environment / value).is_file(), f"{relative}: missing document {value}")

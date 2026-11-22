@@ -34,15 +34,6 @@ SHARED_FILES = {
 }
 LIFECYCLE = ['testing/verify-start.sh', 'solution/apply.sh', 'testing/wait-solved.sh']
 VM_LIFECYCLE = ['vm/verify-start.sh', 'vm/apply-solution.sh', 'vm/wait-solved.sh']
-# qemu labs that still build their own cluster inside a plain Ubuntu VM (kind
-# in the VM, or Falco on the host) and grade with their own checker. They are
-# checked for one grader per outcome only, until they move to the kubeadm
-# layout that scripts/ci/vm-lab.py generates.
-OWN_VM_LAYOUT = {
-    'sections/section-010/module-02/labs/lab-02',
-    'sections/section-010/module-02/labs/lab-03',
-    'sections/section-050/module-03/labs/lab-02',
-}
 spec = importlib.util.spec_from_file_location('vm_lab', Path(__file__).with_name('vm-lab.py'))
 vm_lab = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(vm_lab)
@@ -81,9 +72,6 @@ def check_lab(root, lab, entry):
     scripts = (cfg.get('validation') or {}).get('scripts', [])
     if entry.get('examScope') and runtime != 'kind':
         raise ValueError(f'{lab}: only kind labs fit the exam profile')
-    if lab in OWN_VM_LAYOUT:
-        check_graders(lab, directory, scripts, False)
-        return name
     init = [item.get('source') for item in cfg.get('testing', {}).get('init', [])]
     lifecycle = VM_LIFECYCLE if qemu else LIFECYCLE
     if init != lifecycle:
@@ -148,6 +136,6 @@ def validate(root):
 if __name__ == '__main__':
     try:
         count = validate(ROOT)
-        print(f'PASS: {count} labs have the exam-ready layout ({len(OWN_VM_LAYOUT)} qemu labs keep their own VM layout)')
+        print(f'PASS: {count} labs have the exam-ready layout')
     except (ValueError, KeyError, OSError) as error:
         sys.exit(f'FAIL: {error}')

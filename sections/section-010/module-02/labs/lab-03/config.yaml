@@ -7,45 +7,48 @@ metadata:
     caseStudy: docs/case-study.md
     guide: solution.md
 runtime:
+  # Falco watches real kernel events on the node and reads Pod metadata from
+  # containerd, so the lab runs a VM with a one-node kubeadm cluster. The
+  # image ships Falco 0.45.2 with the modern eBPF driver; bootstrap/setup.sh
+  # starts falco-modern-bpf.service.
   type: qemu
   qemu:
   - image:
-      type: url
-      source: https://cloud-images.ubuntu.com/releases/noble/release-20261017/ubuntu-24.04-server-cloudimg-{ARCH}.img
-      checksums:
-        amd64: sha256:04e8f2461a16a44e78a370284471f29616cdd9baf1893df25807b71f985b6c94
-        arm64: sha256:50e24e1fb79e89116e939d90aa7738f7af48c442fa1bc2510131e0b39c50348e
-    cpus: 4
-    memoryMB: 6144
-    diskSizeGB: 24
+      type: oci
+      source: ghcr.io/astrona-io/ubuntu-qcow2-image:24.04-cks-20261122
+    cpus: 2
+    memoryMB: 4096
+    diskSizeGB: 25
+    display: false
 bootstrap:
   init:
-  - name: prepare-environment
+  - name: seed-private-environment
     type: file
-    source: bootstrap/setup.sh
+    source: vm/install.sh
+teardown:
+  keepCluster: false
 testing:
   init:
   - name: verify-start
+    description: Verify the starting state and reject the unfinished lab
     type: file
-    source: testing/verify-start.sh
-  - name: reference-solution
+    source: vm/verify-start.sh
+  - name: reference-result
     type: file
-    source: solution/apply.sh
-  - name: negative-cases
+    source: vm/apply-solution.sh
+  - name: wait-solved
+    description: Wait until the reference solution settles and every outcome passes
     type: file
-    source: testing/regression.sh
+    source: vm/wait-solved.sh
 validation:
   scripts:
   - name: namespace-detection
-    description: Fresh shell events in the protected namespace include real Kubernetes identity
+    description: New shells in the reporter Pod of starfleet-036-010-02-03 raise Training namespace shell alerts with the namespace, Pod name and Pod UID
     type: file
-    source: validation/validate-namespace-detection.sh
+    source: vm/validate-namespace-detection.sh
     points: 1
   - name: scoped-exceptions
-    description: Approved commands and an outside namespace remain silent while a later protected event
-      is detected
+    description: The approved command and a shell in outpost-036-010-02-03 raise no alert while a later shell in the monitored Pod still does
     type: file
-    source: validation/validate-scoped-exceptions.sh
+    source: vm/validate-scoped-exceptions.sh
     points: 1
-teardown:
-  keepCluster: false

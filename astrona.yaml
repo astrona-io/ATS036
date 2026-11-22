@@ -142,7 +142,8 @@ modules:
     topic: runtime-detection
     task_kind: build
     learning_goals:
-    - Prove live shell detection and a narrow exception with real kernel events.
+    - New sh and bash shells of probe-user raise Unexpected probe shell alerts with priority WARNING, the command line and the account.
+    - The approved maintenance command and shells of other-user raise no alert while a later probe-user shell still does.
     tags:
     - cks
     - falco
@@ -162,8 +163,8 @@ modules:
     difficulty: intermediate
     estimated_duration: 15m
     learning_goals:
-    - Fresh shell events in the protected namespace include real Kubernetes identity
-    - Approved commands and an outside namespace remain silent while a later protected event is detected
+    - New shells in the reporter Pod of starfleet-036-010-02-03 raise Training namespace shell alerts with the namespace, Pod name and Pod UID.
+    - The approved command and a shell in outpost-036-010-02-03 raise no alert while a later shell in the monitored Pod still does.
   - type: reading
     title: "Scope Live Falco Events With Kubernetes Metadata \u2014 Solution"
     path: sections/section-010/module-02/labs/lab-03/solution.md
@@ -895,8 +896,8 @@ modules:
     difficulty: intermediate
     estimated_duration: 15m
     learning_goals:
-    - A fresh audit event reaches the authenticated TLS collector outside the control-plane container
-    - Only the scoped namespace is collected and Secret bodies remain absent
+    - With the right token and a verified TLS certificate, fresh create events of the scoped namespace reach the collector outside the kube-apiserver Pod.
+    - The collector receives only Metadata events for Secrets and ConfigMaps of starfleet-036-050-03-02, with no bodies, no RequestReceived stage and nothing from outpost-036-050-03-02.
   - type: reading
     title: "Deliver Audit Metadata Outside The Control Plane \u2014 Solution"
     path: sections/section-050/module-03/labs/lab-02/solution.md

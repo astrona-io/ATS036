@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
+# Grades the outcome this file is named after (validate-<outcome>.sh).
 set -euo pipefail
-sudo python3 /opt/astrona-live/check.py metadata-boundary
+outcome="$(basename "$0" .sh)"
+exec bash "$(cd "$(dirname "$0")/.." && pwd)/validate.sh" "${outcome#validate-}"

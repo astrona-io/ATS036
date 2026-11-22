@@ -1,7 +1,7 @@
-# Case study
+---
+exam_objectives:
+- Use Kubernetes audit logs to monitor access
+---
+# Starting Environment
 
-
-
-The independent VM runs a kind control-plane container and a separate TLS audit collector managed by systemd. The API server's webhook backend is mounted and enabled, but its credential is wrong and its policy records nothing.
-
-Allow about 15 minutes for the tasks. API server replacements add short waits.
+The lab VM runs a one-node kubeadm cluster. The kube-apiserver sends audit events to `audit-collector.service`, an HTTPS receiver on `127.0.0.1:8443` outside its Pod. The webhook file `/etc/kubernetes/audit/webhook.yaml` sends the wrong token, and the policy `/etc/kubernetes/audit/policy.yaml` records nothing. The collector writes the events it accepts to `/var/log/audit-collector/events.jsonl`.

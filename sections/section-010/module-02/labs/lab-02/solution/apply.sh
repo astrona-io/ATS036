@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
-sudo tee /etc/falco/training-rules.yaml >/dev/null <<'RULES'
+context="${ASTRONA_KUBE_CONTEXT:-kubernetes-admin@astro-ats-036-lab-010-02-02}"
+if [[ "$(kubectl config current-context)" != "$context" ]]; then
+  printf 'Refusing to operate on another Kubernetes context\n' >&2
+  exit 1
+fi
+
+sudo tee /etc/falco/falco_rules.local.yaml >/dev/null <<'RULES'
 - rule: Unexpected probe shell
   desc: Shell execution by the probe account outside approved maintenance
   condition: >
@@ -15,7 +21,10 @@ sudo tee /etc/falco/training-rules.yaml >/dev/null <<'RULES'
     values:
     - [sh, "sh /opt/approved-maintenance.sh "]
 RULES
-sudo falco -V /etc/falco/training-rules.yaml
-sudo systemctl restart training-falco
-sleep 5
-sudo systemctl is-active --quiet training-falco
+sudo falco -V /etc/falco/falco_rules.local.yaml
+sudo systemctl restart falco-modern-bpf.service
+for attempt in $(seq 1 30); do
+  sudo systemctl is-active --quiet falco-modern-bpf.service && break
+  sleep 2
+done
+sudo systemctl is-active --quiet falco-modern-bpf.service

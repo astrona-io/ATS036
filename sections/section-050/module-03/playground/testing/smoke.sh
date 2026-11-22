@@ -108,10 +108,9 @@ expect_equal 'the directory stat shows an octal mode, the owner root and the nam
 # Forwarding and retention policy: the page has no commands.
 
 # Verify delivery to an audit webhook: skipped. The page runs inside the VM of
-# the webhook delivery lab (/etc/training/kubeconfig, the
-# training-audit-collector systemd service and sudo reload-training-audit) and
-# edits /etc/training/audit-webhook.json by hand. None of these exist in this
-# kind playground; the lab tests its own environment.
+# the webhook delivery lab (audit-collector.service and the kubeadm files in
+# /etc/kubernetes/audit). None of these exist in this kind playground; the lab
+# tests its own environment.
 
 # Playground guide
 guide=playground/docs/overview.md

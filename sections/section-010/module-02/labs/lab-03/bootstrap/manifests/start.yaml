@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: starfleet-036-010-02-03
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: outpost-036-010-02-03
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: reporter
+  namespace: starfleet-036-010-02-03
+  labels:
+    app: reporter
+spec:
+  containers:
+  - name: reporter
+    image: docker.io/library/busybox:1.37.0
+    imagePullPolicy: IfNotPresent
+    command: ["sleep", "36000"]
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: reporter
+  namespace: outpost-036-010-02-03
+  labels:
+    app: reporter
+spec:
+  containers:
+  - name: reporter
+    image: docker.io/library/busybox:1.37.0
+    imagePullPolicy: IfNotPresent
+    command: ["sleep", "36000"]

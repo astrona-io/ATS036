@@ -1,0 +1,39 @@
+{
+  "context": "kubernetes-admin@astro-ats-036-lab-010-02-03",
+  "cluster": "astro-ats-036-lab-010-02-03",
+  "runtime": "qemu",
+  "namespace": "starfleet-036-010-02-03",
+  "resources": [
+    {
+      "kind": "pod",
+      "name": "reporter",
+      "expected": {
+        "metadata": {
+          "namespace": "starfleet-036-010-02-03"
+        }
+      },
+      "state": "pod"
+    },
+    {
+      "kind": "pod",
+      "name": "reporter",
+      "namespace": "outpost-036-010-02-03",
+      "expected": {
+        "metadata": {
+          "namespace": "outpost-036-010-02-03"
+        }
+      },
+      "state": "pod"
+    }
+  ],
+  "behavior": [
+    {
+      "args": [
+        "kubectl",
+        "get",
+        "--raw=/readyz"
+      ],
+      "equals": "ok"
+    }
+  ]
+}

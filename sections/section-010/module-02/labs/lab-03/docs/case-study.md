@@ -1,7 +1,7 @@
-# Case study
+---
+exam_objectives:
+- Perform behavioral analytics to detect malicious activities
+---
+# Starting Environment
 
-
-
-This independent Ubuntu VM runs a kind cluster, Falco, the Kubernetes metadata collector and its plugin. Both `monitored` and `outside` contain a `reporter` Pod. The custom rule currently selects a nonexistent namespace.
-
-Allow about 15 minutes for the tasks. VM, cluster and sensor startup add several minutes.
+The lab VM runs a one-node kubeadm cluster and Falco 0.45.2 as `falco-modern-bpf.service`. The namespaces `starfleet-036-010-02-03` and `outpost-036-010-02-03` each run a Pod named `reporter`. The rule `Training namespace shell` in `/etc/falco/falco_rules.local.yaml` selects the namespace `unfinished` and shows only the command line. Falco writes JSON alerts to `/var/log/falco-events.jsonl`.
