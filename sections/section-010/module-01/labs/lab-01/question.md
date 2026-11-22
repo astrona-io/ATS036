@@ -28,4 +28,4 @@ Work only in this lab’s namespaces `starfleet-036-010-01-01` and `outpost-036-
 
 ## How the answer is checked
 
-The finding matches a real denied Secret request. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: the finding names a real ResponseComplete audit event and its actor; the finding records the denied Secret read without Secret payloads. The grader reads live resources and evidence; it does not award points for preserving the starting state.

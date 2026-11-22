@@ -13,11 +13,26 @@
         },
         "data": {
           "container": "report",
-          "exitCode": "12",
+          "exitCode": "12"
+        }
+      },
+      "outcome": "previous-exit-code"
+    },
+    {
+      "kind": "configmap",
+      "name": "crash-diagnosis",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "crash-diagnosis",
+          "namespace": "starfleet-036-020-01-01"
+        },
+        "data": {
           "logMarker": "application-started"
         }
       },
-      "outcome": "crash-diagnosis"
+      "outcome": "previous-log-evidence"
     }
   ],
   "behavior": [
@@ -34,7 +49,8 @@
       ],
       "contains": [
         "application-started"
-      ]
+      ],
+      "outcome": "previous-log-evidence"
     }
   ],
   "cluster": "astro-ats-036-lab-020-01-01",

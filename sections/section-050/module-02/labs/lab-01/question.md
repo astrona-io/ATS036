@@ -28,4 +28,4 @@ Work only in this lab’s namespaces `starfleet-036-050-02-01` and `outpost-036-
 
 ## How the answer is checked
 
-A real exec request is audited at Metadata level. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: a real id command in Pod shuttle is audited at Metadata level without bodies; the report records the audited exec request. The grader reads live resources and evidence; it does not award points for preserving the starting state.

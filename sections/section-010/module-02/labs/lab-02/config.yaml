@@ -42,7 +42,7 @@ validation:
     description: Real kernel events trigger scoped shell alerts while approved maintenance
       stays quiet
     type: file
-    source: validation/validate-live-rule.sh
+    source: validation/validate-live-shell-rule.sh
     points: 1
 teardown:
   keepCluster: false

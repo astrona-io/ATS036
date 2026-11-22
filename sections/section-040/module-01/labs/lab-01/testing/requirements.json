@@ -13,6 +13,32 @@
         },
         "spec": {
           "restartPolicy": "Never",
+          "securityContext": {
+            "runAsNonRoot": true,
+            "runAsUser": 1000,
+            "runAsGroup": 1000,
+            "fsGroup": 1000,
+            "seccompProfile": {
+              "type": "RuntimeDefault"
+            }
+          },
+          "automountServiceAccountToken": false
+        }
+      },
+      "state": "pod",
+      "outcome": "non-root-identity"
+    },
+    {
+      "kind": "pod",
+      "name": "restricted-reader",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "metadata": {
+          "name": "restricted-reader",
+          "namespace": "starfleet-036-040-01-01"
+        },
+        "spec": {
           "containers": [
             {
               "name": "reader",
@@ -39,26 +65,16 @@
               ]
             }
           ],
-          "securityContext": {
-            "runAsNonRoot": true,
-            "runAsUser": 1000,
-            "runAsGroup": 1000,
-            "fsGroup": 1000,
-            "seccompProfile": {
-              "type": "RuntimeDefault"
-            }
-          },
           "volumes": [
             {
               "name": "scratch",
               "emptyDir": {}
             }
-          ],
-          "automountServiceAccountToken": false
+          ]
         }
       },
       "state": "pod",
-      "outcome": "restricted-reader"
+      "outcome": "read-only-root"
     }
   ],
   "behavior": [
@@ -74,7 +90,7 @@
         "-u"
       ],
       "equals": "1000",
-      "outcome": "restricted-reader"
+      "outcome": "non-root-identity"
     },
     {
       "args": [
@@ -89,7 +105,7 @@
         "printf allowed > /scratch/result; cat /scratch/result"
       ],
       "equals": "allowed",
-      "outcome": "restricted-reader"
+      "outcome": "read-only-root"
     },
     {
       "args": [
@@ -107,7 +123,7 @@
       "failure_markers": [
         "read-only file system"
       ],
-      "outcome": "restricted-reader"
+      "outcome": "read-only-root"
     }
   ],
   "cluster": "astro-ats-036-lab-040-01-01",

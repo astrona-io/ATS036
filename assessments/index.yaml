@@ -6,4 +6,12 @@ banks:
 - id: ats036-final
   path: sections/final-domain-quiz.yaml
   question_count: 15
-  covered_sections: []
+  placement:
+    position: after
+    reading: sections/section-050/module-03/course-05-summary.md
+  covered_sections:
+  - section-010
+  - section-020
+  - section-030
+  - section-040
+  - section-050

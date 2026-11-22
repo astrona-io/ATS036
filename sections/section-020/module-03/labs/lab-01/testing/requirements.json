@@ -14,11 +14,26 @@
         "data": {
           "subject": "system:serviceaccount:starfleet-036-020-03-01:reporter",
           "verb": "get",
-          "resource": "secrets",
+          "resource": "secrets"
+        }
+      },
+      "outcome": "access-subject"
+    },
+    {
+      "kind": "configmap",
+      "name": "access-finding",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "access-finding",
+          "namespace": "starfleet-036-020-03-01"
+        },
+        "data": {
           "binding": "reporter-secrets"
         }
       },
-      "outcome": "access-finding"
+      "outcome": "access-binding"
     },
     {
       "kind": "rolebinding",

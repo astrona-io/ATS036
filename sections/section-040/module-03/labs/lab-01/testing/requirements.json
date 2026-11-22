@@ -24,7 +24,33 @@
                       "name": "VERSION",
                       "value": "v2"
                     }
-                  ],
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "state": "deployment",
+      "outcome": "v2-rollout"
+    },
+    {
+      "kind": "deployment",
+      "name": "probe",
+      "expected": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "probe",
+          "namespace": "starfleet-036-040-03-01"
+        },
+        "spec": {
+          "replicas": 2,
+          "template": {
+            "spec": {
+              "containers": [
+                {
+                  "name": "probe",
                   "securityContext": {
                     "readOnlyRootFilesystem": true
                   },
@@ -58,7 +84,7 @@
         }
       },
       "state": "deployment",
-      "outcome": "immutable-rollout"
+      "outcome": "read-only-root"
     }
   ],
   "behavior": [
@@ -79,7 +105,7 @@
       "contains": [
         "version=v2"
       ],
-      "outcome": "immutable-rollout"
+      "outcome": "v2-rollout"
     },
     {
       "args": [
@@ -94,7 +120,7 @@
         "printf ok > /tmp/scratch-check; cat /tmp/scratch-check"
       ],
       "equals": "ok",
-      "outcome": "immutable-rollout"
+      "outcome": "read-only-root"
     },
     {
       "args": [
@@ -112,7 +138,7 @@
       "failure_markers": [
         "read-only file system"
       ],
-      "outcome": "immutable-rollout"
+      "outcome": "read-only-root"
     },
     {
       "args": [
@@ -126,7 +152,7 @@
         "jsonpath={.spec.template.spec.volumes[*].hostPath}"
       ],
       "equals": "",
-      "outcome": "immutable-rollout"
+      "outcome": "read-only-root"
     }
   ],
   "cluster": "astro-ats-036-lab-040-03-01",

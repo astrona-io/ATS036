@@ -35,8 +35,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
+  - name: exec-audited
+    description: A real id command in Pod shuttle is audited at Metadata level without bodies
+    type: file
+    source: validation/validate-exec-audited.sh
+    points: 1
   - name: audit-exec
-    description: A real exec request is audited at Metadata level
+    description: The report records the audited exec request
     type: file
     source: validation/validate-audit-exec.sh
-    points: 2
+    points: 1

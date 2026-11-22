@@ -28,4 +28,4 @@ Work only in this lab’s namespaces `starfleet-036-010-03-01` and `outpost-036-
 
 ## How the answer is checked
 
-The finding identifies the actual Pod exec request. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: the finding names the audit event, actor and request URI of the exec request; the finding names the pods/exec subresource and the Pod that received it. The grader reads live resources and evidence; it does not award points for preserving the starting state.

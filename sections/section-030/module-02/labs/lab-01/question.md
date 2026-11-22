@@ -28,4 +28,4 @@ Work only in this lab’s namespaces `starfleet-036-030-02-01` and `outpost-036-
 
 ## How the answer is checked
 
-The report preserves the persistence and authority relationships. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: the report preserves the persistence and authority relationships; the Deployment remains as evidence with no running Pods; the attacker RoleBinding is removed. The grader reads live resources and evidence; it does not award points for preserving the starting state.

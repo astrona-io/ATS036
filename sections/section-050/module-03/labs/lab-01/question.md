@@ -28,4 +28,4 @@ Work only in this lab’s namespaces `starfleet-036-050-03-01` and `outpost-036-
 
 ## How the answer is checked
 
-The report matches live audit paths, rotation flags and file mode. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: the report matches the live audit paths and rotation flags; the report matches the live log file mode and the log holds records. The grader reads live resources and evidence; it does not award points for preserving the starting state.

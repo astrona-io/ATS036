@@ -28,4 +28,4 @@ Work only in this lab’s namespaces `starfleet-036-030-01-01` and `outpost-036-
 
 ## How the answer is checked
 
-The finding binds the request to a live Pod UID. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: the finding names a real denied Secret request and its actor; the finding binds the request to the live Pod name, UID and address. The grader reads live resources and evidence; it does not award points for preserving the starting state.

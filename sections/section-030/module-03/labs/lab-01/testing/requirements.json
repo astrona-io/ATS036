@@ -14,12 +14,28 @@
         },
         "data": {
           "sourcePod": "intruder",
-          "sourceNamespace": "outpost-036-030-03-01",
+          "sourceNamespace": "outpost-036-030-03-01"
+        }
+      },
+      "outcome": "source-pod"
+    },
+    {
+      "kind": "configmap",
+      "name": "lateral-finding",
+      "namespace": "starfleet-036-030-03-01",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "lateral-finding",
+          "namespace": "starfleet-036-030-03-01"
+        },
+        "data": {
           "target": "probe",
           "finding": "lateral-movement-to-probe"
         }
       },
-      "outcome": "lateral-finding"
+      "outcome": "probe-access"
     },
     {
       "kind": "pod",

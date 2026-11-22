@@ -32,4 +32,4 @@ Work only in this lab’s namespaces `starfleet-036-020-01-01` and `outpost-036-
 
 ## How the answer is checked
 
-The diagnosis matches the previous container instance. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: the diagnosis records the exit code of the previous container instance; the diagnosis records the log line of the previous container instance. The grader reads live resources and evidence; it does not award points for preserving the starting state.

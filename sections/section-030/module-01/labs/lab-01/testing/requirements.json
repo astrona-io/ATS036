@@ -20,7 +20,7 @@
           "finding": "unauthorized-secret-read"
         }
       },
-      "outcome": "actor-attribution"
+      "outcome": "denied-request"
     }
   ],
   "behavior": [],

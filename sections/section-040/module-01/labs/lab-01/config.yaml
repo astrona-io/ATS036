@@ -33,8 +33,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
-  - name: restricted-reader
-    description: The non-root Pod writes only to its scratch volume
+  - name: non-root-identity
+    description: Pod restricted-reader runs as UID 1000 with seccomp RuntimeDefault and no ServiceAccount token
     type: file
-    source: validation/validate-restricted-reader.sh
-    points: 2
+    source: validation/validate-non-root-identity.sh
+    points: 1
+  - name: read-only-root
+    description: The container has a read-only root filesystem and writes only to its scratch volume
+    type: file
+    source: validation/validate-read-only-root.sh
+    points: 1

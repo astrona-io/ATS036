@@ -13,13 +13,29 @@
           "namespace": "starfleet-036-010-03-01"
         },
         "data": {
-          "resource": "pods",
-          "subresource": "exec",
-          "namespace": "starfleet-036-010-03-01",
           "finding": "unexpected-exec"
         }
       },
-      "outcome": "exec-finding"
+      "outcome": "exec-request-identity"
+    },
+    {
+      "kind": "configmap",
+      "name": "exec-finding",
+      "namespace": "starfleet-036-010-03-01",
+      "expected": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "exec-finding",
+          "namespace": "starfleet-036-010-03-01"
+        },
+        "data": {
+          "resource": "pods",
+          "subresource": "exec",
+          "namespace": "starfleet-036-010-03-01"
+        }
+      },
+      "outcome": "exec-target"
     }
   ],
   "behavior": [],

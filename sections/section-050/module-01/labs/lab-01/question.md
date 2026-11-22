@@ -28,4 +28,4 @@ Work only in this lab’s namespaces `starfleet-036-050-01-01` and `outpost-036-
 
 ## How the answer is checked
 
-Secret reads are audited without their payloads. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: a real read of Secret audit-token is audited at Metadata level without payloads; the review records the audit level, resource and payload result. The grader reads live resources and evidence; it does not award points for preserving the starting state.

@@ -35,8 +35,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
+  - name: denied-request
+    description: The finding names a real denied Secret request and its actor
+    type: file
+    source: validation/validate-denied-request.sh
+    points: 1
   - name: actor-attribution
-    description: The finding binds the request to a live Pod UID
+    description: The finding binds the request to the live Pod name, UID and address
     type: file
     source: validation/validate-actor-attribution.sh
-    points: 2
+    points: 1

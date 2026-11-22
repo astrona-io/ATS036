@@ -35,8 +35,13 @@ testing:
     source: testing/wait-solved.sh
 validation:
   scripts:
-  - name: lateral-finding
-    description: The report connects a live source Pod to probe access logs
+  - name: source-pod
+    description: The report names the source Pod and its live address
     type: file
-    source: validation/validate-lateral-finding.sh
-    points: 2
+    source: validation/validate-source-pod.sh
+    points: 1
+  - name: probe-access
+    description: The probe access logs show requests from the recorded address
+    type: file
+    source: validation/validate-probe-access.sh
+    points: 1

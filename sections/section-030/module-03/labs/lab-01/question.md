@@ -28,4 +28,4 @@ Work only in this lab’s namespaces `starfleet-036-030-03-01` and `outpost-036-
 
 ## How the answer is checked
 
-The report connects a live source Pod to probe access logs. The grader reads live resources and evidence; it does not award points for preserving the starting state.
+Each check gives one point: the report names the source Pod and its live address; the probe access logs show requests from the recorded address. The grader reads live resources and evidence; it does not award points for preserving the starting state.
