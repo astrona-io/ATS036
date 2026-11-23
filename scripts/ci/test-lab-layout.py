@@ -108,6 +108,12 @@ class LayoutTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'validation/ files and config.yaml differ'):
             module.validate(self.root)
 
+    def test_stale_vm_scripts(self):
+        with (self.root / VM_LAB / 'testing/live.py').open('a') as handle:
+            handle.write('# local change\n')
+        with self.assertRaisesRegex(ValueError, r"stale \['vm/install.sh'\]"):
+            module.validate(self.root)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -112,13 +112,15 @@ sections:
     - id: lab-02
       path: sections/section-010/module-02/labs/lab-02
       after_reading: sections/section-010/module-02/course-04-test-a-live-sensor-in-a-linux-vm.md
-      objective: Prove live shell detection and a narrow exception with real kernel events.
+      objective: New sh and bash shells of probe-user raise Unexpected probe shell alerts with priority
+        WARNING, the command line and the account.
       status: alpha
       runtime_verification: passed
     - id: lab-03
       path: sections/section-010/module-02/labs/lab-03
       after_reading: sections/section-010/module-02/course-05-detect-with-kubernetes-metadata.md
-      objective: Fresh shell events in the protected namespace include real Kubernetes identity
+      objective: New shells in the reporter Pod of starfleet-036-010-02-03 raise Training namespace shell
+        alerts with the namespace, Pod name and Pod UID.
       status: alpha
       runtime_verification: passed
     practice_readings:
@@ -661,8 +663,8 @@ sections:
     - id: lab-02
       path: sections/section-050/module-03/labs/lab-02
       after_reading: sections/section-050/module-03/course-04-verify-audit-webhook-delivery.md
-      objective: A fresh audit event reaches the authenticated TLS collector outside the control-plane
-        container
+      objective: With the right token and a verified TLS certificate, fresh create events of the scoped
+        namespace reach the collector outside the kube-apiserver Pod.
       status: alpha
       runtime_verification: passed
     practice_readings:
